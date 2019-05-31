@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <SwitchPreference
+        android:icon="@drawable/ic_nightmode"
+        android:key="@string/night_mode_key"
+        android:title="@string/night_mode_title"
+        android:summaryOff="@string/night_mode_off"
+        android:summaryOn="@string/night_mode_on"/>
+
+    <SwitchPreference
+        android:icon="@drawable/ic_photo"
+        android:key="@string/show_images_key"
+        android:title="@string/show_images_title"
+        android:summaryOff="@string/show_images_off"
+        android:summaryOn="@string/show_images_on"/>
+
+    <SwitchPreference
+        android:icon="@drawable/ic_notification"
+        android:key="@string/last_minute_notifications_key"
+        android:title="@string/last_minute_notifications_title"
+        android:summaryOff="@string/last_minute_notifications_off"
+        android:summaryOn="@string/last_minute_notifications_on"/>
+
+    <Preference
+        android:icon="@drawable/ic_settings"
+        android:key="@string/open_notification_settings_key"
+        android:title="@string/open_notification_settings_title">
+    </Preference>
+
+    <Preference
+        android:icon="@drawable/ic_edit_tabs"
+        android:key="intent_edit_categories"
+        android:title="@string/edit_categories"
+        android:summary="@string/edit_categories_summary">
+        <intent
+            android:action="android.intent.action.VIEW"
+            android:targetPackage="com.haberinadresi.androidapp"
+            android:targetClass="com.haberinadresi.androidapp.activities.EditCategoriesActivity"/>
+    </Preference>
+
+    <SwitchPreference
+        android:icon="@drawable/ic_openwithbrowser"
+        android:key="@string/open_with_browser_key"
+        android:summaryOff="@string/open_with_browser_off"
+        android:summaryOn="@string/open_with_browser_on"
+        android:title="@string/open_with_browser_title" />
+
+    <Preference
+        android:icon="@drawable/ic_cached"
+        android:key="@string/clear_cache_key"
+        android:title="@string/clear_cache_title">
+    </Preference>
+
+    <Preference
+        android:icon="@drawable/ic_security"
+        android:key="@string/privacy_policy_key"
+        android:title="@string/privacy_policy_title">
+    </Preference>
+
+    <!--
+
+    <ListPreference
+        android:icon="@drawable/ic_fontsize"
+        android:defaultValue="@string/pref_font_label_medium"
+        android:key="@string/pref_font_key"
+        android:title="@string/change_font_size"
+        android:entries="@array/pref_font_size_labels"
+        android:entryValues="@array/pref_font_size_values"/>
+    -->
+
+</PreferenceScreen>

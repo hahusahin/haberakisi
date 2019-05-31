@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "313114308301",
+    "firebase_url": "https://haberler-c4032.firebaseio.com",
+    "project_id": "haberler-c4032",
+    "storage_bucket": "haberler-c4032.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:313114308301:android:1d13d5d6ed01b8b6",
+        "android_client_info": {
+          "package_name": "com.haberinadresi.androidapp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "313114308301-1kq27d3g1i4evcum46etpematjavqvgt.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.haberinadresi.androidapp",
+            "certificate_hash": "e82284d583d82137d224b04b6775dc7ae82fc8fb"
+          }
+        },
+        {
+          "client_id": "313114308301-tjlvdq1delfv7c9o26mvure5nfqh6k4f.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCS9weRU0_xDwAnT7e00aFt_O2O1DYpmCA"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "313114308301-tjlvdq1delfv7c9o26mvure5nfqh6k4f.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

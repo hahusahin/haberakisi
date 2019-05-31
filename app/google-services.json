@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "510314997422",
+    "firebase_url": "https://haber-akisi-notifications.firebaseio.com",
+    "project_id": "haber-akisi-notifications",
+    "storage_bucket": "haber-akisi-notifications.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:510314997422:android:1d13d5d6ed01b8b6",
+        "android_client_info": {
+          "package_name": "com.haberinadresi.androidapp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "510314997422-6n1bv5agr5ku2eo8a2kdplc54pl6gb8d.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBQWQSku0huGmAzr07pkZtrCS-S7ju4ZNQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "510314997422-6n1bv5agr5ku2eo8a2kdplc54pl6gb8d.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

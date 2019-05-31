@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string-array name="tabs">
+        <item>@string/gundem_normal</item>
+        <item>@string/spor_normal</item>
+        <item>@string/koseyazilari_normal</item>
+        <item>@string/ekonomi_normal</item>
+        <item>@string/teknoloji_normal</item>
+        <item>@string/kultursanat_normal</item>
+        <item>@string/saglik_normal</item>
+        <item>@string/magazin_normal</item>
+        <item>@string/habersiteleri_normal</item>
+        <item>@string/manset_normal</item>
+    </string-array>
+
+    <string-array name="pref_font_size_labels">
+        <item>@string/pref_font_label_small</item>
+        <item>@string/pref_font_label_medium</item>
+        <item>@string/pref_font_label_large</item>
+        <item>@string/pref_font_label_extra_large</item>
+    </string-array>
+
+    <string-array name="pref_font_size_values">
+        <item>@string/pref_font_value_small</item>
+        <item>@string/pref_font_value_medium</item>
+        <item>@string/pref_font_value_large</item>
+        <item>@string/pref_font_value_extra_large</item>
+    </string-array>
+
+</resources>

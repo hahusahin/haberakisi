@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/colorPrimaryDark">
+
+    <ImageView
+        android:id="@+id/slide_image"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="25dp"
+        android:layout_marginEnd="25dp"
+        android:adjustViewBounds="true"
+        android:layout_marginTop="20dp"
+        android:layout_centerHorizontal="true"
+        tools:src="@drawable/slide_1"
+        tools:ignore="ContentDescription"/>
+
+    <TextView
+        android:id="@+id/slide_text"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_below="@+id/slide_image"
+        android:layout_marginStart="25dp"
+        android:layout_marginEnd="25dp"
+        android:layout_marginTop="18dp"
+        android:padding="8dp"
+        android:lineSpacingMultiplier="1.2"
+        tools:text="Kaynaklarınızı düzenlemek, kayıtlı haberlerinize ulaşmak vb. ayarlar için tıklayınız. Favori kaynaklarınıza ait haberlere buradan ulaşabilirsiniz"
+        android:background="@color/colorDivider"
+        android:textColor="@color/colorPrimaryText"
+        android:textSize="18sp"
+        android:textAlignment="center"/>
+
+</RelativeLayout>

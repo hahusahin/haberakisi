@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!-- Consists of two parts: Left (Title + Time) and Right (Image) -->
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/layout_news_item"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:baselineAligned="false">
+
+    <!-- Left Part (title + time) -->
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:gravity="center_vertical"
+        android:layout_weight="7">
+
+        <TextView
+            android:id="@+id/tv_news_title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingTop="10dp"
+            android:paddingBottom="6dp"
+            android:paddingStart="14dp"
+            android:paddingEnd="6dp"
+            tools:text="Kampta ateşe düşen 7 aylık yeğenini tedavi için İngiltere\'ye getiren Iraklı sığınmacı sınır dışı edilecek"
+            android:textSize="14sp"
+            android:textColor="@color/colorPrimaryText"/>
+
+        <TextView
+            android:id="@+id/tv_news_time"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:maxLines="1"
+            android:paddingTop="6dp"
+            android:paddingBottom="10dp"
+            android:paddingStart="14dp"
+            android:paddingEnd="6dp"
+            android:layout_gravity="center_vertical"
+            tools:text="25 Dakika Önce"
+            android:textColor="@color/colorSecondaryText"
+            android:textSize="12sp" />
+
+    </LinearLayout>
+
+    <!-- Right Part (News Image) -->
+    <RelativeLayout
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:padding="6dp"
+        android:layout_weight="3">
+
+        <ImageView
+            android:id="@+id/iv_news_image"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:layout_centerVertical="true"
+            android:layout_centerHorizontal="true"
+            android:scaleType="centerCrop"
+            tools:srcCompat="@drawable/ornek_haber"
+            tools:ignore="ContentDescription"/>
+
+    </RelativeLayout>
+
+</LinearLayout>

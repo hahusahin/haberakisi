@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:showIn="navigation_view">
+
+    <item
+        android:id="@+id/nav_parent_my_sources"
+        android:title="@string/bana_ozel">
+        <menu>
+            <item
+                android:id="@+id/nav_kaynaklarim"
+                android:icon="@drawable/ic_star_filled"
+                android:title="@string/kaynaklarim" />
+            <item
+                android:id="@+id/nav_favorite_news"
+                android:icon="@drawable/ic_remove_news"
+                android:title="@string/kayitli_haberler" />
+            <item
+                android:id="@+id/nav_favorite_columns"
+                android:icon="@drawable/ic_remove_news"
+                android:title="@string/kayitli_kose_yazilari" />
+        </menu>
+    </item>
+
+    <item
+        android:id="@+id/nav_parent_arrange_sources"
+        android:title="@string/edit_source">
+        <menu>
+            <item
+                android:id="@+id/nav_gundem"
+                android:icon="@drawable/ic_gundem"
+                android:title="@string/gundem_normal" />
+            <item
+                android:id="@+id/nav_yazarlar"
+                android:icon="@drawable/ic_yazarlar"
+                android:title="@string/koseyazarlari_normal" />
+            <item
+                android:id="@+id/nav_spor"
+                android:icon="@drawable/ic_spor"
+                android:title="@string/spor_normal" />
+            <item
+                android:id="@+id/nav_ekonomi"
+                android:icon="@drawable/ic_ekonomi"
+                android:title="@string/ekonomi_normal" />
+            <item
+                android:id="@+id/nav_teknoloji"
+                android:icon="@drawable/ic_teknoloji"
+                android:title="@string/teknoloji_normal" />
+            <item
+                android:id="@+id/nav_kultursanat"
+                android:icon="@drawable/ic_kultursanat"
+                android:title="@string/kultursanat_normal" />
+            <item
+                android:id="@+id/nav_saglik"
+                android:icon="@drawable/ic_saglik"
+                android:title="@string/saglik_normal" />
+            <item
+                android:id="@+id/nav_magazin"
+                android:icon="@drawable/ic_magazin"
+                android:title="@string/magazin_normal" />
+            <item
+                android:id="@+id/nav_habersiteleri"
+                android:icon="@drawable/ic_web"
+                android:title="@string/habersiteleri_normal" />
+        </menu>
+    </item>
+
+    <item
+        android:id="@+id/nav_parent_others"
+        android:title="@string/diger">
+        <menu>
+            <item
+                android:id="@+id/nav_settings"
+                android:icon="@drawable/ic_settings"
+                android:title="@string/action_settings" />
+            <item
+                android:id="@+id/nav_share_app"
+                android:icon="@drawable/ic_share_black"
+                android:title="@string/share_app" />
+            <item
+                android:id="@+id/nav_evaluate_app"
+                android:icon="@drawable/ic_evaluate"
+                android:title="@string/evaluate_app" />
+            <item
+                android:id="@+id/nav_comment_app"
+                android:icon="@drawable/ic_comment"
+                android:title="@string/send_comment_app" />
+            <item
+                android:id="@+id/nav_user_guide"
+                android:icon="@drawable/ic_help"
+                android:title="@string/intro_guide" />
+        </menu>
+    </item>
+</menu>
