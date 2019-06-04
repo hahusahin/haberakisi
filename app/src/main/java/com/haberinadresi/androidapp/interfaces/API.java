@@ -32,12 +32,16 @@ public interface API {
     Call<List<SourceItem>> getSourcesByCategory(@Path("category") String category);
 
 
+    @GET("allnews/gundem")
+    Call<List<NewsItem>> getTopNews();
+
     //////////////////// KULLANILMIYOR//////////////////////////
+
+    /*
 
     @GET("gundem/{source}")
     Observable<List<NewsItem>> getTopNews(@Path("source") String source);
 
-    /*
     @GET("spor/{source}")
     Observable<List<NewsItem>> getSportNews(@Path("source") String source);
 

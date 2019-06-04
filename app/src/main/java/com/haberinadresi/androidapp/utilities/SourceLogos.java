@@ -65,6 +65,8 @@ public class SourceLogos {
                 return "https://docs.google.com/uc?id=1fqTjGoOXLSY2owwSKhz6FkUbyySVxR8C";
             case "dirilispostasi_habersiteleri":
                 return "https://docs.google.com/uc?id=1pwWuAddxe44ETGJ1_IGNJhpruJ4t8qWc";
+            case "dogruhaber_habersiteleri":
+                return "https://docs.google.com/uc?id=1u2EWpoK_Sx8z4m3ennk0lpshUPHJL3N9";
             case "donanimhaber_teknoloji": case "donanimhaber_habersiteleri":
                 return "https://docs.google.com/uc?id=1DzLt-WeuN3D1rwCzMUEfOjgnvv4GyTio";
             case "dunya_gundem": case "dunya_habersiteleri":

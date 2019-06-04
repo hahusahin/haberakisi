@@ -5,6 +5,7 @@ import android.arch.lifecycle.AndroidViewModel;
 import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.MutableLiveData;
 import android.content.SharedPreferences;
+import android.support.annotation.NonNull;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -27,6 +28,9 @@ import io.reactivex.functions.Function;
 import io.reactivex.schedulers.Schedulers;
 import okhttp3.OkHttpClient;
 import okhttp3.logging.HttpLoggingInterceptor;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory;
 import retrofit2.converter.gson.GsonConverterFactory;
@@ -44,9 +48,17 @@ public class NewsVM extends AndroidViewModel {
 
         newsLiveData = new MutableLiveData<>();
 
+        // If the cache is empty OR there is change in the preferences then load from server
         if(loadNewsFromSP(category).isEmpty() || isPreferenceChanged){
-            // If the cache is empty OR there is change in the preferences then load from server
-            loadNewsFromServer(category, sourceList);
+
+            // If user has more than 20 gundem sources, then fetch all news (instead of making multiple requests)
+            if(category.equals(getApplication().getResources().getString(R.string.gundem_key)) && sourceList.size() >= 20){
+                loadAllNewsFromServer();
+
+            // For all other cases, fetch the files that are user's favorite sources
+            } else {
+                loadSourceNewsFromServer(category, sourceList);
+            }
 
         } else {
             // If there exists data in cache and there is no change in preferences then load it
@@ -55,9 +67,10 @@ public class NewsVM extends AndroidViewModel {
         return newsLiveData;
     }
 
+    // Fetches news from only the sources that are in user's favorites
 
     //@SuppressWarnings("unchecked cast")
-    private void loadNewsFromServer(final String category, ArrayList<String> sourceList) {
+    private void loadSourceNewsFromServer(final String category, ArrayList<String> sourceList) {
 
         Gson gson = new GsonBuilder().setLenient().create();
 
@@ -120,6 +133,66 @@ public class NewsVM extends AndroidViewModel {
 
                 }
             });
+    }
+
+    // Fetches all Gundem news (from 40 sources) and after that filters the list wrt the user's favorites
+    private void loadAllNewsFromServer() {
+
+        Gson gson = new GsonBuilder().setLenient().create();
+
+        final OkHttpClient client = new OkHttpClient.Builder()
+                .addInterceptor(new HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.BODY))
+                .build();
+
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(getApplication().getResources().getString(R.string.api_link))
+                .addConverterFactory(GsonConverterFactory.create(gson))
+                .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
+                .client(client)
+                .build();
+
+        API api = retrofit.create(API.class);
+        Call<List<NewsItem>> call = api.getTopNews();
+
+        if (call != null) {
+
+            call.enqueue(new Callback<List<NewsItem>>() {
+                @Override
+                public void onResponse(@NonNull Call<List<NewsItem>> call, @NonNull Response<List<NewsItem>> response) {
+
+                    if(response.isSuccessful() && response.body() != null){
+
+                        List<NewsItem> allNews = response.body();
+                        List<NewsItem> filteredNews = new ArrayList<>();
+                        SharedPreferences mySources = getApplication().getSharedPreferences(getApplication().getResources().getString(R.string.source_prefs_key), MODE_PRIVATE);
+                        for(NewsItem newsItem : allNews){
+                            if(mySources.contains(newsItem.getKey())){
+                                filteredNews.add(newsItem);
+                            }
+                        }
+
+                        Collections.sort(filteredNews, new Comparator<NewsItem>() {
+                            @Override
+                            public int compare(NewsItem news1, NewsItem news2) {
+                                return Long.compare(news2.getUpdateTime(), news1.getUpdateTime());
+                            }
+                        });
+
+                        //set the list to our MutableLiveData
+                        newsLiveData.setValue(filteredNews);
+                        //save the response to shared preferences
+                        saveNewsToSP(getApplication().getResources().getString(R.string.gundem_key), filteredNews);
+                    }
+                }
+
+                @Override
+                public void onFailure(@NonNull Call<List<NewsItem>> call, @NonNull Throwable t) {
+                    t.printStackTrace();
+                }
+            });
+
+        }
+
     }
 
     private List<NewsItem> loadNewsFromSP(String category) {
