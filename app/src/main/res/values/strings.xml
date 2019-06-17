@@ -99,15 +99,6 @@
     <string name="headline_list">Headline List</string>
     <string name="headline_position">Headline Position</string>
 
-    <!-- SİLİNEBİLİR -->
-    <string name="ornek_kaynak">İnternet Haber</string>
-    <string name="ornek_yazar">Prof.Dr.Yaşar Hacısalihoğlu</string>
-    <string name="ornek_haber_baslik">Kampta ateşe düşen 7 aylık yeğenini tedavi için İngiltere\'ye getiren Iraklı sığınmacı sınır dışı edilecek</string>
-    <string name="ornek_koseyazisi_baslik">Siyasî bedduanın ardında entellektüel fukaralık yatar</string>
-    <string name="ornek_haber_detayı">İstanbul, Bayrampaşa Kaymakamlık binası içinde bir kadın polis memuru silahla intihar girişiminde bulundu. Kadın polis hastaneye kaldırılırken, durumunun ağır olduğu öğrenildi.</string>
-    <string name="ornek_haber_zaman">25 Dakika Önce</string>
-    <string name="ornek_koseyazisi_tarihi">27 Aralık 2018</string>
-
     <string name="first_select_source">Öncelikle Haber \nKaynaklarınızı Seçiniz</string>
     <string name="first_select_columnist">Öncelikle Köşe \nYazarlarınızı Seçiniz</string>
     <string name="first_select_website">Öncelikle Haber \nSitelerini Seçiniz</string>

@@ -54,8 +54,8 @@ public class ShowInWebviewActivity extends AppCompatActivity {
         //webView.getSettings().setJavaScriptCanOpenWindowsAutomatically(true);
         //webView.getSettings().setBuiltInZoomControls(true);
         //webView.getSettings().setDisplayZoomControls(true);
+        //webView.setVerticalScrollBarEnabled(false);
         webView.getSettings().setDomStorageEnabled(true);
-        webView.setVerticalScrollBarEnabled(false);
         webView.setOverScrollMode(WebView.OVER_SCROLL_NEVER);
         webView.loadUrl(newsUrl);
 

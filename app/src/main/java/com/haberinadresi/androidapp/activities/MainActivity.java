@@ -31,19 +31,9 @@ import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.InterstitialAd;
 import com.google.android.gms.ads.MobileAds;
 import com.google.firebase.messaging.FirebaseMessaging;
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
 import com.haberinadresi.androidapp.R;
 import com.haberinadresi.androidapp.adapters.TabPagerAdapter;
-import com.haberinadresi.androidapp.models.CategoryItem;
-import com.haberinadresi.androidapp.services.UpdateMyColumnists;
-import com.haberinadresi.androidapp.utilities.NetworkUtils;
 import com.haberinadresi.androidapp.utilities.SharedPreferenceUtils;
-import com.haberinadresi.androidapp.utilities.WhatsNewDialog;
-
-import java.lang.reflect.Type;
-import java.util.ArrayList;
-import java.util.List;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener{
@@ -80,17 +70,6 @@ public class MainActivity extends AppCompatActivity
         getSharedPreferences(getResources().getString(R.string.clicked_news_key), Context.MODE_PRIVATE).edit().clear().apply();
         // Columns are cleared wrt their dates (since they are not changing rapidly)
         SharedPreferenceUtils.clearColumns(this);
-
-        /* HATALAR VERİYOR - O YÜZDEN YUKARIDAKİYLE DEĞİŞTİRDİM
-        //////////////// start the cleanup service of old clicked news and columns data from sharedprefs
-        Intent cleanClickedIntent = new Intent(this, CleanClickedNews.class);
-        JobIntentService.enqueueWork(this, CleanClickedNews.class, 100, cleanClickedIntent);
-        */
-
-        /////////////İLERLEYEN ZAMANLARDA SİLİNECEK (3 YENİ KATEGORİNİN EKLENMESİ)/////////////
-        if(! customPreferences.getBoolean(getResources().getString(R.string.new_categories_added_v1), false)){
-            addNewCategories();
-        }
 
         /////////////Initialize Admob
         MobileAds.initialize(this, getResources().getString(R.string.admob_app_id));
@@ -327,23 +306,6 @@ public class MainActivity extends AppCompatActivity
             }
             onPauseFlag = false;
         }
-
-        /////////////////// İLERLEYEN ZAMANLARDA SİLİNECEK (GEÇİCİ) ///////////////////////////
-        //start the service of updating the keys of favorite columnists for once (to make all keys lowercase)
-        if(! customPreferences.getBoolean(getResources().getString(R.string.is_columnist_keys_lowercased), false)){
-            Intent updateColumnistsIntent = new Intent(MainActivity.this, UpdateMyColumnists.class);
-            startService(updateColumnistsIntent);
-            customPreferences.edit().putBoolean(getResources().getString(R.string.is_columnist_keys_lowercased), true).apply();
-        }
-
-        /////////////////// YENİ ÖZELLİK EKLEMEDİYSEN SİL ///////////////////////////
-        // Show What's New Dialog for once if it is not seen by user AND it is updated (not newly installed)
-        if(! customPreferences.getBoolean(getResources().getString(R.string.whats_new_dialog_v3), false) &&
-                NetworkUtils.isInstallFromUpdate(MainActivity.this)){
-            WhatsNewDialog dialog = new WhatsNewDialog();
-            dialog.show(getSupportFragmentManager(), "What's New In This Update");
-        }
-
         super.onResume();
     }
 
@@ -378,29 +340,6 @@ public class MainActivity extends AppCompatActivity
         subMenuItem.setTitle(mNewTitle);
     }
 
-    /////////////////// İLERLEYEN ZAMANLARDA SİLİNECEK (GEÇİCİ) ///////////////////////////
-    // EKONOMİ, KÜLTÜR SANAT, SAĞLIK VE HABER SİTELERİ SEKMELERİNİ KİŞİNİN KATEGORİLERİNE EKLE (SADECE BİR KERE)
-
-    public void addNewCategories(){
-        SharedPreferences.Editor editor = customPreferences.edit();
-        String json = customPreferences.getString(getResources().getString(R.string.category_preferences), null);
-        if (json != null) {
-            //Convert string to arraylist
-            Gson gson = new Gson();
-            Type type = new TypeToken<ArrayList<CategoryItem>>() {}.getType();
-            List<CategoryItem> categoryList = gson.fromJson(json, type);
-            //Add the three categories to list
-            categoryList.add(new CategoryItem(getResources().getString(R.string.ekonomi_normal), R.mipmap.letter_e, true));
-            categoryList.add(new CategoryItem(getResources().getString(R.string.kultursanat_normal), R.mipmap.letter_k, true));
-            categoryList.add(new CategoryItem(getResources().getString(R.string.saglik_normal), R.mipmap.letter_s, true));
-            categoryList.add(new CategoryItem(getResources().getString(R.string.habersiteleri_normal), R.mipmap.letter_h, true));
-            //Convert list to string again and rewrite the file
-            editor.putString(getResources().getString(R.string.category_preferences), gson.toJson(categoryList));
-        }
-        editor.putBoolean(getResources().getString(R.string.new_categories_added_v1), true);
-        editor.apply();
-    }
-
     private void createNotificationChannels() {
         // If device API Level is 26+ (Android 8+)
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
@@ -416,30 +355,63 @@ public class MainActivity extends AppCompatActivity
 
         }
     }
-
 }
 
 
+////////// ÖNCEDEN KULLANDIKLARIM ///////////
+
 /*
-// If Ad is loaded, then show it
-if(interstitialAd.isLoaded()){
-    interstitialAd.show();
-    interstitialAd.setAdListener(new AdListener() {
-        @Override
-        public void onAdOpened() {
-            //If Ad is opened, then reset the counter
-            SharedPreferences.Editor editor = customPreferences.edit();
-            editor.putInt(getResources().getString(R.string.news_click_counter), 0);
-            editor.apply();
-        }
-        @Override
-        public void onAdClosed() {
-            // Load the next interstitial
-            interstitialAd.loadAd(new AdRequest.Builder().build());
-        }
-    });
-    // If it fails to load, then load a new one
-} else {
-    interstitialAd.loadAd(new AdRequest.Builder().build());
+//////////////// YENİ ÖZELLİK EKLEDİĞİNDE KULLANDIĞIM DİALOG SCREEN //////////////////
+// Show What's New Dialog for once if it is not seen by user AND it is updated (not newly installed)
+if(! customPreferences.getBoolean(getResources().getString(R.string.whats_new_dialog_v3), false) &&
+        NetworkUtils.isInstallFromUpdate(MainActivity.this)){
+    WhatsNewDialog dialog = new WhatsNewDialog();
+    dialog.show(getSupportFragmentManager(), "What's New In This Update");
+}
+*/
+
+/*
+/////////////////// YAZARLARIN KEY'LERININ KUCUK HARFE ÇEVRİLMESİ ///////////////////////////
+//start the service of updating the keys of favorite columnists for once (to make all keys lowercase)
+if(! customPreferences.getBoolean(getResources().getString(R.string.is_columnist_keys_lowercased), false)){
+    Intent updateColumnistsIntent = new Intent(MainActivity.this, UpdateMyColumnists.class);
+    startService(updateColumnistsIntent);
+    customPreferences.edit().putBoolean(getResources().getString(R.string.is_columnist_keys_lowercased), true).apply();
+}
+*/
+
+/*
+//////////////BAZI TELEFONLARDA HATA VERDİĞİ İÇİN DEĞİŞTİRDİĞİM JOBINTENTSERVICE //////////////
+// start the cleanup service of old clicked news and columns data from sharedprefs
+Intent cleanClickedIntent = new Intent(this, CleanClickedNews.class);
+JobIntentService.enqueueWork(this, CleanClickedNews.class, 100, cleanClickedIntent);
+*/
+
+/*
+///////////// 4 YENİ KATEGORİNİN EKLENMESİ /////////////
+if(! customPreferences.getBoolean(getResources().getString(R.string.new_categories_added_v1), false)){
+        addNewCategories();
+}
+
+// EKONOMİ, KÜLTÜR SANAT, SAĞLIK VE HABER SİTELERİ SEKMELERİNİ KİŞİNİN KATEGORİLERİNE EKLE (SADECE BİR KERE)
+
+public void addNewCategories(){
+    SharedPreferences.Editor editor = customPreferences.edit();
+    String json = customPreferences.getString(getResources().getString(R.string.category_preferences), null);
+    if (json != null) {
+        //Convert string to arraylist
+        Gson gson = new Gson();
+        Type type = new TypeToken<ArrayList<CategoryItem>>() {}.getType();
+        List<CategoryItem> categoryList = gson.fromJson(json, type);
+        //Add the three categories to list
+        categoryList.add(new CategoryItem(getResources().getString(R.string.ekonomi_normal), R.mipmap.letter_e, true));
+        categoryList.add(new CategoryItem(getResources().getString(R.string.kultursanat_normal), R.mipmap.letter_k, true));
+        categoryList.add(new CategoryItem(getResources().getString(R.string.saglik_normal), R.mipmap.letter_s, true));
+        categoryList.add(new CategoryItem(getResources().getString(R.string.habersiteleri_normal), R.mipmap.letter_h, true));
+        //Convert list to string again and rewrite the file
+        editor.putString(getResources().getString(R.string.category_preferences), gson.toJson(categoryList));
+    }
+    editor.putBoolean(getResources().getString(R.string.new_categories_added_v1), true);
+    editor.apply();
 }
 */

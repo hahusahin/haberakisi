@@ -17,6 +17,7 @@ import com.google.gson.GsonBuilder;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import okhttp3.OkHttpClient;
 import okhttp3.logging.HttpLoggingInterceptor;
@@ -42,8 +43,8 @@ public class OneSourceNewsVM extends AndroidViewModel {
 
         newsLiveData = new MutableLiveData<>();
 
-        if(loadNewsFromSP(key).isEmpty()){
-            // If the cache is empty then load from server
+        if(loadNewsFromSP(key).isEmpty() || getGundemSourceCount() >= 20){
+            // If the cache is empty OR user's gundem sources are more than 20 then load from server
             loadNewsFromServer(key);
 
         } else {
@@ -119,4 +120,20 @@ public class OneSourceNewsVM extends AndroidViewModel {
         }
     }
 
+    // Gets the number of gundem sources (to be used in the getnewslivedata method)
+    private int getGundemSourceCount() {
+        int sourceCounter = 0;
+        // Get all the source preferences (in map format)
+        SharedPreferences sourcePreferences = getApplication().getSharedPreferences(getApplication().getResources().getString(R.string.source_prefs_key), MODE_PRIVATE);
+        Map<String, ?> preferences = sourcePreferences.getAll();
+        if (preferences != null) {
+            for (Map.Entry<String, ?> entry : preferences.entrySet()) {
+                // if the item in the sharedpreference is in user's sources increment counter
+                if (entry.getKey().contains("_gundem")) {
+                    sourceCounter ++;
+                }
+            }
+        }
+        return sourceCounter;
+    }
 }

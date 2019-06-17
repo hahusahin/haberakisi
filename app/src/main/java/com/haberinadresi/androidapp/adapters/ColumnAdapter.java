@@ -105,15 +105,15 @@ public class ColumnAdapter extends RecyclerView.Adapter<ColumnAdapter.ColumnView
             columnViewHolder.columnDay.setText(columnItem.getDay());
         }
 
-        // Put the correct image wrt the news state (saved/not saved) when it is first attached
-        if (savedColumns.getBoolean(columnItem.getColumnUrl(),false)) {
+        // Put the correct image wrt the columns state (saved/not saved) when it is first attached
+        if (savedColumns.contains(columnItem.getColumnUrl())) {
             columnViewHolder.saveColumn.setImageResource(R.drawable.ic_remove_news);
         } else {
             columnViewHolder.saveColumn.setImageResource(R.drawable.ic_save_news);
         }
 
         // Highlight the news that are clicked before
-        if (clickedColumns.getLong(columnItem.getColumnUrl(),0L) > 0L){
+        if (clickedColumns.contains(columnItem.getColumnUrl())){
 
             columnViewHolder.columnTitle.setTextColor(context.getResources().getColor(R.color.colorSecondaryText));
             columnViewHolder.columnistName.setTextColor(context.getResources().getColor(R.color.colorSecondaryText));
@@ -172,7 +172,7 @@ public class ColumnAdapter extends RecyclerView.Adapter<ColumnAdapter.ColumnView
             @Override
             public void onClick(View v) {
             // if column is already in the saved list
-            if (savedColumns.getBoolean(columnItem.getColumnUrl(),false)) {
+            if (savedColumns.contains(columnItem.getColumnUrl())) {
                 // change the image
                 columnViewHolder.saveColumn.setImageResource(R.drawable.ic_save_news);
                 //Delete column from favorite columns database

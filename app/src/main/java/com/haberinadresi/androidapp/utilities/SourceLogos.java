@@ -117,6 +117,8 @@ public class SourceLogos {
                 return "https://docs.google.com/uc?id=1-qdVniQ-i1rDpe2bbY4bPNsqDUfvcjZ1";
             case "haberler_gundem": case "haberler_saglik": case "haberler_habersiteleri":
                 return "https://docs.google.com/uc?id=17ElK50MQkIe_ia807p33dN5uF4t2vUiA";
+            case "haberturk_ekonomi":
+                return "https://docs.google.com/uc?id=1zeqQDDslznhE3ZAP-nmbuJtMjnnL85HT";
             case "haberturk_gundem": case "haberturk_saglik": case "haberturk_kultursanat": case "haberturk_habersiteleri":
                 return "https://docs.google.com/uc?id=1uXPRqlrGQXTZTn7X2nR8O2JAzzmnKn5W";
             case "haberturk_magazin": case "htmagazin_habersiteleri":
@@ -135,6 +137,8 @@ public class SourceLogos {
                 return "https://docs.google.com/uc?id=1y6U_BIuNq8JK3cemNDfRBuyNdirdVCzX";
             case "hurriyet_teknoloji":
                 return "https://docs.google.com/uc?id=1GXswcmhxqeJeiEqepcUbgh2PcafFmp_R";
+            case "independenttr_gundem": case "independenttr_habersiteleri":
+                return "https://docs.google.com/uc?id=10OYXA7ESVgOvgwzt9gWO-nkT_AFWcRB2";
             case "internethaber_gundem": case "internethaber_habersiteleri":
                 return "https://docs.google.com/uc?id=1svtr5tG3VWNz1xhqq6bPreIOf41AiqND";
             case "investingtr_habersiteleri":
@@ -143,7 +147,7 @@ public class SourceLogos {
                 return "https://docs.google.com/uc?id=1foibxMldffuteIuYb7wivx7Ws_vd3t_A";
             case "kamupersoneli_habersiteleri":
                 return "https://docs.google.com/uc?id=16GrPuv_N-j3l6R1QP1tmmgjLVDlWwxSo";
-            case "kamudanhaber_habersiteleri":
+            case "kamudanhaber_gundem": case "kamudanhaber_habersiteleri":
                 return "https://docs.google.com/uc?id=18q10T2jwy4LGM2zfaIMQB888KqlPx6AA";
             case "karar_gundem": case "karar_habersiteleri":
                 return "https://docs.google.com/uc?id=1WvjRmtr9BB8ozVkTP3dKMdUrIOCp9R6u";
@@ -163,7 +167,7 @@ public class SourceLogos {
                 return "https://docs.google.com/uc?id=1Ixv9BWTZls3DZMrrxINXfkw3tkcfXaGJ";
             case "medyatava_habersiteleri":
                 return "https://docs.google.com/uc?id=1l82oUKbIbFJXPiywfvYHNTax_tT4Hnoh";
-            case "memurlarnet_habersiteleri":
+            case "memurlarnet_gundem": case "memurlarnet_habersiteleri":
                 return "https://docs.google.com/uc?id=1KH08PAu_nnfLIzB-Tho9A3Tsv7pgE2Wh";
             case "menshealth_habersiteleri":
                 return "https://docs.google.com/uc?id=1ybd6sY8z_Nfg9Am5k1CJK0NwyHy-EkUQ";
@@ -217,6 +221,8 @@ public class SourceLogos {
                 return "https://docs.google.com/uc?id=1H3FLSZKVPmdMreW21dIgXNatXCYmwChq";
             case "ranini_habersiteleri":
                 return "https://docs.google.com/uc?id=1pEpJW9_jV62RWDZ1u2oj5cLpLbspFE3J";
+            case "sabah_ekonomi":
+                return "https://docs.google.com/uc?id=1ECjE-SV6us4DkDlwu3CPzDwVFWr7CD_T";
             case "sabah_gundem": case "sabah_habersiteleri":
                 return "https://docs.google.com/uc?id=1zKruLMoiujchyjTlNjzIxtb5bX3WR94I";
             case "sabah_kultursanat":
@@ -247,7 +253,7 @@ public class SourceLogos {
                 return "https://docs.google.com/uc?id=1fC-rcKOV-M-yXhrmCvbX1v3hNQF_m577";
             case "sporx_spor": case "sporx_habersiteleri":
                 return "https://docs.google.com/uc?id=1DLjUPV8uLhv7sHRCMc6tLXNOoOmB3SsH";
-            case "sputnik_habersiteleri":
+            case "sputniktr_gundem": case "sputnik_habersiteleri":
                 return "https://docs.google.com/uc?id=1DFp_DM30HUdRUuB5LmMABpXzpmfGNE2u";
             case "star_gundem": case "star_habersiteleri":
                 return "https://docs.google.com/uc?id=1lfm19vBwFofanRAcB5qf9QpXK2jjkA_M";
@@ -279,8 +285,8 @@ public class SourceLogos {
                 return "https://docs.google.com/uc?id=1A1s6ENGUD-noUAufodTvjvEXzQ4fYK5I";
             case "turkiye_spor":
                 return "https://docs.google.com/uc?id=1ZU_kRYmi83hlcO91NvQLAbCx8IEhqNJg";
-            case "uzmanpara_habersiteleri": case "uzmanpara_ekonomi":
-                return "https://docs.google.com/uc?id=1v-RJn7IkIP1BXptJHSv1pTEHTe4VMQdM";
+            case "uzmanpara_ekonomi": case "uzmanpara_habersiteleri":
+                return "https://docs.google.com/uc?id=1Jp5yq21c2nw7veqONakjfS7Vb9tQ2xUF";
             case "vatan_gundem": case "vatan_habersiteleri":
                 return "https://docs.google.com/uc?id=1Zk8VeJnDfdg0znHDX9Ip_yBnts2QDVVE";
             case "voaturkce_habersiteleri":
@@ -317,6 +323,10 @@ public class SourceLogos {
                 return "https://docs.google.com/uc?id=11vGG5C9sXLnKri8-otU67tzJ2FV0Bh51";
             case "afyonhaber_habersiteleri":
                 return "https://docs.google.com/uc?id=12Erk2oupLO3_GZo4adlj8sRbULpCZ-Uy";
+            case "aydinhedef_habersiteleri":
+                return "https://docs.google.com/uc?id=1qMf9eeQUf9jxcxpVEswcLiWJiJP9GGJW";
+            case "kusadasihaberajansi_habersiteleri":
+                return "https://docs.google.com/uc?id=1fjWyq7z88rwrg312xfuY1c2FzTRgJlAv";
             case "bursaolay_habersiteleri":
                 return "https://docs.google.com/uc?id=1iwtejHF6uxTD5lozIaKXz9XeB_z2v7D1";
             case "cukurovaexpres_habersiteleri":
