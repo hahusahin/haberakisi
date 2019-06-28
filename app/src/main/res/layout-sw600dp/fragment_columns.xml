@@ -18,7 +18,8 @@
             android:layout_height="match_parent"
             android:paddingTop="8dp"
             android:paddingBottom="100dp"
-            android:clipToPadding="false"/>
+            android:clipToPadding="false"
+            style="@style/FontStyle"/>
 
     </android.support.v4.widget.SwipeRefreshLayout>
 

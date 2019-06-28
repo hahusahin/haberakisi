@@ -42,11 +42,12 @@
             android:layout_marginRight="15dp"
             android:layout_marginEnd="15dp"
             android:padding="8dp"
-            tools:text="İnternet Haber"
-            android:textSize="15sp"
+            android:textSize="?attr/source_category_name_phone"
             android:textStyle="bold"
             android:textAllCaps="true"
-            android:textColor="@color/colorPrimaryText"/>
+            android:textColor="@color/colorPrimaryText"
+            tools:text="İnternet Haber"
+            tools:textSize="15sp"/>
 
         <ImageView
             android:id="@+id/iv_source_selector"

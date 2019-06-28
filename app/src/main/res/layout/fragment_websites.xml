@@ -27,7 +27,8 @@
                 <android.support.v7.widget.RecyclerView
                     android:id="@+id/rv_websites_general"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"/>
+                    android:layout_height="match_parent"
+                    style="@style/FontStyle"/>
 
                 <View
                     android:id="@+id/divider_1"
@@ -38,7 +39,8 @@
                 <android.support.v7.widget.RecyclerView
                     android:id="@+id/rv_websites_sport"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"/>
+                    android:layout_height="match_parent"
+                    style="@style/FontStyle"/>
 
                 <View
                     android:id="@+id/divider_2"
@@ -49,7 +51,8 @@
                 <android.support.v7.widget.RecyclerView
                     android:id="@+id/rv_websites_others"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"/>
+                    android:layout_height="match_parent"
+                    style="@style/FontStyle"/>
 
                 <View
                     android:id="@+id/divider_3"
@@ -60,7 +63,8 @@
                 <android.support.v7.widget.RecyclerView
                     android:id="@+id/rv_websites_foreign"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"/>
+                    android:layout_height="match_parent"
+                    style="@style/FontStyle"/>
 
             </LinearLayout>
 

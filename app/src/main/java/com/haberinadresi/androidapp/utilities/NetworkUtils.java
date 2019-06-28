@@ -35,7 +35,7 @@ public class NetworkUtils {
 
     // Returns active connection type of the user. 0: none; 1:wifi ; 2: mobile data
     @IntRange(from = 0, to = 2)
-    public static int getConnectionType(Context context) {
+    private static int getConnectionType(Context context) {
         int result = 0;
         ConnectivityManager cm = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
         // If device is above API level 23

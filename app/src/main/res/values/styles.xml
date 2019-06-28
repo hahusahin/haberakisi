@@ -50,4 +50,142 @@
     </style>
     -->
 
+
+    <!-- TEXT SIZE STYLES -->
+
+    <style name="FontStyle" parent="AppTheme.NoActionBar"/>
+
+    <style name="FontStyle.Small">
+        <item name="column_title_phone">12sp</item>
+        <item name="column_title_tablet">18sp</item>
+        <item name="column_other_info_phone">10sp</item>
+        <item name="column_other_info_tablet">15sp</item>
+        <item name="columnist_name_phone">12sp</item>
+        <item name="columnist_name_tablet">18sp</item>
+        <item name="columnist_source_phone">10sp</item>
+        <item name="columnist_source_tablet">15sp</item>>
+        <item name="headline_source_phone">10sp</item>
+        <item name="headline_source_tablet">15sp</item>
+        <item name="my_source_phone">10sp</item>
+        <item name="my_source_tablet">12sp</item>
+        <item name="my_source_category_phone">15sp</item>
+        <item name="my_source_category_tablet">21sp</item>
+        <item name="extranews_title_phone">12sp</item>
+        <item name="extranews_title_tablet">18sp</item>
+        <item name="extranews_time_phone">10sp</item>
+        <item name="extranews_time_tablet">15sp</item>
+        <item name="news_title_phone">12sp</item>
+        <item name="news_title_tablet">18sp</item>
+        <item name="news_other_info_phone">10sp</item>
+        <item name="news_other_info_tablet">15sp</item>
+        <item name="source_category_name_phone">12sp</item>
+        <item name="source_category_name_tablet">18sp</item>
+        <item name="detail_title_phone">18sp</item>
+        <item name="detail_title_tablet">22sp</item>
+        <item name="detail_source_time_button_phone">12sp</item>
+        <item name="detail_source_time_button_tablet">18sp</item>
+        <item name="detail_summary_detail_phone">14sp</item>
+        <item name="detail_summary_detail_tablet">20sp</item>
+    </style>
+
+    <style name="FontStyle.Medium">
+        <item name="column_title_phone">15sp</item>
+        <item name="column_title_tablet">21sp</item>
+        <item name="column_other_info_phone">12sp</item>
+        <item name="column_other_info_tablet">18sp</item>
+        <item name="columnist_name_phone">15sp</item>
+        <item name="columnist_name_tablet">21sp</item>
+        <item name="columnist_source_phone">12sp</item>
+        <item name="columnist_source_tablet">18sp</item>>
+        <item name="headline_source_phone">12sp</item>
+        <item name="headline_source_tablet">18sp</item>
+        <item name="my_source_phone">12sp</item>
+        <item name="my_source_tablet">15sp</item>
+        <item name="my_source_category_phone">18sp</item>
+        <item name="my_source_category_tablet">24sp</item>
+        <item name="extranews_title_phone">15sp</item>
+        <item name="extranews_title_tablet">21sp</item>
+        <item name="extranews_time_phone">12sp</item>
+        <item name="extranews_time_tablet">18sp</item>
+        <item name="news_title_phone">15sp</item>
+        <item name="news_title_tablet">21sp</item>
+        <item name="news_other_info_phone">12sp</item>
+        <item name="news_other_info_tablet">18sp</item>
+        <item name="source_category_name_phone">15sp</item>
+        <item name="source_category_name_tablet">21sp</item>
+        <item name="detail_title_phone">20sp</item>
+        <item name="detail_title_tablet">26sp</item>
+        <item name="detail_source_time_button_phone">14sp</item>
+        <item name="detail_source_time_button_tablet">20sp</item>
+        <item name="detail_summary_detail_phone">16sp</item>
+        <item name="detail_summary_detail_tablet">22sp</item>
+    </style>
+
+    <style name="FontStyle.Large">
+        <item name="column_title_phone">18sp</item>
+        <item name="column_title_tablet">24sp</item>
+        <item name="column_other_info_phone">15sp</item>
+        <item name="column_other_info_tablet">21sp</item>
+        <item name="columnist_name_phone">18sp</item>
+        <item name="columnist_name_tablet">24sp</item>
+        <item name="columnist_source_phone">15sp</item>
+        <item name="columnist_source_tablet">21sp</item>>
+        <item name="headline_source_phone">15sp</item>
+        <item name="headline_source_tablet">21sp</item>
+        <item name="my_source_phone">15sp</item>
+        <item name="my_source_tablet">21sp</item>
+        <item name="my_source_category_phone">21sp</item>
+        <item name="my_source_category_tablet">27sp</item>
+        <item name="extranews_title_phone">18sp</item>
+        <item name="extranews_title_tablet">24sp</item>
+        <item name="extranews_time_phone">15sp</item>
+        <item name="extranews_time_tablet">21sp</item>
+        <item name="news_title_phone">18sp</item>
+        <item name="news_title_tablet">24sp</item>
+        <item name="news_other_info_phone">15sp</item>
+        <item name="news_other_info_tablet">21sp</item>
+        <item name="source_category_name_phone">18sp</item>
+        <item name="source_category_name_tablet">24sp</item>
+        <item name="detail_title_phone">22sp</item>
+        <item name="detail_title_tablet">30sp</item>
+        <item name="detail_source_time_button_phone">16sp</item>
+        <item name="detail_source_time_button_tablet">24sp</item>
+        <item name="detail_summary_detail_phone">19sp</item>
+        <item name="detail_summary_detail_tablet">26sp</item>
+    </style>
+
+    <style name="FontStyle.XLarge">
+        <item name="column_title_phone">21sp</item>
+        <item name="column_title_tablet">27sp</item>
+        <item name="column_other_info_phone">18sp</item>
+        <item name="column_other_info_tablet">24sp</item>
+        <item name="columnist_name_phone">21sp</item>
+        <item name="columnist_name_tablet">27sp</item>
+        <item name="columnist_source_phone">18sp</item>
+        <item name="columnist_source_tablet">24sp</item>>
+        <item name="headline_source_phone">18sp</item>
+        <item name="headline_source_tablet">24sp</item>
+        <item name="my_source_phone">18sp</item>
+        <item name="my_source_tablet">24sp</item>
+        <item name="my_source_category_phone">24sp</item>
+        <item name="my_source_category_tablet">30sp</item>
+        <item name="extranews_title_phone">21sp</item>
+        <item name="extranews_title_tablet">27sp</item>
+        <item name="extranews_time_phone">18sp</item>
+        <item name="extranews_time_tablet">24sp</item>
+        <item name="news_title_phone">21sp</item>
+        <item name="news_title_tablet">27sp</item>
+        <item name="news_other_info_phone">18sp</item>
+        <item name="news_other_info_tablet">24sp</item>
+        <item name="source_category_name_phone">21sp</item>
+        <item name="source_category_name_tablet">27sp</item>
+        <item name="detail_title_phone">24sp</item>
+        <item name="detail_title_tablet">34sp</item>
+        <item name="detail_source_time_button_phone">18sp</item>
+        <item name="detail_source_time_button_tablet">28sp</item>
+        <item name="detail_summary_detail_phone">22sp</item>
+        <item name="detail_summary_detail_tablet">30sp</item>
+    </style>
+
+
 </resources>

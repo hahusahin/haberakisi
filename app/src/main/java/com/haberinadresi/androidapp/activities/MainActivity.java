@@ -33,7 +33,9 @@ import com.google.android.gms.ads.MobileAds;
 import com.google.firebase.messaging.FirebaseMessaging;
 import com.haberinadresi.androidapp.R;
 import com.haberinadresi.androidapp.adapters.TabPagerAdapter;
+import com.haberinadresi.androidapp.utilities.NetworkUtils;
 import com.haberinadresi.androidapp.utilities.SharedPreferenceUtils;
+import com.haberinadresi.androidapp.utilities.WhatsNewDialog;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener{
@@ -55,21 +57,44 @@ public class MainActivity extends AppCompatActivity
         } else {
             AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
         }
+
+        // Set the text style (size) of user's preference
+        String fontPreference = customPreferences.getString(getResources().getString(R.string.pref_font_key), "medium");
+        if(fontPreference != null){
+            switch (fontPreference){
+                case "small":
+                    setTheme(R.style.FontStyle_Small);
+                    break;
+                case "medium":
+                    setTheme(R.style.FontStyle_Medium);
+                    break;
+                case "large":
+                    setTheme(R.style.FontStyle_Large);
+                    break;
+                case "xlarge":
+                    setTheme(R.style.FontStyle_XLarge);
+                    break;
+                default:
+                    setTheme(R.style.FontStyle_Medium);
+            }
+        } else {
+            setTheme(R.style.FontStyle_Medium);
+        }
+
         setContentView(R.layout.activity_main);
 
-        ///////// clear the news that are in the cache
-        // (only when activity is created from scratch, not when a configuration change occurs)
+        // Clear cached news and clicked info (only when activity is created from scratch, not when a configuration change occurs)
         boolean isCategoriesChanged = getIntent().getBooleanExtra(EditCategoriesActivity.class.getName(), false);
         boolean isSettingsChanged = getIntent().getBooleanExtra(SettingsActivity.class.getName(), false);
         if(! isCategoriesChanged && ! isSettingsChanged){
+            ///////// clear the news that are in the cache
             getSharedPreferences(getResources().getString(R.string.cached_news_key), MODE_PRIVATE).edit().clear().apply();
+            //////////////// Clear the old clicked news and columns from sharedprefs
+            // All clicked news are cleared in each session
+            getSharedPreferences(getResources().getString(R.string.clicked_news_key), Context.MODE_PRIVATE).edit().clear().apply();
+            // Columns are cleared wrt their dates (since they are not changing rapidly)
+            SharedPreferenceUtils.clearColumns(this);
         }
-
-        //////////////// Clear the old clicked news and columns from sharedprefs
-        // All clicked news are cleared in each session
-        getSharedPreferences(getResources().getString(R.string.clicked_news_key), Context.MODE_PRIVATE).edit().clear().apply();
-        // Columns are cleared wrt their dates (since they are not changing rapidly)
-        SharedPreferenceUtils.clearColumns(this);
 
         /////////////Initialize Admob
         MobileAds.initialize(this, getResources().getString(R.string.admob_app_id));
@@ -305,6 +330,13 @@ public class MainActivity extends AppCompatActivity
                 interstitialAd.show();
             }
             onPauseFlag = false;
+        }
+        //////////////// YENİ ÖZELLİK EKLEDİĞİNDE KULLANDIĞIM DİALOG SCREEN //////////////////
+        // Show What's New Dialog for once if it is not seen by user AND it is updated (not newly installed)
+        if(! customPreferences.getBoolean(getResources().getString(R.string.whats_new_dialog_v4), false) &&
+                NetworkUtils.isInstallFromUpdate(MainActivity.this)){
+            WhatsNewDialog dialog = new WhatsNewDialog();
+            dialog.show(getSupportFragmentManager(), "What's New In This Update");
         }
         super.onResume();
     }

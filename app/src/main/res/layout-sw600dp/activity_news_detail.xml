@@ -80,10 +80,11 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="16dp"
                     android:padding="16dp"
-                    tools:text="Kampta ateşe düşen 7 aylık yeğenini tedavi için İngiltere\'ye getiren Iraklı sığınmacı sınır dışı edilecek"
                     android:textColor="@color/colorPrimaryText"
                     android:textStyle="bold"
-                    android:textSize="30sp"/>
+                    android:textSize="?attr/detail_title_tablet"
+                    tools:textSize="26sp"
+                    tools:text="Kampta ateşe düşen 7 aylık yeğenini tedavi için İngiltere\'ye getiren Iraklı sığınmacı sınır dışı edilecek"/>
 
                 <!-- Logo, Source, Time -->
                 <RelativeLayout
@@ -114,9 +115,10 @@
                         android:textStyle="bold"
                         android:textAllCaps="true"
                         android:textColor="@color/colorPrimaryText"
-                        android:textSize="20sp"
+                        android:textSize="?attr/detail_source_time_button_tablet"
                         android:maxLines="1"
-                        tools:text="İnternet Haber"/>
+                        tools:text="İnternet Haber"
+                        tools:textSize="20sp"/>
 
                     <ImageView
                         android:id="@+id/iv_clock_symbol"
@@ -136,10 +138,11 @@
                         android:layout_gravity="center_vertical"
                         android:layout_alignParentEnd="true"
                         android:padding="8dp"
-                        tools:text="25 Dakika Önce"
                         android:textColor="@color/colorPrimaryText"
                         android:textStyle="bold"
-                        android:textSize="20sp"/>
+                        android:textSize="?attr/detail_source_time_button_tablet"
+                        tools:text="25 Dakika Önce"
+                        tools:textSize="20sp"/>
 
                 </RelativeLayout>
 
@@ -151,10 +154,11 @@
                     android:padding="16dp"
                     android:layout_marginTop="5dp"
                     android:lineSpacingMultiplier="1.4"
-                    tools:text="İstanbul, Bayrampaşa Kaymakamlık binası içinde bir kadın polis memuru silahla intihar girişiminde bulundu."
                     android:textColor="@color/colorPrimaryText"
-                    android:textSize="24sp"
-                    android:textStyle="bold"/>
+                    android:textSize="?attr/detail_summary_detail_tablet"
+                    android:textStyle="bold"
+                    tools:textSize="22sp"
+                    tools:text="İstanbul, Bayrampaşa Kaymakamlık binası içinde bir kadın polis memuru silahla intihar girişiminde bulundu."/>
 
                 <!-- Detail -->
                 <TextView
@@ -163,9 +167,10 @@
                     android:layout_height="wrap_content"
                     android:padding="16dp"
                     android:lineSpacingMultiplier="1.4"
-                    tools:text="İstanbul, Bayrampaşa Kaymakamlık binası içinde bir kadın polis memuru silahla intihar girişiminde bulundu. Kadın polis hastaneye kaldırılırken, durumunun ağır olduğu öğrenildi."
                     android:textColor="@color/colorPrimaryText"
-                    android:textSize="24sp"/>
+                    android:textSize="?attr/detail_summary_detail_tablet"
+                    tools:textSize="22sp"
+                    tools:text="İstanbul, Bayrampaşa Kaymakamlık binası içinde bir kadın polis memuru silahla intihar girişiminde bulundu. Kadın polis hastaneye kaldırılırken, durumunun ağır olduğu öğrenildi." />
 
                 <!-- Share icons -->
                 <LinearLayout
@@ -213,7 +218,8 @@
                     android:layout_marginBottom="6dp"
                     android:padding="20dp"
                     android:text="@string/view_source"
-                    android:textSize="20sp"/>
+                    android:textSize="?attr/detail_source_time_button_tablet"
+                    tools:textSize="20sp"/>
 
                 <!-- Seperator (Single Line) -->
                 <View
@@ -233,7 +239,8 @@
                     tools:text="Sözcü Kaynağından Daha Fazla"
                     android:textColor="@color/colorPrimaryText"
                     android:textAlignment="center"
-                    android:textSize="24sp"/>
+                    android:textSize="?attr/detail_summary_detail_tablet"
+                    tools:textSize="22sp"/>
 
                 <!-- 3 Extra news -->
                 <LinearLayout

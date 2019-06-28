@@ -43,10 +43,10 @@
             android:layout_marginEnd="12dp"
             android:padding="6dp"
             tools:text="Prof.Dr.Yaşar Hacısalihoğlu"
-            android:textSize="20sp"
             android:textStyle="bold"
             android:textAllCaps="true"
-            android:textColor="@color/colorPrimaryText"/>
+            android:textColor="@color/colorPrimaryText"
+            android:textSize="?attr/columnist_name_tablet"/>
 
         <TextView
             android:id="@+id/tv_col_source_name"
@@ -59,7 +59,7 @@
             android:padding="6dp"
             tools:text="İnternet Haber"
             android:textAllCaps="true"
-            android:textSize="18sp"/>
+            android:textSize="?attr/columnist_source_tablet"/>
 
         <ImageView
             android:id="@+id/iv_source_selector"

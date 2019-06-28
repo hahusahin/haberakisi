@@ -33,7 +33,7 @@
             android:layout_marginBottom="8dp"
             android:lineSpacingMultiplier="1.1"
             android:textColor="@color/colorPrimaryText"
-            android:textSize="15sp"
+            android:textSize="?attr/column_title_phone"
             android:textStyle="bold"
             android:maxLines="4"
             android:ellipsize="end"
@@ -42,6 +42,7 @@
             app:layout_constraintEnd_toStartOf="@+id/guideline1"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
+            tools:textSize="15sp"
             tools:text="Gerekçeli karar geciktikçe iş içinden çıkılmaz hale geliyor.. Yenilenmeyi isteyenlerin işgüzarlıkları yüzünden…" />
 
         <TextView
@@ -51,7 +52,7 @@
             android:layout_marginBottom="8dp"
             android:textAllCaps="true"
             android:textColor="@color/colorPrimaryText"
-            android:textSize="12sp"
+            android:textSize="?attr/column_other_info_phone"
             android:textStyle="italic"
             android:maxLines="1"
             android:ellipsize="end"
@@ -59,6 +60,7 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/tv_column_title"
             app:layout_constraintBottom_toTopOf="@id/tv_col_source_name"
+            tools:textSize="12sp"
             tools:text="Prof.Dr.Yaşar Hacısalihoğlu" />
 
         <TextView
@@ -67,26 +69,28 @@
             android:layout_height="wrap_content"
             android:layout_marginBottom="8dp"
             android:textAllCaps="true"
-            android:textSize="12sp"
+            android:textSize="?attr/column_other_info_phone"
             android:textStyle="italic"
             android:textColor="@color/colorSecondaryText"
             app:layout_constraintEnd_toStartOf="@+id/guideline1"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/tv_columnist_name"
             app:layout_constraintBottom_toTopOf="@id/tv_column_day"
+            tools:textSize="12sp"
             tools:text="İnternet Haber" />
 
         <TextView
             android:id="@+id/tv_column_day"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:textSize="12sp"
+            android:textSize="?attr/column_other_info_phone"
             android:textStyle="italic"
             android:textColor="@color/colorSecondaryText"
             app:layout_constraintEnd_toStartOf="@+id/guideline1"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/tv_col_source_name"
             app:layout_constraintBottom_toBottomOf="parent"
+            tools:textSize="12sp"
             tools:text="27 Aralık 2018" />
 
         <ImageView

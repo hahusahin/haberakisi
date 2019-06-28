@@ -15,6 +15,14 @@
         android:summaryOff="@string/show_images_off"
         android:summaryOn="@string/show_images_on"/>
 
+    <ListPreference
+        android:icon="@drawable/ic_fontsize"
+        android:defaultValue="@string/pref_font_label_medium"
+        android:key="@string/pref_font_key"
+        android:title="@string/change_font_size"
+        android:entries="@array/pref_font_size_labels"
+        android:entryValues="@array/pref_font_size_values"/>
+
     <SwitchPreference
         android:icon="@drawable/ic_notification"
         android:key="@string/last_minute_notifications_key"
@@ -47,26 +55,17 @@
         android:title="@string/open_with_browser_title" />
 
     <Preference
-        android:icon="@drawable/ic_cached"
-        android:key="@string/clear_cache_key"
-        android:title="@string/clear_cache_title">
-    </Preference>
-
-    <Preference
         android:icon="@drawable/ic_security"
         android:key="@string/privacy_policy_key"
         android:title="@string/privacy_policy_title">
     </Preference>
 
     <!--
-
-    <ListPreference
-        android:icon="@drawable/ic_fontsize"
-        android:defaultValue="@string/pref_font_label_medium"
-        android:key="@string/pref_font_key"
-        android:title="@string/change_font_size"
-        android:entries="@array/pref_font_size_labels"
-        android:entryValues="@array/pref_font_size_values"/>
+    <Preference
+        android:icon="@drawable/ic_cached"
+        android:key="@string/clear_cache_key"
+        android:title="@string/clear_cache_title">
+    </Preference>
     -->
 
 </PreferenceScreen>

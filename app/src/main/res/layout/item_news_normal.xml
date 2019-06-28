@@ -30,15 +30,16 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginBottom="10dp"
-            android:maxLines="4"
+            android:maxLines="5"
             android:ellipsize="end"
-            android:textSize="15sp"
+            android:textSize="?attr/news_title_phone"
             android:textStyle="bold"
             android:textColor="@color/colorPrimaryText"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toStartOf="@id/guideline1"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toTopOf="@id/tv_news_summary"
+            tools:textSize="15sp"
             tools:text="Kampta ateşe düşen 7 aylık yeğenini tedavi için İngiltere\'ye getiren Iraklı sığınmacı sınır dışı edilecek" />
 
         <TextView
@@ -48,12 +49,13 @@
             android:layout_marginBottom="10dp"
             android:maxLines="3"
             android:ellipsize="end"
-            android:textSize="12sp"
+            android:textSize="?attr/news_other_info_phone"
             android:textColor="@color/colorPrimaryText"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toStartOf="@id/guideline1"
             app:layout_constraintTop_toBottomOf="@+id/tv_news_title"
-            app:layout_constraintBottom_toTopOf="@+id/barrier1"
+            app:layout_constraintBottom_toTopOf="@+id/barrier2"
+            tools:textSize="12sp"
             tools:text="İstanbul, Bayrampaşa Kaymakamlık binası içinde bir kadın polis memuru silahla intihar girişiminde bulundu. Kadın polis hastaneye kaldırılırken, durumunun ağır olduğu öğrenildi" />
 
         <ImageView
@@ -67,12 +69,12 @@
             app:layout_constraintStart_toEndOf="@id/guideline1"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintBottom_toTopOf="@+id/barrier1"
+            app:layout_constraintBottom_toTopOf="@+id/barrier2"
             tools:src="@drawable/ornek_haber"
             tools:ignore="ContentDescription"/>
 
         <android.support.constraint.Barrier
-            android:id="@+id/barrier1"
+            android:id="@+id/barrier2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             app:barrierDirection="bottom"
@@ -83,7 +85,7 @@
             android:layout_width="25dp"
             android:layout_height="25dp"
             android:padding="2dp"
-            app:layout_constraintTop_toBottomOf="@id/barrier1"
+            app:layout_constraintTop_toBottomOf="@id/barrier2"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
             tools:src="@drawable/ornek_logo_kare"
@@ -95,12 +97,13 @@
             android:layout_height="wrap_content"
             android:padding="6dp"
             android:textAllCaps="true"
-            android:textSize="12sp"
+            android:textSize="?attr/news_other_info_phone"
             android:textColor="@color/colorSecondaryText"
-            app:layout_constraintTop_toBottomOf="@id/barrier1"
+            app:layout_constraintTop_toBottomOf="@id/barrier2"
             app:layout_constraintStart_toEndOf="@id/iv_source_logo"
             app:layout_constraintBottom_toBottomOf="parent"
-            tools:text="İnternet Haber"/>
+            tools:text="İnternet Haber"
+            tools:textSize="12sp"/>
 
         <ImageView
             android:id="@+id/iv_clock_symbol"
@@ -108,7 +111,7 @@
             android:layout_height="15dp"
             android:layout_margin="1dp"
             app:layout_constraintStart_toEndOf="@id/tv_news_source"
-            app:layout_constraintTop_toBottomOf="@id/barrier1"
+            app:layout_constraintTop_toBottomOf="@id/barrier2"
             app:layout_constraintBottom_toBottomOf="parent"
             app:srcCompat="@mipmap/ic_clock"
             tools:ignore="ContentDescription"/>
@@ -120,12 +123,13 @@
             android:maxLines="1"
             android:padding="6dp"
             android:textColor="@color/colorSecondaryText"
-            android:textSize="12sp"
+            android:textSize="?attr/news_other_info_phone"
             app:layout_constraintStart_toEndOf="@id/iv_clock_symbol"
             app:layout_constraintEnd_toStartOf="@id/guideline2"
-            app:layout_constraintTop_toBottomOf="@id/barrier1"
+            app:layout_constraintTop_toBottomOf="@id/barrier2"
             app:layout_constraintBottom_toBottomOf="parent"
-            tools:text="25 Dakika Önce" />
+            tools:text="25 Dakika Önce"
+            tools:textSize="12sp"/>
 
         <android.support.constraint.Guideline
             android:id="@+id/guideline2"
@@ -141,7 +145,7 @@
             android:padding="2dp"
             android:layout_marginStart="12dp"
             app:layout_constraintStart_toEndOf="@id/guideline2"
-            app:layout_constraintTop_toBottomOf="@id/barrier1"
+            app:layout_constraintTop_toBottomOf="@id/barrier2"
             app:layout_constraintBottom_toBottomOf="parent"
             app:srcCompat="@drawable/ic_save_news"
             android:contentDescription="@string/save"/>
@@ -152,7 +156,7 @@
             android:layout_height="30dp"
             android:padding="2dp"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/barrier1"
+            app:layout_constraintTop_toBottomOf="@id/barrier2"
             app:layout_constraintBottom_toBottomOf="parent"
             app:srcCompat="@drawable/ic_share_black"
             android:contentDescription="@string/share"/>

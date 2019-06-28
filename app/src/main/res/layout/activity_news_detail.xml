@@ -79,10 +79,11 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="12dp"
                     android:padding="14dp"
-                    tools:text="Kampta ateşe düşen 7 aylık yeğenini tedavi için İngiltere\'ye getiren Iraklı sığınmacı sınır dışı edilecek"
                     android:textColor="@color/colorPrimaryText"
-                    android:textSize="20sp"
-                    android:textStyle="bold" />
+                    android:textSize="?attr/detail_title_phone"
+                    android:textStyle="bold"
+                    tools:textSize="20sp"
+                    tools:text="Kampta ateşe düşen 7 aylık yeğenini tedavi için İngiltere\'ye getiren Iraklı sığınmacı sınır dışı edilecek"/>
 
                 <!-- Logo, Source, Time -->
                 <RelativeLayout
@@ -111,10 +112,11 @@
                         android:padding="6dp"
                         android:textAllCaps="true"
                         android:textColor="@color/colorPrimaryText"
-                        android:textSize="14sp"
+                        android:textSize="?attr/detail_source_time_button_phone"
                         android:textStyle="bold"
                         android:maxLines="1"
-                        tools:text="İnternet Haber"/>
+                        tools:text="İnternet Haber"
+                        tools:textSize="14sp"/>
 
                     <ImageView
                         android:id="@+id/iv_clock_symbol"
@@ -136,8 +138,9 @@
                         android:padding="6dp"
                         tools:text="25 Dakika Önce"
                         android:textColor="@color/colorPrimaryText"
-                        android:textSize="14sp"
-                        android:textStyle="bold" />
+                        android:textSize="?attr/detail_source_time_button_phone"
+                        android:textStyle="bold"
+                        tools:textSize="14sp"/>
 
                 </RelativeLayout>
 
@@ -149,10 +152,11 @@
                     android:layout_marginTop="5dp"
                     android:lineSpacingMultiplier="1.4"
                     android:padding="12dp"
-                    tools:text="İstanbul, Bayrampaşa Kaymakamlık binası içinde bir kadın polis memuru silahla intihar girişiminde bulundu."
                     android:textColor="@color/colorPrimaryText"
-                    android:textSize="16sp"
-                    android:textStyle="bold" />
+                    android:textSize="?attr/detail_summary_detail_phone"
+                    android:textStyle="bold"
+                    tools:textSize="16sp"
+                    tools:text="İstanbul, Bayrampaşa Kaymakamlık binası içinde bir kadın polis memuru silahla intihar girişiminde bulundu."/>
 
                 <!-- Detail -->
                 <TextView
@@ -161,9 +165,10 @@
                     android:layout_height="wrap_content"
                     android:lineSpacingMultiplier="1.4"
                     android:padding="12dp"
-                    tools:text="İstanbul, Bayrampaşa Kaymakamlık binası içinde bir kadın polis memuru silahla intihar girişiminde bulundu. Kadın polis hastaneye kaldırılırken, durumunun ağır olduğu öğrenildi."
                     android:textColor="@color/colorPrimaryText"
-                    android:textSize="16sp" />
+                    android:textSize="?attr/detail_summary_detail_phone"
+                    tools:textSize="16sp"
+                    tools:text="İstanbul, Bayrampaşa Kaymakamlık binası içinde bir kadın polis memuru silahla intihar girişiminde bulundu. Kadın polis hastaneye kaldırılırken, durumunun ağır olduğu öğrenildi."/>
 
                 <!-- Share icons -->
                 <LinearLayout
@@ -211,7 +216,8 @@
                     android:layout_marginBottom="5dp"
                     android:padding="18dp"
                     android:text="@string/view_source"
-                    android:textSize="14sp" />
+                    android:textSize="?attr/detail_source_time_button_phone"
+                    tools:textSize="14sp"/>
 
                 <!-- Seperator (Single Line) -->
                 <View
@@ -231,7 +237,8 @@
                     tools:text="Sözcü Kaynağından Daha Fazla"
                     android:textColor="@color/colorPrimaryText"
                     android:textAlignment="center"
-                    android:textSize="16sp"/>
+                    android:textSize="?attr/detail_summary_detail_phone"
+                    tools:textSize="16sp"/>
 
                 <!-- 3 Extra news -->
                 <LinearLayout

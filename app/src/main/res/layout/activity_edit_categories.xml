@@ -29,7 +29,8 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:paddingBottom="90dp"
-            android:clipToPadding="false"/>
+            android:clipToPadding="false"
+            style="@style/FontStyle"/>
 
         <Button
             android:id="@+id/btn_apply_changes"

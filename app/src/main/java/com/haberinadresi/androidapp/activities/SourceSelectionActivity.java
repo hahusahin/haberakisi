@@ -41,11 +41,34 @@ public class SourceSelectionActivity extends AppCompatActivity implements Search
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        // Set the text style (size) of user's preference
+        customPreferences = getSharedPreferences(getResources().getString(R.string.custom_keys), Context.MODE_PRIVATE);
+        String fontPreference = customPreferences.getString(getResources().getString(R.string.pref_font_key), "medium");
+        if(fontPreference != null){
+            switch (fontPreference){
+                case "small":
+                    setTheme(R.style.FontStyle_Small);
+                    break;
+                case "medium":
+                    setTheme(R.style.FontStyle_Medium);
+                    break;
+                case "large":
+                    setTheme(R.style.FontStyle_Large);
+                    break;
+                case "xlarge":
+                    setTheme(R.style.FontStyle_XLarge);
+                    break;
+                default:
+                    setTheme(R.style.FontStyle_Medium);
+            }
+        } else {
+            setTheme(R.style.FontStyle_Medium);
+        }
+
         setContentView(R.layout.activity_source_select);
         Toolbar toolbar = findViewById(R.id.settings_toolbar);
         setSupportActionBar(toolbar);
 
-        customPreferences = getSharedPreferences(getResources().getString(R.string.custom_keys), Context.MODE_PRIVATE);
 
         progressBar = findViewById(R.id.pb_source_select);
         progressBar.setVisibility(View.VISIBLE);

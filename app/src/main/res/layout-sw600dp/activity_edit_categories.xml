@@ -30,7 +30,8 @@
             android:layout_height="match_parent"
             android:paddingTop="10dp"
             android:paddingBottom="120dp"
-            android:clipToPadding="false"/>
+            android:clipToPadding="false"
+            style="@style/FontStyle"/>
 
         <Button
             android:id="@+id/btn_apply_changes"

@@ -58,9 +58,33 @@ public class NewsDetailActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_news_detail);
 
         customKeys = getSharedPreferences(getResources().getString(R.string.custom_keys), MODE_PRIVATE);
+        // Set the text style (size) of user's preference
+        String fontPreference = customKeys.getString(getResources().getString(R.string.pref_font_key), "medium");
+        if(fontPreference != null){
+            switch (fontPreference){
+                case "small":
+                    setTheme(R.style.FontStyle_Small);
+                    break;
+                case "medium":
+                    setTheme(R.style.FontStyle_Medium);
+                    break;
+                case "large":
+                    setTheme(R.style.FontStyle_Large);
+                    break;
+                case "xlarge":
+                    setTheme(R.style.FontStyle_XLarge);
+                    break;
+                default:
+                    setTheme(R.style.FontStyle_Medium);
+            }
+        } else {
+            setTheme(R.style.FontStyle_Medium);
+        }
+
+        setContentView(R.layout.activity_news_detail);
+
 
         Toolbar toolbar = findViewById(R.id.news_detail_toolbar);
         setSupportActionBar(toolbar);

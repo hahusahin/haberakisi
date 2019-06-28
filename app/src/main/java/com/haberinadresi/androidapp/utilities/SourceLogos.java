@@ -319,16 +319,30 @@ public class SourceLogos {
                 return "https://docs.google.com/uc?id=1di-nEMxBrRvIvZq2NRxKgc7bAN6EEgTC";
 
             // YEREL GAZETELER
+            case "adanahaber_habersiteleri":
+                return "https://docs.google.com/uc?id=1Y0WRmzjE8N3lZlKwqr8U0xwJSXadsKgN";
             case "adiyamanhaber_habersiteleri":
                 return "https://docs.google.com/uc?id=11vGG5C9sXLnKri8-otU67tzJ2FV0Bh51";
             case "afyonhaber_habersiteleri":
                 return "https://docs.google.com/uc?id=12Erk2oupLO3_GZo4adlj8sRbULpCZ-Uy";
+            case "antalyaguncel_habersiteleri":
+                return "https://docs.google.com/uc?id=11lUJljlccKHZAaLN4vN8NbZszNVXRZGS";
+            case "artvin08_habersiteleri":
+                return "https://docs.google.com/uc?id=12eqz1-7xerS-UlqaGwr2WDRsc4X1Bv-x";
             case "aydinhedef_habersiteleri":
                 return "https://docs.google.com/uc?id=1qMf9eeQUf9jxcxpVEswcLiWJiJP9GGJW";
-            case "kusadasihaberajansi_habersiteleri":
-                return "https://docs.google.com/uc?id=1fjWyq7z88rwrg312xfuY1c2FzTRgJlAv";
+            case "balikesirposta_habersiteleri":
+                return "https://docs.google.com/uc?id=12Wzh0wabtzZ5LkSrsI0giJLDaJx5DZBR";
+            case "bilecikhaber_habersiteleri":
+                return "https://docs.google.com/uc?id=1oejhM4Jm2HlE6uIBLzg9fYd5dKM0B9ck";
+            case "bodrumkenttv_habersiteleri":
+                return "https://docs.google.com/uc?id=19n6eCVpCejr3Hci3qMPenLctpD8o2Xhb";
             case "bursaolay_habersiteleri":
                 return "https://docs.google.com/uc?id=1iwtejHF6uxTD5lozIaKXz9XeB_z2v7D1";
+            case "buyuksivas_habersiteleri":
+                return "https://docs.google.com/uc?id=1JjgWyr61nqb46fyWFqUp5SsILpYffk0_";
+            case "canakkalehedef_habersiteleri":
+                return "https://docs.google.com/uc?id=15-iKttywaPmAFqqtpgfDueZxIT0_wV_1";
             case "cukurovaexpres_habersiteleri":
                 return "https://docs.google.com/uc?id=1RpR9dJs3xMjwv4q8xGWDHzFh2U5biP_S";
             case "denizlihaber_habersiteleri":
@@ -337,28 +351,56 @@ public class SourceLogos {
                 return "https://docs.google.com/uc?id=1_YugMaJ54WgH5WvqCyVFpcQBpyzAzNOP";
             case "egepostasi_habersiteleri":
                 return "https://docs.google.com/uc?id=1ZQLhQfIQb9EwAPWWoKDO2G07RfPrOAgl";
+            case "erzurumajans_habersiteleri":
+                return "https://docs.google.com/uc?id=1l2kYOxXgE2DYjnLW6ebW5HtRHYL_g1s6";
             case "eskisehiranadolu_habersiteleri":
                 return "https://docs.google.com/uc?id=1tqQkq4USgzYdT2OGLSMZcK6RonNC-KVs";
             case "gazianteppusula_habersiteleri":
                 return "https://docs.google.com/uc?id=1tKZTqPIRwRu9MIV50fR2X6_EwsbwGM_J";
             case "gercekhaberci_habersiteleri":
                 return "https://docs.google.com/uc?id=1SKDoixWbf1jPVyP3dQQnibELw8McBKnj";
+            case "haber50_habersiteleri":
+                return "https://docs.google.com/uc?id=1cP6vWyFelYAda3N-7jhHTKetDa4IA_WC";
+            case "haber53_habersiteleri":
+                return "https://docs.google.com/uc?id=1eJeoUNZs_5yy2IGeCbhWWX_cdCSOCz9y";
             case "haber61_habersiteleri":
                 return "https://docs.google.com/uc?id=1JbyTT88zTsSpbcxPhqKgoLFEo7nEiqHa";
             case "ispartahaber32_habersiteleri":
                 return "https://docs.google.com/uc?id=1h9qgIPQKiUJ6VTZJuvmDdGB_qiidXnhl";
+            case "karsmanset_habersiteleri":
+                return "https://docs.google.com/uc?id=1TkivMMfhP-qhykyB2l6tC351CVXfdITn";
             case "kayseriolay_habersiteleri":
                 return "https://docs.google.com/uc?id=1Kez1XIezRU7iATdiVdt93AyflRnYZeG8";
             case "konhaber_habersiteleri":
                 return "https://docs.google.com/uc?id=1pE878PL9NeVVJE1Jw4Ie3PNm9Eu0oCnl";
+            case "kusadasihaberajansi_habersiteleri":
+                return "https://docs.google.com/uc?id=1fjWyq7z88rwrg312xfuY1c2FzTRgJlAv";
+            case "malatyaguncel_habersiteleri":
+                return "https://docs.google.com/uc?id=1WXvyA_k4_6_RJoyMNl1ZzadL5rx3ufUh";
             case "marasanahaber_habersiteleri":
                 return "https://docs.google.com/uc?id=1svIhBo2l9fCd8PltLhQ_jFigTLgQPONn";
             case "mavikocaeli_habersiteleri":
                 return "https://docs.google.com/uc?id=1abRaBURVld2sIchMs9ivPefnsLRwC2kn";
             case "medyabar_habersiteleri":
                 return "https://docs.google.com/uc?id=1XpyEhq9CSOObS4QXKhByJiHlDc-swS_h";
+            case "mersinhaber_habersiteleri":
+                return "https://docs.google.com/uc?id=1h4vdJvGVPO69Iwtkt7OFndNq_faTGFUC";
+            case "orduolay_habersiteleri":
+                return "https://docs.google.com/uc?id=1G6L0IZhN28kWqBsV8o9KLzQNKfcUVTc7";
+            case "samsunhaber_habersiteleri":
+                return "https://docs.google.com/uc?id=1yi_PNkpH8yb6A9t2JjMlvnTUL3d6TYdz";
+            case "tokattan_habersiteleri":
+                return "https://docs.google.com/uc?id=16xINsERkZej1NbRxfZkxmU_hDhAvcnoL";
+            case "urfastar_habersiteleri":
+                return "https://docs.google.com/uc?id=1ueSIirdJOiTNRxyNq03byEzTPlYrVZ3P";
             case "wanhaber_habersiteleri":
                 return "https://docs.google.com/uc?id=1iEaCzWf4HJlQ0t46XD7CPHA8G5Ec5Gpl";
+            case "yalovagazetesi_habersiteleri":
+                return "https://docs.google.com/uc?id=1wPRoMK46Bpxx-nivAPiVuospCWL8H7c9";
+            case "yozgatileri_habersiteleri":
+                return "https://docs.google.com/uc?id=18PcPjhbvqfIl7So2pp0sEklaSnX-qyz2";
+            case "zonguldakpusula_habersiteleri":
+                return "https://docs.google.com/uc?id=1C4RvsooaJQ8NHq0MLVm_-0sQDEyH2kM-";
 
             // YABANCI BASIN
             case "abcnews_habersiteleri":

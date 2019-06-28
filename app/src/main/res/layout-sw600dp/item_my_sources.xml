@@ -26,10 +26,11 @@
         android:layout_marginTop="8dp"
         android:layout_marginBottom="8dp"
         android:gravity="center_vertical"
-        tools:text="İnternet Haber"
         android:textAllCaps="true"
         android:textColor="@color/colorPrimaryText"
-        android:textSize="14sp"
-        android:textStyle="bold" />
+        android:textSize="?attr/my_source_tablet"
+        android:textStyle="bold"
+        tools:text="İnternet Haber"
+        tools:textSize="15sp"/>
 
 </LinearLayout>

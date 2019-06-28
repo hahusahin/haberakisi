@@ -8,11 +8,9 @@ import android.os.Build;
 import android.os.Bundle;
 import android.provider.Settings;
 import android.support.v7.app.AppCompatDelegate;
+import android.support.v7.preference.ListPreference;
 import android.support.v7.preference.Preference;
 import android.support.v7.preference.PreferenceFragmentCompat;
-import android.widget.Toast;
-
-import com.bumptech.glide.Glide;
 import com.google.firebase.messaging.FirebaseMessaging;
 import com.haberinadresi.androidapp.R;
 
@@ -51,7 +49,6 @@ public class SettingsFragment extends PreferenceFragmentCompat {
                 return true;
             }
         });
-
 
         // Link that opens Notification Settings (For Android 8+) if notifications are enabled
         final Preference openNotificationSettings = findPreference(getResources().getString(R.string.open_notification_settings_key));
@@ -123,7 +120,63 @@ public class SettingsFragment extends PreferenceFragmentCompat {
             }
         });
 
-        // Clear Image Cache Button
+        // Privacy Policy
+        Preference privacyPolicy = findPreference(getResources().getString(R.string.privacy_policy_key));
+        privacyPolicy.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+            @Override
+            public boolean onPreferenceClick(Preference preference) {
+                Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(getResources().getString(R.string.privacy_policy_link)));
+                startActivity(intent);
+                return true;
+            }
+        });
+
+
+        // Font Size Preference
+        Preference fontSizePreference = findPreference(getResources().getString(R.string.pref_font_key));
+        setFontSummary(fontSizePreference);
+
+    }
+
+    private void setFontSummary(Preference preference){
+        preference.setOnPreferenceChangeListener(listener);
+        listener.onPreferenceChange(preference, sharedPreferences.getString(preference.getKey(), "medium"));
+                //PreferenceManager.getDefaultSharedPreferences(preference.getContext()).getString(preference.getKey(), ""));
+    }
+
+    private Preference.OnPreferenceChangeListener listener = new Preference.OnPreferenceChangeListener() {
+        @Override
+        public boolean onPreferenceChange(Preference preference, Object newValue) {
+            String value = newValue.toString();
+            if(preference instanceof ListPreference){
+                ListPreference listPreference = (ListPreference) preference;
+                int index = listPreference.findIndexOfValue(value);
+                // set the summary to reflect new value
+                preference.setSummary(index >= 0 ? listPreference.getEntries()[index] : null);
+                switch (index){
+                    case 0:
+                        sharedPreferences.edit().putString(preference.getKey(), getResources().getString(R.string.pref_font_value_small)).apply();
+                        break;
+                    case 1:
+                        sharedPreferences.edit().putString(preference.getKey(), getResources().getString(R.string.pref_font_value_medium)).apply();
+                        break;
+                    case 2:
+                        sharedPreferences.edit().putString(preference.getKey(), getResources().getString(R.string.pref_font_value_large)).apply();
+                        break;
+                    case 3:
+                        sharedPreferences.edit().putString(preference.getKey(), getResources().getString(R.string.pref_font_value_extra_large)).apply();
+                        break;
+                    default:
+                        sharedPreferences.edit().putString(preference.getKey(), getResources().getString(R.string.pref_font_value_medium)).apply();
+                }
+            }
+            return true;
+        }
+    };
+
+
+    /* ŞİMDİLİK İPTAL GEREK YOK RESİMLERİ YÜKLEMİYORUM ZATEN TELEFONA
+    // Clear Image Cache Button
         Preference clearCache = findPreference(getResources().getString(R.string.clear_cache_key));
         // Get the cache size and set it to the summary as kB, MB etc.. (ŞİMDİLİK BOYUTU GÖSTERME)
         //long cacheSize = getCacheSize();
@@ -145,49 +198,7 @@ public class SettingsFragment extends PreferenceFragmentCompat {
             }
         });
 
-        // Privacy Policy
-        Preference privacyPolicy = findPreference(getResources().getString(R.string.privacy_policy_key));
-        privacyPolicy.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
-            @Override
-            public boolean onPreferenceClick(Preference preference) {
-                Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(getResources().getString(R.string.privacy_policy_link)));
-                startActivity(intent);
-                return true;
-            }
-        });
 
-    }
-
-
-    /*
-    // YAZI BOYUTUNU ARTIRMA/AZALTMA İÇİN
-
-    //bindSummaryValue(findPreference(getResources().getString(R.string.pref_font_key)));
-
-
-        private static void bindSummaryValue(Preference preference){
-            preference.setOnPreferenceChangeListener(listener);
-            listener.onPreferenceChange(preference,
-                    PreferenceManager.getDefaultSharedPreferences(preference.getContext()).getString(preference.getKey(), ""));
-        }
-
-        private static Preference.OnPreferenceChangeListener listener = new Preference.OnPreferenceChangeListener() {
-            @Override
-            public boolean onPreferenceChange(Preference preference, Object newValue) {
-                String value = newValue.toString();
-                if(preference instanceof ListPreference){
-                    ListPreference listPreference = (ListPreference) preference;
-                    int index = listPreference.findIndexOfValue(value);
-                    // set the summary to reflect new value
-                    preference.setSummary(index >= 0 ? listPreference.getEntries()[index] : null);
-                }
-                return true;
-            }
-        };
-     */
-
-
-    /*
     // 3 Helper Methods to get the Cache Size of the Images
     public long getCacheSize(){
         long size = 0;

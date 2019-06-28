@@ -161,22 +161,22 @@
     <string name="open_with_browser_on">Haber bağlantılarını tarayıcı (Chrome vb) ile açar</string>
     <string name="open_with_browser_off">Haber bağlantılarını uygulama arayüzü ile açar</string>
     <string name="open_with_browser_key">Open With Web Browser</string>
+    <string name="change_font_size">Haber Yazı Boyutu</string>
+    <string name="pref_font_key">fontsize</string>
+    <string name="pref_font_label_small">Küçük</string>
+    <string name="pref_font_label_medium">Orta</string>
+    <string name="pref_font_label_large">Büyük</string>
+    <string name="pref_font_label_extra_large">Çok Büyük</string>
+    <string name="pref_font_value_small">small</string>
+    <string name="pref_font_value_medium">medium</string>
+    <string name="pref_font_value_large">large</string>
+    <string name="pref_font_value_extra_large">xlarge</string>
+    <string name="privacy_policy_title">Gizlilik Sözleşmesi</string>
+    <string name="privacy_policy_key">Privacy Policy</string>
     <string name="clear_cache_title">Önbelleği Temizle</string>
     <string name="clear_cache_key">Clear Cache</string>
     <string name="clear_cache_summary">-</string>
     <string name="clear_cache_toast">Resim Önbelleği Temizlendi</string>
-    <string name="privacy_policy_title">Gizlilik Sözleşmesi</string>
-    <string name="privacy_policy_key">Privacy Policy</string>
-    <string name="change_font_size">Haber Yazı Boyutu</string>
-    <string name="pref_font_key">fontsize</string>
-    <string name="pref_font_label_small">Küçük</string>
-    <string name="pref_font_label_medium">Normal</string>
-    <string name="pref_font_label_large">Büyük</string>
-    <string name="pref_font_label_extra_large">Çok Büyük</string>
-    <string name="pref_font_value_small">small</string>
-    <string name="pref_font_value_medium">normal</string>
-    <string name="pref_font_value_large">large</string>
-    <string name="pref_font_value_extra_large">xlarge</string>
 
     <!-- Intro Activity -->
     <string name="intro_finish">Bitti</string>
@@ -209,8 +209,8 @@
 
 
     <!-- TEK SEFERLİK ÇALIŞAN ANAHTAR'LAR (SHARED PREFERENCES) -->
-
-    <string name="whats_new_dialog_v3">Whats New Dialog v3 Seen</string> <!-- BİR KERE ÇALIŞTI, SONRAKİ VERSİYONLARDA SİL -->
+    <string name="whats_new_dialog_v4">Whats New Dialog v4 Seen</string> <!-- BİR KERE ÇALIŞTI, SONRAKİ VERSİYONLARDA SİL -->
+    <string name="whats_new_dialog_v3">Whats New Dialog v3 Seen</string> <!-- BİR KERE ÇALIŞTI, V19'DA SİLDİM AMA KULLANMA -->
     <string name="whats_new_dialog_v2">Whats New Dialog v2 Seen</string> <!-- BİR KERE ÇALIŞTI,  V14'DA SİLDİM AMA KULLANMA  -->
     <string name="is_whats_new_dialog_seen">Neler Yeni Ekranı Görüldü</string> <!-- BİR KERE ÇALIŞTI, V10'DA SİLDİM AMA KULLANMA -->
 

@@ -15,8 +15,7 @@ public class WhatsNewDialog extends AppCompatDialogFragment {
 
     public static final String title = "Neler Yeni?";
     public static final String message =
-            "\t- Haberlerin bildirim olarak gösterilmesi." +
-            "\n\n\t- Haber linklerini Chrome vb. internet tarayıcısı ile açma seçeneği." +
+            "\t- Haber Yazı Boyutu ayarı eklendi" +
             "\n\n\t(Ana Menü - Ayarlar'dan ulaşabilirsiniz)";
     public static final String okay = "Tamam";
 
@@ -33,10 +32,9 @@ public class WhatsNewDialog extends AppCompatDialogFragment {
                         SharedPreferences customPrefs = requireActivity().getSharedPreferences(getResources().getString(R.string.custom_keys), Context.MODE_PRIVATE);
                         SharedPreferences.Editor editor = customPrefs.edit();
                         // Delete the previous keys that are used
-                        editor.remove(getResources().getString(R.string.is_whats_new_dialog_seen));
-                        editor.remove(getResources().getString(R.string.whats_new_dialog_v2));
+                        editor.remove(getResources().getString(R.string.whats_new_dialog_v3));
                         // Put the new key
-                        editor.putBoolean(getResources().getString(R.string.whats_new_dialog_v3), true);
+                        editor.putBoolean(getResources().getString(R.string.whats_new_dialog_v4), true);
                         editor.apply();
                     }
                 });

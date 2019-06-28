@@ -26,9 +26,10 @@
             android:paddingBottom="6dp"
             android:paddingStart="14dp"
             android:paddingEnd="6dp"
-            tools:text="Kampta ateşe düşen 7 aylık yeğenini tedavi için İngiltere\'ye getiren Iraklı sığınmacı sınır dışı edilecek"
-            android:textSize="14sp"
-            android:textColor="@color/colorPrimaryText"/>
+            android:textSize="?attr/extranews_title_phone"
+            android:textColor="@color/colorPrimaryText"
+            tools:textSize="15sp"
+            tools:text="Kampta ateşe düşen 7 aylık yeğenini tedavi için İngiltere\'ye getiren Iraklı sığınmacı sınır dışı edilecek"/>
 
         <TextView
             android:id="@+id/tv_news_time"
@@ -40,9 +41,10 @@
             android:paddingStart="14dp"
             android:paddingEnd="6dp"
             android:layout_gravity="center_vertical"
-            tools:text="25 Dakika Önce"
             android:textColor="@color/colorSecondaryText"
-            android:textSize="12sp" />
+            android:textSize="?attr/extranews_time_phone"
+            tools:text="25 Dakika Önce"
+            tools:textSize="12sp"/>
 
     </LinearLayout>
 

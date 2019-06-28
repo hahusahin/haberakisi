@@ -12,6 +12,7 @@ public class SettingsActivity extends AppCompatActivity implements SharedPrefere
     SharedPreferences sharedPreferences;
     boolean isNightModeChanged = false;
     boolean isShowImagesChanged = false;
+    boolean isFontSizeChanged = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,6 +46,8 @@ public class SettingsActivity extends AppCompatActivity implements SharedPrefere
             isNightModeChanged = true;
         } else if(key.equals(getResources().getString(R.string.show_images_key))){
             isShowImagesChanged = true;
+        } else if(key.equals(getResources().getString(R.string.pref_font_key))){
+            isFontSizeChanged = true;
         }
     }
 
@@ -54,6 +57,7 @@ public class SettingsActivity extends AppCompatActivity implements SharedPrefere
         // Save the change status of settings to bundle since activity is recreated when nightmode switch toggled
         outState.putBoolean(getResources().getString(R.string.night_mode_key), isNightModeChanged);
         outState.putBoolean(getResources().getString(R.string.show_images_key), isShowImagesChanged);
+        outState.putBoolean(getResources().getString(R.string.pref_font_key), isFontSizeChanged);
     }
 
     @Override
@@ -62,14 +66,14 @@ public class SettingsActivity extends AppCompatActivity implements SharedPrefere
         // Restore the state changes if activity is recreated
         isNightModeChanged = savedInstanceState.getBoolean(getResources().getString(R.string.night_mode_key), false);
         isShowImagesChanged = savedInstanceState.getBoolean(getResources().getString(R.string.show_images_key), false);
-
+        isFontSizeChanged = savedInstanceState.getBoolean(getResources().getString(R.string.pref_font_key), false);
     }
 
     @Override
     public void onBackPressed() {
         super.onBackPressed();
         // If a preference changed then restart the main activity (to apply the changes since affects the main activity)
-        if(isNightModeChanged || isShowImagesChanged){
+        if(isNightModeChanged || isShowImagesChanged || isFontSizeChanged){
             Intent intent = new Intent(SettingsActivity.this, MainActivity.class);
             intent.putExtra(SettingsActivity.class.getName(), true);
             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);

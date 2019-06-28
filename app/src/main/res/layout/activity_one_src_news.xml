@@ -29,7 +29,8 @@
         <android.support.v7.widget.RecyclerView
             android:id="@+id/rv_one_source_news"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"/>
+            android:layout_height="match_parent"
+            style="@style/FontStyle"/>
 
         <ProgressBar
             android:id="@+id/pb_one_src_news"

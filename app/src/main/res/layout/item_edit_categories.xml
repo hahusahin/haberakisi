@@ -42,11 +42,12 @@
             android:layout_marginRight="15dp"
             android:layout_marginEnd="15dp"
             android:padding="8dp"
-            tools:text="Gündem"
-            android:textSize="15sp"
+            android:textSize="?attr/source_category_name_phone"
             android:textStyle="bold"
             android:textAllCaps="true"
-            android:textColor="@color/colorPrimaryText"/>
+            android:textColor="@color/colorPrimaryText"
+            tools:text="Gündem"
+            tools:textSize="15sp"/>
 
         <CheckBox
             android:id="@+id/cb_category_selector"

@@ -39,16 +39,18 @@
                 android:layout_marginBottom="8dp"
                 android:text="@string/gundem_ekonomi_normal"
                 android:textStyle="bold"
-                android:textSize="18sp"
+                android:textSize="?attr/my_source_category_phone"
                 android:textAllCaps="true"
                 android:textAlignment="center"
                 android:textColor="@color/colorPrimaryText"
-                android:background="@color/colorDivider"/>
+                android:background="@color/colorDivider"
+                tools:textSize="18sp"/>
 
             <android.support.v7.widget.RecyclerView
                 android:id="@+id/rv_my_gundem_sources"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"/>
+                android:layout_height="wrap_content"
+                style="@style/FontStyle"/>
 
             <TextView
                 android:id="@+id/tv_my_sources_spor"
@@ -59,16 +61,18 @@
                 android:layout_marginBottom="8dp"
                 android:text="@string/spor_normal"
                 android:textStyle="bold"
-                android:textSize="18sp"
+                android:textSize="?attr/my_source_category_phone"
                 android:textAllCaps="true"
                 android:textAlignment="center"
                 android:textColor="@color/colorPrimaryText"
-                android:background="@color/colorDivider"/>
+                android:background="@color/colorDivider"
+                tools:textSize="18sp"/>
 
             <android.support.v7.widget.RecyclerView
                 android:id="@+id/rv_my_spor_sources"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"/>
+                android:layout_height="wrap_content"
+                style="@style/FontStyle"/>
 
             <TextView
                 android:id="@+id/tv_my_sources_teknoloji"
@@ -79,16 +83,18 @@
                 android:layout_marginBottom="8dp"
                 android:text="@string/teknoloji_normal"
                 android:textStyle="bold"
-                android:textSize="18sp"
+                android:textSize="?attr/my_source_category_phone"
                 android:textAllCaps="true"
                 android:textAlignment="center"
                 android:textColor="@color/colorPrimaryText"
-                android:background="@color/colorDivider"/>
+                android:background="@color/colorDivider"
+                tools:textSize="18sp"/>
 
             <android.support.v7.widget.RecyclerView
                 android:id="@+id/rv_my_teknoloji_sources"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"/>
+                android:layout_height="wrap_content"
+                style="@style/FontStyle"/>
 
             <TextView
                 android:id="@+id/tv_my_sources_kultursanat"
@@ -99,16 +105,18 @@
                 android:layout_marginBottom="8dp"
                 android:text="@string/kultursanat_normal"
                 android:textStyle="bold"
-                android:textSize="18sp"
+                android:textSize="?attr/my_source_category_phone"
                 android:textAllCaps="true"
                 android:textAlignment="center"
                 android:textColor="@color/colorPrimaryText"
-                android:background="@color/colorDivider"/>
+                android:background="@color/colorDivider"
+                tools:textSize="18sp"/>
 
             <android.support.v7.widget.RecyclerView
                 android:id="@+id/rv_my_kultursanat_sources"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"/>
+                android:layout_height="wrap_content"
+                style="@style/FontStyle"/>
 
             <TextView
                 android:id="@+id/tv_my_sources_saglik"
@@ -119,16 +127,18 @@
                 android:layout_marginBottom="8dp"
                 android:text="@string/saglik_normal"
                 android:textStyle="bold"
-                android:textSize="18sp"
+                android:textSize="?attr/my_source_category_phone"
                 android:textAllCaps="true"
                 android:textAlignment="center"
                 android:textColor="@color/colorPrimaryText"
-                android:background="@color/colorDivider"/>
+                android:background="@color/colorDivider"
+                tools:textSize="18sp"/>
 
             <android.support.v7.widget.RecyclerView
                 android:id="@+id/rv_my_saglik_sources"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"/>
+                android:layout_height="wrap_content"
+                style="@style/FontStyle"/>
 
             <TextView
                 android:id="@+id/tv_my_sources_magazin"
@@ -139,16 +149,18 @@
                 android:layout_marginBottom="8dp"
                 android:text="@string/magazin_normal"
                 android:textStyle="bold"
-                android:textSize="18sp"
+                android:textSize="?attr/my_source_category_phone"
                 android:textAllCaps="true"
                 android:textAlignment="center"
                 android:textColor="@color/colorPrimaryText"
-                android:background="@color/colorDivider"/>
+                android:background="@color/colorDivider"
+                tools:textSize="18sp"/>
 
             <android.support.v7.widget.RecyclerView
                 android:id="@+id/rv_my_magazin_sources"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"/>
+                android:layout_height="wrap_content"
+                style="@style/FontStyle"/>
 
         </LinearLayout>
 
