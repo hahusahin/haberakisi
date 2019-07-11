@@ -34,7 +34,6 @@ public class WebUtils {
         return customTabBuilder.build();
     }
 
-
     // Method to check whether an app is installed in the device (by getting the package name)
     public static boolean isAppInstalled(Context context, String packageName) {
         try {
@@ -45,4 +44,13 @@ public class WebUtils {
             return false;
         }
     }
+
+    public static String getPath11(Context context){
+        return context.getResources().getString(R.string.tumu_path);
+    }
+
+    public static String getPath12(Context context){
+        return context.getResources().getString(R.string.kaynak_path);
+    }
+
 }

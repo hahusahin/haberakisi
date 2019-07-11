@@ -96,14 +96,10 @@ public class ColumnAdapter extends RecyclerView.Adapter<ColumnAdapter.ColumnView
         columnViewHolder.columnistName.setText(columnItem.getName());
         columnViewHolder.sourceName.setText(columnItem.getSource());
 
-        // If column is at most 2 days old, write "BUGÜN, DÜN" instead of the long date string
+        // Write relative time instead of real time (bugün, dün, 3 gün önce ...)
         String relativeTime = DateUtils.getRelativeTimeSpanString(
                 columnItem.getTime(), System.currentTimeMillis(), DateUtils.DAY_IN_MILLIS).toString();
-        if(System.currentTimeMillis() - columnItem.getTime() < 48*60*60*1000L) {
-            columnViewHolder.columnDay.setText(relativeTime);
-        }else {
-            columnViewHolder.columnDay.setText(columnItem.getDay());
-        }
+        columnViewHolder.columnDay.setText(relativeTime);
 
         // Put the correct image wrt the columns state (saved/not saved) when it is first attached
         if (savedColumns.contains(columnItem.getColumnUrl())) {
@@ -112,7 +108,7 @@ public class ColumnAdapter extends RecyclerView.Adapter<ColumnAdapter.ColumnView
             columnViewHolder.saveColumn.setImageResource(R.drawable.ic_save_news);
         }
 
-        // Highlight the news that are clicked before
+        // Highlight the columns that are clicked before
         if (clickedColumns.contains(columnItem.getColumnUrl())){
 
             columnViewHolder.columnTitle.setTextColor(context.getResources().getColor(R.color.colorSecondaryText));

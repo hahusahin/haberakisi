@@ -136,7 +136,9 @@ public class ColumnistSelectActivity extends AppCompatActivity implements Search
                 for (Columnist columnist : allColumnists){
 
                     String columnistName = columnist.getName().toLowerCase(new Locale("tr", "TR"));
-                    if(columnistName.contains(searchText))
+                    String sourceName = columnist.getSource().toLowerCase(new Locale("tr", "TR"));
+                    // If the string that user typed exists in the Columnist name OR in the source name then show that columnist
+                    if(columnistName.contains(searchText) || sourceName.contains(searchText))
                         newList.add(columnist);
                 }
             }

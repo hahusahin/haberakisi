@@ -33,9 +33,7 @@ import com.google.android.gms.ads.MobileAds;
 import com.google.firebase.messaging.FirebaseMessaging;
 import com.haberinadresi.androidapp.R;
 import com.haberinadresi.androidapp.adapters.TabPagerAdapter;
-import com.haberinadresi.androidapp.utilities.NetworkUtils;
 import com.haberinadresi.androidapp.utilities.SharedPreferenceUtils;
-import com.haberinadresi.androidapp.utilities.WhatsNewDialog;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener{
@@ -331,13 +329,6 @@ public class MainActivity extends AppCompatActivity
             }
             onPauseFlag = false;
         }
-        //////////////// YENİ ÖZELLİK EKLEDİĞİNDE KULLANDIĞIM DİALOG SCREEN //////////////////
-        // Show What's New Dialog for once if it is not seen by user AND it is updated (not newly installed)
-        if(! customPreferences.getBoolean(getResources().getString(R.string.whats_new_dialog_v4), false) &&
-                NetworkUtils.isInstallFromUpdate(MainActivity.this)){
-            WhatsNewDialog dialog = new WhatsNewDialog();
-            dialog.show(getSupportFragmentManager(), "What's New In This Update");
-        }
         super.onResume();
     }
 
@@ -395,7 +386,7 @@ public class MainActivity extends AppCompatActivity
 /*
 //////////////// YENİ ÖZELLİK EKLEDİĞİNDE KULLANDIĞIM DİALOG SCREEN //////////////////
 // Show What's New Dialog for once if it is not seen by user AND it is updated (not newly installed)
-if(! customPreferences.getBoolean(getResources().getString(R.string.whats_new_dialog_v3), false) &&
+if(! customPreferences.getBoolean(getResources().getString(R.string.whats_new_dialog_v4), false) &&
         NetworkUtils.isInstallFromUpdate(MainActivity.this)){
     WhatsNewDialog dialog = new WhatsNewDialog();
     dialog.show(getSupportFragmentManager(), "What's New In This Update");

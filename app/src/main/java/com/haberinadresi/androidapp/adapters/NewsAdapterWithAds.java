@@ -185,14 +185,14 @@ public class NewsAdapterWithAds extends RecyclerView.Adapter<RecyclerView.ViewHo
                 newsViewHolder.newsTime.setText(relativeTime);
 
                 // Put the correct image wrt the news state (saved/not saved) when it is first attached
-                if (savedNews.getBoolean(newsItem.getNewsUrl(),false)) {
+                if (savedNews.contains(newsItem.getNewsUrl())) {
                     newsViewHolder.saveNews.setImageResource(R.drawable.ic_remove_news);
                 } else {
                     newsViewHolder.saveNews.setImageResource(R.drawable.ic_save_news);
                 }
 
-                // Highlight the columns that are clicked before
-                if (clickedNews.getLong(newsItem.getNewsUrl(),0L) > 0L){
+                // Highlight the news that are clicked before
+                if (clickedNews.contains(newsItem.getNewsUrl())){
 
                     newsViewHolder.newsTitle.setTextColor(context.getResources().getColor(R.color.colorSecondaryText));
                     newsViewHolder.newsSummary.setTextColor(context.getResources().getColor(R.color.colorSecondaryText));
@@ -274,7 +274,7 @@ public class NewsAdapterWithAds extends RecyclerView.Adapter<RecyclerView.ViewHo
                     @Override
                     public void onClick(View v) {
                         // if news is already in the saved list
-                        if (savedNews.getBoolean(newsItem.getNewsUrl(),false)) {
+                        if (savedNews.contains(newsItem.getNewsUrl())) {
                             // change the image
                             newsViewHolder.saveNews.setImageResource(R.drawable.ic_save_news);
                             //Delete news from favorite news database

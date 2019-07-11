@@ -13,6 +13,8 @@ import com.haberinadresi.androidapp.interfaces.API;
 import com.haberinadresi.androidapp.models.NewsItem;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.haberinadresi.androidapp.utilities.NetworkUtils;
+import com.haberinadresi.androidapp.utilities.WebUtils;
 
 import java.lang.reflect.Type;
 import java.util.ArrayList;
@@ -30,12 +32,13 @@ import static android.content.Context.MODE_PRIVATE;
 
 public class HeadlinesVM extends AndroidViewModel {
 
-    //this is the data that we will fetch asynchronously
-    private MutableLiveData<List<NewsItem>> headlinesLiveData;
-
     public HeadlinesVM(@NonNull Application application) {
         super(application);
     }
+
+    private MutableLiveData<List<NewsItem>> headlinesLiveData;
+    private final String path1 = WebUtils.getPath11(getApplication().getApplicationContext());
+    private final String path2 = NetworkUtils.getPath21(getApplication().getApplicationContext());
 
     //load news from server OR from shared preferences and attach to livedata
     public LiveData<List<NewsItem>> getHeadlinesLivedata() {
@@ -68,7 +71,7 @@ public class HeadlinesVM extends AndroidViewModel {
                 .build();
 
         API api = retrofit.create(API.class);
-        Call<List<NewsItem>> call = api.getHeadlines();
+        Call<List<NewsItem>> call = api.getHeadlines(path1, path2);
 
         if (call != null) {
 

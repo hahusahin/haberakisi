@@ -35,7 +35,7 @@
             android:textStyle="bold"
             android:lineSpacingMultiplier="1.2"
             android:textColor="@color/colorPrimaryText"
-            android:maxLines="4"
+            android:maxLines="5"
             android:ellipsize="end"
             app:layout_constraintVertical_chainStyle="spread"
             app:layout_constraintBottom_toTopOf="@+id/tv_columnist_name"

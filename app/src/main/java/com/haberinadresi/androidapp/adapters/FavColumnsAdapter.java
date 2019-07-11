@@ -8,6 +8,7 @@ import android.support.annotation.NonNull;
 import android.support.constraint.ConstraintLayout;
 import android.support.customtabs.CustomTabsIntent;
 import android.support.v7.widget.RecyclerView;
+import android.text.format.DateUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -91,7 +92,12 @@ public class FavColumnsAdapter extends RecyclerView.Adapter<FavColumnsAdapter.Co
         columnViewHolder.columnTitle.setText(columnItem.getTitle());
         columnViewHolder.columnistName.setText(columnItem.getName());
         columnViewHolder.sourceName.setText(columnItem.getSource());
-        columnViewHolder.columnDay.setText(columnItem.getDay());
+
+        // Write relative time instead of real time (bugün, dün, 3 gün önce ...)
+        String relativeTime = DateUtils.getRelativeTimeSpanString(
+                columnItem.getTime(), System.currentTimeMillis(), DateUtils.DAY_IN_MILLIS).toString();
+        columnViewHolder.columnDay.setText(relativeTime);
+
         columnViewHolder.saveColumn.setImageResource(R.drawable.ic_remove_news);
 
         columnViewHolder.constraintLayout.setOnClickListener(new View.OnClickListener() {

@@ -13,6 +13,8 @@ import com.google.gson.reflect.TypeToken;
 import com.haberinadresi.androidapp.R;
 import com.haberinadresi.androidapp.interfaces.API;
 import com.haberinadresi.androidapp.models.NewsItem;
+import com.haberinadresi.androidapp.utilities.NetworkUtils;
+import com.haberinadresi.androidapp.utilities.WebUtils;
 
 import java.lang.reflect.Type;
 import java.util.ArrayList;
@@ -39,9 +41,13 @@ import static android.content.Context.MODE_PRIVATE;
 
 public class NewsVM extends AndroidViewModel {
 
-    private MutableLiveData<List<NewsItem>> newsLiveData;
-
     public NewsVM(Application application) { super(application); }
+
+
+    private MutableLiveData<List<NewsItem>> newsLiveData;
+    private final String path1 = WebUtils.getPath11(getApplication().getApplicationContext());
+    private final String path2 = NetworkUtils.getPath23(getApplication().getApplicationContext());
+
 
     //load news from server OR from shared preferences and attach to livedata
     public LiveData<List<NewsItem>> getNewsLivedata(String category, ArrayList<String> sourceList, boolean isPreferenceChanged) {
@@ -152,7 +158,7 @@ public class NewsVM extends AndroidViewModel {
                 .build();
 
         API api = retrofit.create(API.class);
-        Call<List<NewsItem>> call = api.getTopNews();
+        Call<List<NewsItem>> call = api.getTopNews(path1, path2);
 
         if (call != null) {
 

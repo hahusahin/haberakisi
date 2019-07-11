@@ -11,6 +11,8 @@ import com.haberinadresi.androidapp.interfaces.API;
 import com.haberinadresi.androidapp.models.Columnist;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.haberinadresi.androidapp.utilities.NetworkUtils;
+import com.haberinadresi.androidapp.utilities.WebUtils;
 
 import java.util.List;
 
@@ -28,9 +30,9 @@ public class ColumnistSelectVM extends AndroidViewModel {
         super(application);
     }
 
-
-    //this is the data that we will fetch asynchronously
     private MutableLiveData<List<Columnist>> columnistLiveData;
+    private final String path1 = WebUtils.getPath12(getApplication().getApplicationContext());
+    private final String path2 = NetworkUtils.getPath22(getApplication().getApplicationContext());
 
     //call this method to get the data
     public LiveData<List<Columnist>> getColumnistLiveData() {
@@ -61,7 +63,7 @@ public class ColumnistSelectVM extends AndroidViewModel {
                 .build();
 
         API api = retrofit.create(API.class);
-        Call<List<Columnist>> call = api.getColumnistSources();
+        Call<List<Columnist>> call = api.getColumnists(path1, path2);
 
         call.enqueue(new Callback<List<Columnist>>() {
             @Override

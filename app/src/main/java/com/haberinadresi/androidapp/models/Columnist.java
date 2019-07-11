@@ -36,7 +36,8 @@ public class Columnist {
     @Expose
     public String imageUrl;
 
-    @SerializedName("day")
+    //@SerializedName("day")
+    @SerializedName(value="day", alternate="sourceKey") //ŞU AN DAY KULLANILMIYOR, İLERLEYEN ZAMANLARDA YERİNE SOURCE KULLANMAK İÇİN
     @Expose
     private String day;
 
@@ -83,7 +84,7 @@ public class Columnist {
 
     public String getDay() {
         return day;
-    }
+    } // ŞİMDİLİK KULLANILMIYOR
 
     public long getTime() {
         return time;

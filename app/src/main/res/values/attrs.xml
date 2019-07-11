@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="FontStyle">
+        <attr name="column_title_phone" format="dimension" />
+        <attr name="column_title_tablet" format="dimension" />
+        <attr name="column_other_info_phone" format="dimension" />
+        <attr name="column_other_info_tablet" format="dimension" />
+        <attr name="columnist_name_phone" format="dimension" />
+        <attr name="columnist_name_tablet" format="dimension" />
+        <attr name="columnist_source_phone" format="dimension" />
+        <attr name="columnist_source_tablet" format="dimension" />
+        <attr name="headline_source_phone" format="dimension" />
+        <attr name="headline_source_tablet" format="dimension" />
+        <attr name="my_source_phone" format="dimension" />
+        <attr name="my_source_tablet" format="dimension" />
+        <attr name="my_source_category_phone" format="dimension" />
+        <attr name="my_source_category_tablet" format="dimension" />
+        <attr name="extranews_title_phone" format="dimension" />
+        <attr name="extranews_title_tablet" format="dimension" />
+        <attr name="extranews_time_phone" format="dimension" />
+        <attr name="extranews_time_tablet" format="dimension" />
+        <attr name="news_title_phone" format="dimension" />
+        <attr name="news_title_tablet" format="dimension" />
+        <attr name="news_other_info_phone" format="dimension" />
+        <attr name="news_other_info_tablet" format="dimension" />
+        <attr name="source_category_name_phone" format="dimension" />
+        <attr name="source_category_name_tablet" format="dimension" />
+        <attr name="detail_title_phone" format="dimension" />
+        <attr name="detail_title_tablet" format="dimension" />
+        <attr name="detail_source_time_button_phone" format="dimension" />
+        <attr name="detail_source_time_button_tablet" format="dimension" />
+        <attr name="detail_summary_detail_phone" format="dimension" />
+        <attr name="detail_summary_detail_tablet" format="dimension" />
+    </declare-styleable>
+</resources>

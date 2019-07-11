@@ -14,6 +14,8 @@ import com.haberinadresi.androidapp.interfaces.API;
 import com.haberinadresi.androidapp.models.Columnist;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.haberinadresi.androidapp.utilities.NetworkUtils;
+import com.haberinadresi.androidapp.utilities.WebUtils;
 
 import java.lang.reflect.Type;
 import java.util.ArrayList;
@@ -35,8 +37,10 @@ public class ColumnsVM extends AndroidViewModel {
         super(application);
     }
 
-
     private MutableLiveData<List<Columnist>> columnLiveData;
+    private final String path1 = WebUtils.getPath11(getApplication().getApplicationContext());
+    private final String path2 = NetworkUtils.getPath22(getApplication().getApplicationContext());
+
 
     public LiveData<List<Columnist>> getColumnsLivedata(boolean isPreferenceChanged){
 
@@ -68,7 +72,7 @@ public class ColumnsVM extends AndroidViewModel {
                 .build();
 
         API api = retrofit.create(API.class);
-        Call<List<Columnist>> call = api.getColumns();
+        Call<List<Columnist>> call = api.getColumns(path1, path2);
 
         if (call != null) {
 

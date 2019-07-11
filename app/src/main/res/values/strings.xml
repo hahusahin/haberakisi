@@ -113,6 +113,13 @@
     <string name="added_to_favorite">Favorilere Eklendi</string>
     <string name="deleted_from_favorite">Favorilerden Çıkarıldı</string>
 
+
+    <string name="tumu_path">cumle</string>
+    <string name="kaynak_path">menba</string>
+    <string name="manset_path">gazetemanset</string>
+    <string name="yazilar_path">koseyazisi</string>
+    <string name="gundem_path">gundemhaber</string>
+
     <!-- Shared Preference File/Keys-->
     <string name="clicked_news_key">CLICKED NEWS</string>
     <string name="clicked_columns_key">CLICKED COLUMNS</string>

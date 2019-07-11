@@ -125,6 +125,8 @@ public class SourceLogos {
                 return "https://docs.google.com/uc?id=1gK7odJweJxj5-9S_yI47sc-yCdZ_kDdc";
             case "haberturk_spor": case "htspor_habersiteleri":
                 return "https://docs.google.com/uc?id=1_ZCK9ppMlEprUuIJzqkVPtE_olsabPvW";
+            case "haksozhaber_habersiteleri":
+                return "https://docs.google.com/uc?id=1G_8LPDOZCVaOmq4PL1ry1DVPk3MAkyIP";
             case "hbr4_habersiteleri":
                 return "https://docs.google.com/uc?id=19fL-AcupqslrxugTFyVxrv_2Y3NQ3v9s";
             case "hurriyet_gundem": case "hurriyet_habersiteleri":
@@ -221,6 +223,8 @@ public class SourceLogos {
                 return "https://docs.google.com/uc?id=1H3FLSZKVPmdMreW21dIgXNatXCYmwChq";
             case "ranini_habersiteleri":
                 return "https://docs.google.com/uc?id=1pEpJW9_jV62RWDZ1u2oj5cLpLbspFE3J";
+            case "risalehaber_habersiteleri":
+                return "https://docs.google.com/uc?id=1JIpORkQyGb6qKzDC0Hl53tbzKe8rCaxU";
             case "sabah_ekonomi":
                 return "https://docs.google.com/uc?id=1ECjE-SV6us4DkDlwu3CPzDwVFWr7CD_T";
             case "sabah_gundem": case "sabah_habersiteleri":
@@ -295,7 +299,7 @@ public class SourceLogos {
                 return "https://docs.google.com/uc?id=1pXTEZtPFFBFs76VqrqLrX7_CxLqtnrlo";
             case "webrazzi_teknoloji": case "webrazzi_habersiteleri":
                 return "https://docs.google.com/uc?id=1DWvrR6Q_xGZEp7JtjxL1Wf1pxOGwhV-O";
-            case "webtekno_habersiteleri":
+            case "webtekno_teknoloji": case "webtekno_habersiteleri":
                 return "https://docs.google.com/uc?id=1pSSec1pSKIIr-u0QGJC6qm2pwT24a0tU";
             case "womenshealth_habersiteleri":
                 return "https://docs.google.com/uc?id=1c-cycHFNXZzYZiMyEtP5CMsibI-C3C1S";
@@ -367,6 +371,8 @@ public class SourceLogos {
                 return "https://docs.google.com/uc?id=1JbyTT88zTsSpbcxPhqKgoLFEo7nEiqHa";
             case "ispartahaber32_habersiteleri":
                 return "https://docs.google.com/uc?id=1h9qgIPQKiUJ6VTZJuvmDdGB_qiidXnhl";
+            case "karamanorg_habersiteleri":
+                return "https://docs.google.com/uc?id=1Jn0loJYYdoWEleG5Y7gc-o_VVrlArYDf";
             case "karsmanset_habersiteleri":
                 return "https://docs.google.com/uc?id=1TkivMMfhP-qhykyB2l6tC351CVXfdITn";
             case "kayseriolay_habersiteleri":

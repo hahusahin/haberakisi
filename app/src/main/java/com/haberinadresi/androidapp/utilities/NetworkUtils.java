@@ -66,7 +66,6 @@ public class NetworkUtils {
         return result;
     }
 
-
     // Checks whether the app is updated (instead of newly installed) by comparing the times
     public static boolean isInstallFromUpdate(Context context) {
         try {
@@ -77,6 +76,18 @@ public class NetworkUtils {
             e.printStackTrace();
             return false;
         }
+    }
+
+    public static String getPath21(Context context){
+        return context.getResources().getString(R.string.manset_path);
+    }
+
+    public static String getPath22(Context context){
+        return context.getResources().getString(R.string.yazilar_path);
+    }
+
+    public static String getPath23(Context context){
+        return context.getResources().getString(R.string.gundem_path);
     }
 
     /*

@@ -11,6 +11,7 @@ import com.google.gson.GsonBuilder;
 import com.haberinadresi.androidapp.R;
 import com.haberinadresi.androidapp.interfaces.API;
 import com.haberinadresi.androidapp.models.SourceItem;
+import com.haberinadresi.androidapp.utilities.WebUtils;
 
 import java.util.List;
 
@@ -29,8 +30,8 @@ public class SourceSelectionVM extends AndroidViewModel {
         super(application);
     }
 
-    //this is the data that we will fetch asynchronously
     private MutableLiveData<List<SourceItem>> sourcesLiveData;
+    private final String path1 = WebUtils.getPath12(getApplication().getApplicationContext());
 
     //call this method to get the data
     public LiveData<List<SourceItem>> getSourcesLiveData(String category) {
@@ -63,7 +64,7 @@ public class SourceSelectionVM extends AndroidViewModel {
         API api = retrofit.create(API.class);
 
         //Make the related http request depending on the clicked sources category
-        Call<List<SourceItem>> call = api.getSourcesByCategory(category);
+        Call<List<SourceItem>> call = api.getSourcesByCategory(path1, category);
 
         if (call != null) {
 
