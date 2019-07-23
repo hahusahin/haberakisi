@@ -5,9 +5,9 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.v7.app.AlertDialog;
-import android.support.v7.app.AppCompatDialogFragment;
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.app.AppCompatDialogFragment;
 
 import com.haberinadresi.androidapp.R;
 
@@ -15,8 +15,8 @@ public class WhatsNewDialog extends AppCompatDialogFragment {
 
     public static final String title = "Neler Yeni?";
     public static final String message =
-            "\t- Haber Yazı Boyutu ayarı eklendi" +
-            "\n\n\t(Ana Menü - Ayarlar'dan ulaşabilirsiniz)";
+            "\t- 3 Farklı Haber Gösterim İmkanı Getirildi" +
+            "\n\n\t(Sağ üstteki ikona basarak geçiş yapabilirsiniz)";
     public static final String okay = "Tamam";
 
     @Override
@@ -33,8 +33,9 @@ public class WhatsNewDialog extends AppCompatDialogFragment {
                         SharedPreferences.Editor editor = customPrefs.edit();
                         // Delete the previous keys that are used
                         editor.remove(getResources().getString(R.string.whats_new_dialog_v3));
+                        editor.remove(getResources().getString(R.string.whats_new_dialog_v4));
                         // Put the new key
-                        editor.putBoolean(getResources().getString(R.string.whats_new_dialog_v4), true);
+                        editor.putBoolean(getResources().getString(R.string.whats_new_dialog_v5), true);
                         editor.apply();
                     }
                 });

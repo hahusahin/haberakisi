@@ -27,7 +27,7 @@
         android:id="@+id/action_share"
         android:orderInCategory="103"
         android:icon="@drawable/ic_share_white"
-        android:title="@string/share"
+        android:title="@string/share_news"
         app:showAsAction="ifRoom" />
 
     <!--

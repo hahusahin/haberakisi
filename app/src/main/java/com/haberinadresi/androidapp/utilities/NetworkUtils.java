@@ -2,12 +2,11 @@ package com.haberinadresi.androidapp.utilities;
 
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.content.pm.PackageManager;
 import android.net.ConnectivityManager;
 import android.net.NetworkCapabilities;
 import android.net.NetworkInfo;
 import android.os.Build;
-import android.support.annotation.IntRange;
+import androidx.annotation.IntRange;
 
 import com.haberinadresi.androidapp.R;
 
@@ -64,18 +63,6 @@ public class NetworkUtils {
             }
         }
         return result;
-    }
-
-    // Checks whether the app is updated (instead of newly installed) by comparing the times
-    public static boolean isInstallFromUpdate(Context context) {
-        try {
-            long firstInstallTime = context.getPackageManager().getPackageInfo(context.getPackageName(), 0).firstInstallTime;
-            long lastUpdateTime = context.getPackageManager().getPackageInfo(context.getPackageName(), 0).lastUpdateTime;
-            return firstInstallTime != lastUpdateTime;
-        } catch (PackageManager.NameNotFoundException e) {
-            e.printStackTrace();
-            return false;
-        }
     }
 
     public static String getPath21(Context context){

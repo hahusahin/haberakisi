@@ -2,7 +2,7 @@ package com.haberinadresi.androidapp.utilities;
 
 ///// YEDEK LOGO LİNKLERİ (GOOGLE DRIVE DA)//////
 
-public class SourceLogos {
+public class BackupLogosDrive {
 
     public static String getLogoUrl(String sourceKey){
 
@@ -81,6 +81,8 @@ public class SourceLogos {
                 return "https://docs.google.com/uc?id=1hEsOes1nhEd_kHo0vrZ2LUytWpIBSelM";
             case "ekonomist_habersiteleri":
                 return "https://docs.google.com/uc?id=1nZGTN1xgi_yinlSsOxaLiiYT26KlmYRe";
+            case "ensonhaber_gundem": case "ensonhaber_habersiteleri":
+                return "https://docs.google.com/uc?id=1bwhA0E4uB98YERIeX3W768EKI6pyu154";
             case "epsikiyatri_habersiteleri":
                 return "https://docs.google.com/uc?id=1rrUAj_bwwapeI7VW0oPoc778oLleUFqu";
             case "euronews_gundem": case "euronewstr_habersiteleri":
@@ -95,8 +97,12 @@ public class SourceLogos {
                 return "https://docs.google.com/uc?id=1g-dX4C46lO-NXDxpLFy28Hwc-pxH2Is7";
             case "finansgundem_ekonomi":
                 return "https://docs.google.com/uc?id=1fCmgIKX__mys0kA6dLPE_hdV_SdK67d9";
+            case "fitnesshaber_habersiteleri":
+                return "https://docs.google.com/uc?id=1llw4K54VsqWbxiXe9MAuTV3YsaBxxE6F";
             case "fizikist_habersiteleri":
                 return "https://docs.google.com/uc?id=1S4aD8tfLTar6pFOeuqd_IVBetU7xzUQJ";
+            case "foreks_habersiteleri":
+                return "https://docs.google.com/uc?id=1Bk2JK2C6U0_6wRLMR303jHNUY1PNOIo4";
             case "fortunetr_habersiteleri":
                 return "https://docs.google.com/uc?id=1JQNEgz-RS93ahp6rujpUta9xjvRnw-25";
             case "fotomac_spor": case "fotomac_habersiteleri":
@@ -109,7 +115,7 @@ public class SourceLogos {
                 return "https://docs.google.com/uc?id=1PpeqBfk1ruoVkio7mixrx73lxauvqOO3";
             case "gercekgundem_habersiteleri":
                 return "https://docs.google.com/uc?id=1n8SyL2kDLyz16NTUrBi36wVnklTOpWqX";
-            case "goaltr_habersiteleri":
+            case "goaltr_spor": case "goaltr_habersiteleri":
                 return "https://docs.google.com/uc?id=1vWWsCFu_sX5H68C4VwPtz8lkPkeAuhLJ";
             case "gunes_gundem": case "gunes_habersiteleri":
                 return "https://docs.google.com/uc?id=12BhYmCsMtJkGUmEeSdKIcGYU6EHGS3_d";
@@ -117,6 +123,8 @@ public class SourceLogos {
                 return "https://docs.google.com/uc?id=1-qdVniQ-i1rDpe2bbY4bPNsqDUfvcjZ1";
             case "haberler_gundem": case "haberler_saglik": case "haberler_habersiteleri":
                 return "https://docs.google.com/uc?id=17ElK50MQkIe_ia807p33dN5uF4t2vUiA";
+            case "hbr4_habersiteleri":
+                return "https://docs.google.com/uc?id=19fL-AcupqslrxugTFyVxrv_2Y3NQ3v9s";
             case "haberturk_ekonomi":
                 return "https://docs.google.com/uc?id=1zeqQDDslznhE3ZAP-nmbuJtMjnnL85HT";
             case "haberturk_gundem": case "haberturk_saglik": case "haberturk_kultursanat": case "haberturk_habersiteleri":
@@ -127,18 +135,16 @@ public class SourceLogos {
                 return "https://docs.google.com/uc?id=1_ZCK9ppMlEprUuIJzqkVPtE_olsabPvW";
             case "haksozhaber_habersiteleri":
                 return "https://docs.google.com/uc?id=1G_8LPDOZCVaOmq4PL1ry1DVPk3MAkyIP";
-            case "hbr4_habersiteleri":
-                return "https://docs.google.com/uc?id=19fL-AcupqslrxugTFyVxrv_2Y3NQ3v9s";
-            case "hurriyet_gundem": case "hurriyet_habersiteleri":
+            case "haberlerankara_habersiteleri":
+                return "https://docs.google.com/uc?id=1gfQdJqjWKB39zRZw139bMvgj0BmMJ_Ea";
+            case "hurriyet_gundem": case "hurriyet_ekonomi": case "hurriyet_teknoloji": case "hurriyet_habersiteleri":
                 return "https://docs.google.com/uc?id=152Sgw05FWhIqOXiBa-IfG_qlCvU31CTj";
-            case "hurriyet_kultursanat":
+            case "hurriyet_kultursanat": case "hurriyetsanat_habersiteleri":
                 return "https://docs.google.com/uc?id=1svYHcGKDoQ_Rg1Kax2hdF3cQk6ANFgl4";
             case "hurriyet_magazin": case "kelebek_habersiteleri":
                 return "https://docs.google.com/uc?id=1EANSfZHMEepFKSn5wqTZOb1ahw_o4sJl";
             case "hurriyet_spor": case "sporarena_habersiteleri":
                 return "https://docs.google.com/uc?id=1y6U_BIuNq8JK3cemNDfRBuyNdirdVCzX";
-            case "hurriyet_teknoloji":
-                return "https://docs.google.com/uc?id=1GXswcmhxqeJeiEqepcUbgh2PcafFmp_R";
             case "independenttr_gundem": case "independenttr_habersiteleri":
                 return "https://docs.google.com/uc?id=10OYXA7ESVgOvgwzt9gWO-nkT_AFWcRB2";
             case "internethaber_gundem": case "internethaber_habersiteleri":
@@ -153,7 +159,7 @@ public class SourceLogos {
                 return "https://docs.google.com/uc?id=18q10T2jwy4LGM2zfaIMQB888KqlPx6AA";
             case "karar_gundem": case "karar_habersiteleri":
                 return "https://docs.google.com/uc?id=1WvjRmtr9BB8ozVkTP3dKMdUrIOCp9R6u";
-            case "kayiprihtim_habersiteleri": case "kayiprihtim_kultursanat":
+            case "kayiprihtim_kultursanat": case "kayiprihtim_habersiteleri":
                 return "https://docs.google.com/uc?id=1wtT4LZir8oIYL2DJg2U6jzHKcI0UjniZ";
             case "kulturservisi_habersiteleri":
                 return "https://docs.google.com/uc?id=1u3C7zbELb8wT_n-LBpEiUqFgsiWf-yYZ";
@@ -177,12 +183,14 @@ public class SourceLogos {
                 return "https://docs.google.com/uc?id=1QyYi_lOdSOXwOyjnDQ6zRf5x6lEeTSPT";
             case "milligazete_gundem": case "milligazete_habersiteleri":
                 return "https://docs.google.com/uc?id=1d8agO1W4DiyDgpp4HBMF2zYzO6XXA9TT";
-            case "milliyet_gundem": case "milliyet_saglik": case "milliyet_habersiteleri":
+            case "milliyet_gundem": case "milliyet_ekonomi": case "milliyet_habersiteleri":
                 return "https://docs.google.com/uc?id=1IpSrgY4hZycVuN-kwzJrOBFTxhPyIWMc";
             case "milliyet_magazin": case "cadde_habersiteleri":
                 return "https://docs.google.com/uc?id=1wiegwY0sYi-mV81AMhmRyW3FYAhMpNc3";
             case "milliyet_spor": case "skorer_habersiteleri":
                 return "https://docs.google.com/uc?id=1lu8G0q6qrq2eKFH_3Cy442Ea-lbJO2lu";
+            case "milliyet_saglik": case "pembenar_habersiteleri":
+                return "https://docs.google.com/uc?id=1WG9SABduoyP5z1T_LY4iZe7JCLQM-DpV";
             case "milliyet_teknoloji":
                 return "https://docs.google.com/uc?id=10FF-64tZjTfN-zZt6U7223-sawhv5Tyh";
             case "mynet_gundem": case "mynet_habersiteleri":
@@ -213,8 +221,6 @@ public class SourceLogos {
                 return "https://docs.google.com/uc?id=1NjMNcI3uAqOODLllAgtOSf0v49dvHtrk";
             case "ortadogu_habersiteleri":
                 return "https://docs.google.com/uc?id=1PNHpulDwwCBum5GJfrEppFNuNB1OThLF";
-            case "pembenar_habersiteleri":
-                return "https://docs.google.com/uc?id=1WG9SABduoyP5z1T_LY4iZe7JCLQM-DpV";
             case "playtusu_kultursanat": case "playtusu_habersiteleri":
                 return "https://docs.google.com/uc?id=1okPvMdag0ukusW6qKH2HhZTGB0iFERrL";
             case "popularscience_habersiteleri":
@@ -247,7 +253,7 @@ public class SourceLogos {
                 return "https://docs.google.com/uc?id=1H9fSTZrptFRbAH8EFdQlaT4pt_6HPbkX";
             case "sondakika_habersiteleri":
                 return "https://docs.google.com/uc?id=1XwI0WLkvSgGWKPEFlF7Ymn_GM8eWVlA7";
-            case "sozcu_gundem": case "sozcu_saglik": case "sozcu_habersiteleri":
+            case "sozcu_gundem": case "sozcu_ekonomi": case "sozcu_saglik": case "sozcu_habersiteleri":
                 return "https://docs.google.com/uc?id=1SHf0Zg3-2XyLCpON1lmDHdZ0eNRy6ewF";
             case "sozcu_kultursanat":
                 return "https://docs.google.com/uc?id=1Hz6MNMR9chafysSCjTDbsUGuCnrUkp1z";
@@ -260,7 +266,7 @@ public class SourceLogos {
             case "sputniktr_gundem": case "sputnik_habersiteleri":
                 return "https://docs.google.com/uc?id=1DFp_DM30HUdRUuB5LmMABpXzpmfGNE2u";
             case "star_gundem": case "star_habersiteleri":
-                return "https://docs.google.com/uc?id=1lfm19vBwFofanRAcB5qf9QpXK2jjkA_M";
+                return "https://docs.google.com/uc?id=1EgofTZW4vG_SSBYpdSAztsRFPpFNYkR-";
             case "t24_gundem": case "t24_habersiteleri":
                 return "https://docs.google.com/uc?id=1Ba4WG_KAEN4Rrc5ilzX2a9ZRDyNJPMDy";
             case "takvim_gundem": case "takvim_habersiteleri":
@@ -315,10 +321,10 @@ public class SourceLogos {
                 return "https://docs.google.com/uc?id=1-8Y5RVG8bFeqkYy_fEV-ow8xipdaLSpc";
             case "yenimesaj_habersiteleri":
                 return "https://docs.google.com/uc?id=1rigGnYTOj8YzNo1d6jhScMoea4GS1svH";
-            case "yenisafak_gundem": case "yenisafak_habersiteleri":
-                return "https://docs.google.com/uc?id=1hWg28veLy-WMBtEC1yn5D2IclriX2sfv";
             case "yenisoz_habersiteleri":
                 return "https://docs.google.com/uc?id=1RmwyWXR9DXOlIgGZc__GzLPvmxJdi0rH";
+            case "yenisafak_gundem": case "yenisafak_habersiteleri":
+                return "https://docs.google.com/uc?id=1hWg28veLy-WMBtEC1yn5D2IclriX2sfv";
             case "yurt_habersiteleri":
                 return "https://docs.google.com/uc?id=1di-nEMxBrRvIvZq2NRxKgc7bAN6EEgTC";
 

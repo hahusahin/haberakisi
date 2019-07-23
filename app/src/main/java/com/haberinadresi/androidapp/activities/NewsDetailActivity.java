@@ -1,22 +1,24 @@
 package com.haberinadresi.androidapp.activities;
 
 import android.content.ComponentName;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
-import android.support.customtabs.CustomTabsCallback;
-import android.support.customtabs.CustomTabsClient;
-import android.support.customtabs.CustomTabsIntent;
-import android.support.customtabs.CustomTabsServiceConnection;
-import android.support.customtabs.CustomTabsSession;
-import android.support.design.widget.CollapsingToolbarLayout;
-import android.support.design.widget.FloatingActionButton;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
+import androidx.annotation.Nullable;
+import androidx.browser.customtabs.CustomTabsCallback;
+import androidx.browser.customtabs.CustomTabsClient;
+import androidx.browser.customtabs.CustomTabsIntent;
+import androidx.browser.customtabs.CustomTabsServiceConnection;
+import androidx.browser.customtabs.CustomTabsSession;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+import androidx.core.widget.NestedScrollView;
+
 import android.text.format.DateUtils;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
@@ -30,16 +32,19 @@ import com.bumptech.glide.load.DataSource;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.load.engine.GlideException;
 import com.bumptech.glide.request.RequestListener;
+import com.bumptech.glide.request.RequestOptions;
 import com.bumptech.glide.request.target.Target;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
 import com.haberinadresi.androidapp.R;
 import com.haberinadresi.androidapp.models.NewsItem;
+import com.haberinadresi.androidapp.repository.FavNewsRepository;
+import com.haberinadresi.androidapp.utilities.BackupNewsImages;
 import com.haberinadresi.androidapp.utilities.GlideApp;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.haberinadresi.androidapp.utilities.NetworkUtils;
-import com.haberinadresi.androidapp.utilities.SourceLogos;
+import com.haberinadresi.androidapp.utilities.BackupLogosDrive;
 import com.haberinadresi.androidapp.utilities.WebUtils;
 
 import java.lang.reflect.Type;
@@ -50,7 +55,7 @@ public class NewsDetailActivity extends AppCompatActivity {
     private NewsItem newsItem;
     private AdView bannerAdView;
     Intent newsDetail;
-    private SharedPreferences customKeys;
+    private SharedPreferences customKeys, savedNews;
     private CustomTabsClient customTabsClient;
     private CustomTabsServiceConnection serviceConnection;
     private boolean displayOnlyInWifi;
@@ -97,18 +102,15 @@ public class NewsDetailActivity extends AppCompatActivity {
         AdRequest adRequest = new AdRequest.Builder().build();
         bannerAdView.loadAd(adRequest);
 
-        // To hide the text on the image while collapsing
-        CollapsingToolbarLayout collapsingToolbarLayout = findViewById(R.id.collapsing_toolbar_image);
-        collapsingToolbarLayout.setExpandedTitleColor(getResources().getColor(android.R.color.transparent));
-
         TextView newsSource = findViewById(R.id.news_detail_source);
         TextView newsTitle = findViewById(R.id.news_detail_title);
         TextView newsTime = findViewById(R.id.news_detail_time);
         TextView newsSummary = findViewById(R.id.news_detail_summary);
         TextView newsDescription = findViewById(R.id.news_detail_content);
-        ImageView newsImage = findViewById(R.id.news_detail_image);
+        final ImageView newsImage = findViewById(R.id.news_detail_image);
         ImageView logoImage = findViewById(R.id.news_detail_logo);
         final ProgressBar progressBar = findViewById(R.id.pb_image_loading);
+        final NestedScrollView nestedScrollView = findViewById(R.id.nsv_news_detail);
 
         // Get the news details from the intent that starts this activity (news adapter)
         newsDetail = getIntent();
@@ -119,6 +121,57 @@ public class NewsDetailActivity extends AppCompatActivity {
             String json = newsDetail.getStringExtra(getResources().getString(R.string.news_item));
             Type type = new TypeToken<NewsItem>() {}.getType();
             newsItem = gson.fromJson(json, type);
+
+            // Hide all views until image is loaded
+            nestedScrollView.setVisibility(View.INVISIBLE);
+
+            // Get the user's mobile data saving preference
+            displayOnlyInWifi = NetworkUtils.displayOnlyInWifi(this);
+            // Load news image
+            GlideApp.with(this)
+                    .load(newsItem.getImageUrl())
+                    .diskCacheStrategy(DiskCacheStrategy.NONE)
+                    .onlyRetrieveFromCache(displayOnlyInWifi)
+                    .dontAnimate()
+                    .error(
+                            // If failed to load news image, then load backup image in the Google Drive
+                            GlideApp.with(this)
+                                    .load(BackupNewsImages.getLogoUrl(newsItem.getKey()))
+                                    .diskCacheStrategy(DiskCacheStrategy.AUTOMATIC)
+                                    .error(R.drawable.placeholder_icon_landscape))
+                    // Add listener to hide progressbar when image is loaded and to show all views
+                    .listener(new RequestListener<Drawable>() {
+                        @Override
+                        public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
+                            progressBar.setVisibility(View.GONE);
+                            //newsImage.setVisibility(View.GONE);
+                            nestedScrollView.setVisibility(View.VISIBLE);
+                            return false;
+                        }
+                        @Override
+                        public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target, DataSource dataSource, boolean isFirstResource) {
+                            progressBar.setVisibility(View.GONE);
+                            nestedScrollView.setVisibility(View.VISIBLE);
+                            return false;
+                        }
+                    })
+                    .into(newsImage);
+
+            // News Source Logo (Primary)
+            GlideApp.with(this)
+                    .load(newsItem.getLogoUrl())
+                    .diskCacheStrategy(DiskCacheStrategy.AUTOMATIC)
+                    .apply(RequestOptions.circleCropTransform())
+                    .onlyRetrieveFromCache(displayOnlyInWifi)
+                    .error(
+                            // If failed to load primary logo, then use the secondary logo in the Google Drive
+                            GlideApp.with(this)
+                                    .load(BackupLogosDrive.getLogoUrl(newsItem.getKey()))
+                                    .diskCacheStrategy(DiskCacheStrategy.AUTOMATIC)
+                                    .apply(RequestOptions.circleCropTransform())
+                                    .error(R.drawable.placeholder_icon_square))
+                    .into(logoImage);
+
             // Set the text/image of related fields
             newsTitle.setText(newsItem.getTitle());
             newsSource.setText(newsItem.getSource());
@@ -137,45 +190,9 @@ public class NewsDetailActivity extends AppCompatActivity {
             String relativeTime = DateUtils.getRelativeTimeSpanString(
                     newsItem.getUpdateTime(),
                     System.currentTimeMillis(),
-                    DateUtils.MINUTE_IN_MILLIS).toString();
+                    DateUtils.MINUTE_IN_MILLIS,
+                    DateUtils.FORMAT_ABBREV_RELATIVE).toString();
             newsTime.setText(relativeTime);
-
-            // Get the user's mobile data saving preference
-            displayOnlyInWifi = NetworkUtils.displayOnlyInWifi(this);
-
-            GlideApp.with(this)
-                    .load(newsItem.getImageUrl())
-                    .diskCacheStrategy(DiskCacheStrategy.NONE)
-                    .onlyRetrieveFromCache(displayOnlyInWifi)
-                    .dontAnimate()
-                    .error(R.drawable.placeholder_icon_landscape)
-                    // Add listener to hide progressbar when image is loaded
-                    .listener(new RequestListener<Drawable>() {
-                        @Override
-                        public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
-                            progressBar.setVisibility(View.GONE);
-                            return false;
-                        }
-                        @Override
-                        public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target, DataSource dataSource, boolean isFirstResource) {
-                            progressBar.setVisibility(View.GONE);
-                            return false;
-                        }
-                    })
-                    .into(newsImage);
-
-            // News Source Logo (Primary)
-            GlideApp.with(this)
-                    .load(newsItem.getLogoUrl())
-                    .diskCacheStrategy(DiskCacheStrategy.AUTOMATIC)
-                    .onlyRetrieveFromCache(displayOnlyInWifi)
-                    .error(
-                            // If failed to load primary logo, then use the secondary logo in the Google Drive
-                            GlideApp.with(this)
-                                    .load(SourceLogos.getLogoUrl(newsItem.getKey()))
-                                    .diskCacheStrategy(DiskCacheStrategy.AUTOMATIC)
-                                    .error(R.drawable.placeholder_icon_square))
-                    .into(logoImage);
 
 
             logoImage.setOnClickListener(new View.OnClickListener() {
@@ -221,20 +238,6 @@ public class NewsDetailActivity extends AppCompatActivity {
                     startActivity(intentWebview);
                 }
 
-            }
-        });
-
-        // Share the news link on user's selected app
-        FloatingActionButton fabShare = findViewById(R.id.fab_share);
-        fabShare.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-                String url = newsItem.getNewsUrl();
-                Intent intent = new Intent(Intent.ACTION_SEND);
-                intent.putExtra(Intent.EXTRA_TEXT, url);
-                intent.setType("text/plain");
-                startActivity(intent);
             }
         });
 
@@ -339,7 +342,13 @@ public class NewsDetailActivity extends AppCompatActivity {
                         .load(extraNewsList.get(i).getImageUrl())
                         .diskCacheStrategy(DiskCacheStrategy.NONE)
                         .onlyRetrieveFromCache(displayOnlyInWifi)
-                        .error(R.drawable.placeholder_icon_landscape)
+                        .error(
+                            // If failed to load news image, then load backup image in the Google Drive
+                            GlideApp.with(this)
+                                    .load(BackupNewsImages.getLogoUrl(extraNewsList.get(i).getKey()))
+                                    .diskCacheStrategy(DiskCacheStrategy.AUTOMATIC)
+                                    .error(R.drawable.placeholder_icon_landscape)
+                        )
                         .centerCrop()
                         .dontAnimate()
                         .into(imageViews[i]);
@@ -402,6 +411,21 @@ public class NewsDetailActivity extends AppCompatActivity {
 
     }
 
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // create the menu items
+        getMenuInflater().inflate(R.menu.activity_newsdetail, menu);
+        // Set the save image depending on the news' status (saved vs unsaved)
+        MenuItem saveMenuItem = menu.findItem(R.id.action_save);
+        savedNews = getSharedPreferences(getResources().getString(R.string.saved_news_key), Context.MODE_PRIVATE);
+        if(savedNews.contains(newsItem.getNewsUrl())){
+            saveMenuItem.setIcon(R.drawable.ic_save_filled_white);
+        } else {
+            saveMenuItem.setIcon(R.drawable.ic_save_empty_white);
+        }
+
+        return super.onCreateOptionsMenu(menu);
+    }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -411,6 +435,42 @@ public class NewsDetailActivity extends AppCompatActivity {
         if (id == android.R.id.home){
 
             onBackPressed();
+
+        // SAVE OPERATIONS
+        } else if(id == R.id.action_save){
+            // if news is already in the saved list
+            if (savedNews.contains(newsItem.getNewsUrl())) {
+                //Change menu item icon
+                item.setIcon(R.drawable.ic_save_empty_white);
+                //Delete news from favorite news database
+                FavNewsRepository repository = new FavNewsRepository(NewsDetailActivity.this);
+                repository.delete(newsItem);
+                // Show toast message
+                Toast.makeText(getApplicationContext(), getResources().getString(R.string.news_deleted_from_favorite), Toast.LENGTH_SHORT).show();
+                // update shared preference file
+                savedNews.edit().remove(newsItem.getNewsUrl()).apply();
+
+                // News is not saved before, so save it into database
+            } else {
+                //Change menu item icon
+                item.setIcon(R.drawable.ic_save_filled_white);
+                //Add news to favorite news database
+                FavNewsRepository repository = new FavNewsRepository(NewsDetailActivity.this);
+                repository.insert(newsItem);
+                // Show toast message
+                Toast.makeText(getApplicationContext(), getResources().getString(R.string.news_added_to_favorite), Toast.LENGTH_SHORT).show();
+                // update shared preference file
+                savedNews.edit().putBoolean(newsItem.getNewsUrl(), true).apply();
+            }
+
+        // SHARE OPERATIONS
+        } else if(id == R.id.action_share){
+
+            String url = newsItem.getNewsUrl();
+            Intent intent = new Intent(Intent.ACTION_SEND);
+            intent.putExtra(Intent.EXTRA_TEXT, url);
+            intent.setType("text/plain");
+            startActivity(intent);
         }
 
         return super.onOptionsItemSelected(item);

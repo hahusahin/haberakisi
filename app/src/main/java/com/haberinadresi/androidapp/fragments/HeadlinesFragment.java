@@ -1,13 +1,14 @@
 package com.haberinadresi.androidapp.fragments;
 
-import android.arch.lifecycle.Observer;
-import android.arch.lifecycle.ViewModelProviders;
+import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProviders;
+import android.content.Intent;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
-import android.support.v7.widget.GridLayoutManager;
-import android.support.v7.widget.RecyclerView;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,6 +18,7 @@ import android.widget.ProgressBar;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
 import com.haberinadresi.androidapp.R;
+import com.haberinadresi.androidapp.activities.SettingsActivity;
 import com.haberinadresi.androidapp.adapters.HeadlineAdapter;
 import com.haberinadresi.androidapp.models.NewsItem;
 import com.haberinadresi.androidapp.utilities.NetworkUtils;
@@ -45,10 +47,11 @@ public class HeadlinesFragment extends Fragment {
 
         // The ProgressBar that will indicate to the user that news are loading
         progressBar = view.findViewById(R.id.pb_manset_fragment);
-        progressBar.setVisibility(View.INVISIBLE);
+        progressBar.setVisibility(View.GONE);
         // The internet connection error view
         internetAlert = view.findViewById(R.id.layout_internet_alert);
-        internetAlert.setVisibility(View.INVISIBLE);
+        internetAlert.setVisibility(View.GONE);
+
         Button checkConnection = view.findViewById(R.id.btn_check_internet);
 
         recyclerView = view.findViewById(R.id.rv_mansetler);
@@ -62,10 +65,30 @@ public class HeadlinesFragment extends Fragment {
         AdRequest adRequest = new AdRequest.Builder().build();
         bannerAdView.loadAd(adRequest);
 
-        // If device is connected to the internet, then start fetching data
-        if (NetworkUtils.isConnected(requireActivity())){
+        // The mobile data save alert view
+        Button mobileDataAlert = view.findViewById(R.id.btn_mobiledata_warning);
+        mobileDataAlert.setVisibility(View.GONE);
+        // Open settings activity when clicked
+        mobileDataAlert.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent settings = new Intent(requireActivity(), SettingsActivity.class);
+                startActivity(settings);
+            }
+        });
 
-            fetchHeadlines();
+        // If device is connected to the internet
+        if (NetworkUtils.isConnected(requireActivity())){
+            // Get the user's mobile data saving preference
+            boolean displayOnlyInWifi = NetworkUtils.displayOnlyInWifi(requireActivity());
+            // If mobile data saver is already opened, warn user to close it (don't load headlines)
+            if(displayOnlyInWifi){
+                mobileDataAlert.setVisibility(View.VISIBLE);
+            // Else start fetching data
+            } else {
+                mobileDataAlert.setVisibility(View.GONE);
+                fetchHeadlines();
+            }
 
         } // else show internet connection error
         else {

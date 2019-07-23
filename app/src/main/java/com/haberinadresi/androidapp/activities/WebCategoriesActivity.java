@@ -2,11 +2,11 @@ package com.haberinadresi.androidapp.activities;
 
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.Toolbar;
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+import androidx.appcompat.widget.Toolbar;
 import android.view.MenuItem;
 
 import com.haberinadresi.androidapp.R;
@@ -55,7 +55,7 @@ public class WebCategoriesActivity extends AppCompatActivity {
         }
 
         RecyclerView recyclerView = findViewById(R.id.rv_categories);
-        recyclerView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
+        recyclerView.setLayoutManager(new LinearLayoutManager(this, RecyclerView.VERTICAL, false));
         recyclerView.setHasFixedSize(true);
 
         ArrayList<CategoryItem> categoryList = new ArrayList<>();

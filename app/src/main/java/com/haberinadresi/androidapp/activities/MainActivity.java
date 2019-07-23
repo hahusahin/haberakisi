@@ -10,16 +10,16 @@ import android.content.res.Configuration;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.design.widget.TabLayout;
-import android.support.v4.view.ViewPager;
-import android.support.design.widget.NavigationView;
-import android.support.v4.view.GravityCompat;
-import android.support.v4.widget.DrawerLayout;
-import android.support.v7.app.ActionBarDrawerToggle;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.app.AppCompatDelegate;
-import android.support.v7.widget.Toolbar;
+import androidx.annotation.NonNull;
+import com.google.android.material.tabs.TabLayout;
+import androidx.viewpager.widget.ViewPager;
+import com.google.android.material.navigation.NavigationView;
+import androidx.core.view.GravityCompat;
+import androidx.drawerlayout.widget.DrawerLayout;
+import androidx.appcompat.app.ActionBarDrawerToggle;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.app.AppCompatDelegate;
+import androidx.appcompat.widget.Toolbar;
 import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.style.RelativeSizeSpan;
@@ -34,6 +34,8 @@ import com.google.firebase.messaging.FirebaseMessaging;
 import com.haberinadresi.androidapp.R;
 import com.haberinadresi.androidapp.adapters.TabPagerAdapter;
 import com.haberinadresi.androidapp.utilities.SharedPreferenceUtils;
+import com.haberinadresi.androidapp.utilities.WebUtils;
+import com.haberinadresi.androidapp.utilities.WhatsNewDialog;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener{
@@ -174,28 +176,6 @@ public class MainActivity extends AppCompatActivity
     }
 
     @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.activity_main_menu, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        if (id == R.id.action_my_sources) {
-            startActivity(new Intent(this,MySourcesActivity.class));
-            return true;
-        }
-
-        return super.onOptionsItemSelected(item);
-    }
-
-    @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         // Handle navigation view item clicks here.
         int id = item.getItemId();
@@ -329,6 +309,17 @@ public class MainActivity extends AppCompatActivity
             }
             onPauseFlag = false;
         }
+
+        // Show What's New Dialog for once if it is not seen by user AND it is updated (not newly installed)
+        if(! customPreferences.getBoolean(getResources().getString(R.string.whats_new_dialog_v5), false) &&
+                WebUtils.isInstallFromUpdate(MainActivity.this)) {
+            try {
+                WhatsNewDialog dialog = new WhatsNewDialog();
+                dialog.show(getSupportFragmentManager(), "What's New In This Update");
+            } catch (java.lang.IllegalStateException e) {
+                customPreferences.edit().putBoolean(getResources().getString(R.string.whats_new_dialog_v5), true).apply();
+            }
+        }
         super.onResume();
     }
 
@@ -382,16 +373,6 @@ public class MainActivity extends AppCompatActivity
 
 
 ////////// ÖNCEDEN KULLANDIKLARIM ///////////
-
-/*
-//////////////// YENİ ÖZELLİK EKLEDİĞİNDE KULLANDIĞIM DİALOG SCREEN //////////////////
-// Show What's New Dialog for once if it is not seen by user AND it is updated (not newly installed)
-if(! customPreferences.getBoolean(getResources().getString(R.string.whats_new_dialog_v4), false) &&
-        NetworkUtils.isInstallFromUpdate(MainActivity.this)){
-    WhatsNewDialog dialog = new WhatsNewDialog();
-    dialog.show(getSupportFragmentManager(), "What's New In This Update");
-}
-*/
 
 /*
 /////////////////// YAZARLARIN KEY'LERININ KUCUK HARFE ÇEVRİLMESİ ///////////////////////////

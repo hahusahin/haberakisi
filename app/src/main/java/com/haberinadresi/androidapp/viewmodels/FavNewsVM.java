@@ -1,9 +1,9 @@
 package com.haberinadresi.androidapp.viewmodels;
 
 import android.app.Application;
-import android.arch.lifecycle.AndroidViewModel;
-import android.arch.lifecycle.LiveData;
-import android.support.annotation.NonNull;
+import androidx.lifecycle.AndroidViewModel;
+import androidx.lifecycle.LiveData;
+import androidx.annotation.NonNull;
 
 import com.haberinadresi.androidapp.models.NewsItem;
 import com.haberinadresi.androidapp.repository.FavNewsRepository;

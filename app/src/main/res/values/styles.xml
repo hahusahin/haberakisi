@@ -74,7 +74,7 @@
         <item name="extranews_title_tablet">18sp</item>
         <item name="extranews_time_phone">10sp</item>
         <item name="extranews_time_tablet">15sp</item>
-        <item name="news_title_phone">12sp</item>
+        <item name="news_title_phone">13sp</item>
         <item name="news_title_tablet">18sp</item>
         <item name="news_other_info_phone">10sp</item>
         <item name="news_other_info_tablet">15sp</item>
@@ -107,7 +107,7 @@
         <item name="extranews_title_tablet">21sp</item>
         <item name="extranews_time_phone">12sp</item>
         <item name="extranews_time_tablet">18sp</item>
-        <item name="news_title_phone">15sp</item>
+        <item name="news_title_phone">16sp</item>
         <item name="news_title_tablet">21sp</item>
         <item name="news_other_info_phone">12sp</item>
         <item name="news_other_info_tablet">18sp</item>
@@ -140,7 +140,7 @@
         <item name="extranews_title_tablet">24sp</item>
         <item name="extranews_time_phone">15sp</item>
         <item name="extranews_time_tablet">21sp</item>
-        <item name="news_title_phone">18sp</item>
+        <item name="news_title_phone">19sp</item>
         <item name="news_title_tablet">24sp</item>
         <item name="news_other_info_phone">15sp</item>
         <item name="news_other_info_tablet">21sp</item>
@@ -173,7 +173,7 @@
         <item name="extranews_title_tablet">27sp</item>
         <item name="extranews_time_phone">18sp</item>
         <item name="extranews_time_tablet">24sp</item>
-        <item name="news_title_phone">21sp</item>
+        <item name="news_title_phone">22sp</item>
         <item name="news_title_tablet">27sp</item>
         <item name="news_other_info_phone">18sp</item>
         <item name="news_other_info_tablet">24sp</item>

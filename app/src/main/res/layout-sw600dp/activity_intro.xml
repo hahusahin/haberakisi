@@ -6,7 +6,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     tools:context="com.haberinadresi.androidapp.activities.IntroActivity">
 
-    <android.support.v4.view.ViewPager
+    <androidx.viewpager.widget.ViewPager
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:id="@+id/intro_viewpager"/>

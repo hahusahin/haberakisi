@@ -1,18 +1,18 @@
 package com.haberinadresi.androidapp.activities;
 
-import android.arch.lifecycle.Observer;
-import android.arch.lifecycle.ViewModelProviders;
+import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProviders;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
-import android.support.v4.app.JobIntentService;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.SearchView;
-import android.support.v7.widget.Toolbar;
+import androidx.annotation.Nullable;
+import androidx.core.app.JobIntentService;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+import androidx.appcompat.widget.SearchView;
+import androidx.appcompat.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -84,7 +84,7 @@ public class SourceSelectionActivity extends AppCompatActivity implements Search
         }
 
         RecyclerView recyclerView = findViewById(R.id.rv_source_item);
-        recyclerView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
+        recyclerView.setLayoutManager(new LinearLayoutManager(this, RecyclerView.VERTICAL, false));
         recyclerView.setHasFixedSize(true);
 
         sourceAdapter = new SourceAdapter(SourceSelectionActivity.this, new ArrayList<SourceItem>());
@@ -114,7 +114,7 @@ public class SourceSelectionActivity extends AppCompatActivity implements Search
     public boolean onCreateOptionsMenu(Menu menu) {
 
         // KAYNAKLARDA ARAMA YAPMAK İÇİN
-        getMenuInflater().inflate(R.menu.search_toolbar, menu);
+        getMenuInflater().inflate(R.menu.search_menu, menu);
         MenuItem menuItem = menu.findItem(R.id.action_search);
         SearchView searchView = (SearchView) menuItem.getActionView();
         searchView.setQueryHint(getResources().getString(R.string.search_sources));

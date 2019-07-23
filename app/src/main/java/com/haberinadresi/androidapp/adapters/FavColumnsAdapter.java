@@ -4,12 +4,14 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
-import android.support.annotation.NonNull;
-import android.support.constraint.ConstraintLayout;
-import android.support.customtabs.CustomTabsIntent;
-import android.support.v7.widget.RecyclerView;
+import androidx.annotation.NonNull;
+import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.browser.customtabs.CustomTabsIntent;
+import androidx.appcompat.widget.PopupMenu;
+import androidx.recyclerview.widget.RecyclerView;
 import android.text.format.DateUtils;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -49,8 +51,7 @@ public class FavColumnsAdapter extends RecyclerView.Adapter<FavColumnsAdapter.Co
         private ImageView columnistImage;
         private TextView sourceName;
         private TextView columnDay;
-        private ImageView shareColumn;
-        private ImageView saveColumn;
+        private ImageView moreVertical;
         private ConstraintLayout constraintLayout;
 
         private ColumnViewHolder(View itemView) {
@@ -62,8 +63,7 @@ public class FavColumnsAdapter extends RecyclerView.Adapter<FavColumnsAdapter.Co
             columnistImage = itemView.findViewById(R.id.iv_columnist_image);
             columnDay = itemView.findViewById(R.id.tv_column_day);
             sourceName = itemView.findViewById(R.id.tv_col_source_name);
-            saveColumn = itemView.findViewById(R.id.iv_save_column);
-            shareColumn = itemView.findViewById(R.id.iv_share_column);
+            moreVertical = itemView.findViewById(R.id.iv_more_vertical);
             constraintLayout = itemView.findViewById(R.id.layout_column_item);
         }
     }
@@ -84,6 +84,7 @@ public class FavColumnsAdapter extends RecyclerView.Adapter<FavColumnsAdapter.Co
         // Columnist's image
         GlideApp.with(columnViewHolder.itemView.getContext())
                 .load(columnItem.getImageUrl())
+                .fitCenter()
                 .diskCacheStrategy(DiskCacheStrategy.AUTOMATIC)
                 .onlyRetrieveFromCache(displayOnlyInWifi)
                 .error(R.drawable.placeholder_columnist)
@@ -95,10 +96,10 @@ public class FavColumnsAdapter extends RecyclerView.Adapter<FavColumnsAdapter.Co
 
         // Write relative time instead of real time (bugün, dün, 3 gün önce ...)
         String relativeTime = DateUtils.getRelativeTimeSpanString(
-                columnItem.getTime(), System.currentTimeMillis(), DateUtils.DAY_IN_MILLIS).toString();
+                columnItem.getTime(),
+                System.currentTimeMillis(),
+                DateUtils.DAY_IN_MILLIS).toString();
         columnViewHolder.columnDay.setText(relativeTime);
-
-        columnViewHolder.saveColumn.setImageResource(R.drawable.ic_remove_news);
 
         columnViewHolder.constraintLayout.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -121,32 +122,45 @@ public class FavColumnsAdapter extends RecyclerView.Adapter<FavColumnsAdapter.Co
             }
         });
 
-        ///// OPERATIONS FOR SHARING AND DELETING OF COLUMN
-        columnViewHolder.saveColumn.setOnClickListener(new View.OnClickListener() {
+        // POPUP MENU OPERATIONS (Delete & Share)
+        columnViewHolder.moreVertical.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //Delete column from favorite columns database
-                FavColumnsRepository repository = new FavColumnsRepository(context);
-                repository.delete(columnItem);
-                // Show toast message
-                Toast.makeText(context.getApplicationContext(), context.getResources().getString(R.string.column_deleted_from_favorite), Toast.LENGTH_SHORT).show();
-                // update shared preference file
-                SharedPreferences.Editor editor = savedColumns.edit();
-                editor.remove(columnItem.getColumnUrl());
-                editor.apply();
+                // Create the Popup Menu
+                final PopupMenu popup = new PopupMenu(context, v);
+                popup.getMenuInflater().inflate(R.menu.column_more_menu, popup.getMenu());
+                // Set the title of Save News Menu item (Favorilerden Çıkar)
+                MenuItem saveMenuItem = popup.getMenu().getItem(0);
+                saveMenuItem.setTitle(context.getResources().getString(R.string.unsave_news_column));
+
+                // Set the click operations
+                popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+                    @Override
+                    public boolean onMenuItemClick(MenuItem menuItem) {
+
+                        // DELETE OPERATIONS
+                        if(menuItem.getItemId() == R.id.more_save_column){
+                            //Delete column from favorite columns database
+                            FavColumnsRepository repository = new FavColumnsRepository(context);
+                            repository.delete(columnItem);
+                            // Show toast message
+                            Toast.makeText(context.getApplicationContext(), context.getResources().getString(R.string.column_deleted_from_favorite), Toast.LENGTH_SHORT).show();
+                            // update shared preference file
+                            savedColumns.edit().remove(columnItem.getColumnUrl()).apply();
+
+                        // SHARE OPERATIONS
+                        } else if(menuItem.getItemId() == R.id.more_share_column){
+                            Intent intent = new Intent(Intent.ACTION_SEND);
+                            intent.putExtra(Intent.EXTRA_TEXT, columnItem.getColumnUrl());
+                            intent.setType("text/plain");
+                            context.startActivity(intent);
+                        }
+                        return true;
+                    }
+                });
+                popup.show();
             }
         });
-
-        columnViewHolder.shareColumn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(Intent.ACTION_SEND);
-                intent.putExtra(Intent.EXTRA_TEXT, columnItem.getColumnUrl());
-                intent.setType("text/plain");
-                context.startActivity(intent);
-            }
-        });
-
     }
 
     @Override

@@ -56,7 +56,4 @@ public class SourceItem {
         return logoUrl;
     }
 
-    public void setLogoUrl(String logoUrl){
-        this.logoUrl = logoUrl;
-    }
 }

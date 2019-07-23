@@ -4,12 +4,14 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
-import android.support.annotation.NonNull;
-import android.support.constraint.ConstraintLayout;
-import android.support.customtabs.CustomTabsIntent;
-import android.support.v7.widget.RecyclerView;
+import androidx.annotation.NonNull;
+import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.browser.customtabs.CustomTabsIntent;
+import androidx.appcompat.widget.PopupMenu;
+import androidx.recyclerview.widget.RecyclerView;
 import android.text.format.DateUtils;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -19,12 +21,10 @@ import android.widget.Toast;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.RequestOptions;
 import com.haberinadresi.androidapp.R;
-import com.haberinadresi.androidapp.activities.NewsDetailActivity;
 import com.haberinadresi.androidapp.activities.ShowInWebviewActivity;
 import com.haberinadresi.androidapp.models.NewsItem;
 import com.haberinadresi.androidapp.repository.FavNewsRepository;
 import com.haberinadresi.androidapp.utilities.GlideApp;
-import com.google.gson.Gson;
 import com.haberinadresi.androidapp.utilities.NetworkUtils;
 import com.haberinadresi.androidapp.utilities.WebUtils;
 
@@ -48,13 +48,11 @@ public class FavNewsAdapter extends RecyclerView.Adapter<FavNewsAdapter.NewsView
     static class NewsViewHolder extends RecyclerView.ViewHolder {
 
         private TextView newsTitle;
-        private TextView newsSummary;
         private ImageView newsImage;
         private TextView newsTime;
         private ImageView sourceLogo;
         private TextView sourceName;
-        private ImageView shareNews;
-        private ImageView saveNews;
+        private ImageView moreVertical;
         private ConstraintLayout constraintLayout;
 
 
@@ -63,13 +61,11 @@ public class FavNewsAdapter extends RecyclerView.Adapter<FavNewsAdapter.NewsView
             super(itemView);
 
             newsTitle = itemView.findViewById(R.id.tv_news_title);
-            newsSummary = itemView.findViewById(R.id.tv_news_summary);
             newsImage = itemView.findViewById(R.id.iv_news_image);
             newsTime = itemView.findViewById(R.id.tv_news_time);
             sourceLogo = itemView.findViewById(R.id.iv_source_logo);
             sourceName = itemView.findViewById(R.id.tv_news_source);
-            shareNews = itemView.findViewById(R.id.iv_share_news);
-            saveNews = itemView.findViewById(R.id.iv_save_news);
+            moreVertical = itemView.findViewById(R.id.iv_more_vertical);
             constraintLayout = itemView.findViewById(R.id.cl_news_item); // container that holds the whole news items above
         }
     }
@@ -78,8 +74,23 @@ public class FavNewsAdapter extends RecyclerView.Adapter<FavNewsAdapter.NewsView
     @Override
     public NewsViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
 
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_news_normal, parent,false);
-        return new NewsViewHolder(view);
+        // Inflate the news view type that user preferred
+        int news_view_preference = customKeys.getInt(context.getResources().getString(R.string.news_item_view_preference), 0);
+        View newsView;
+        switch (news_view_preference){
+            case 0:
+                newsView = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_news_type1, parent, false);
+                break;
+            case 1:
+                newsView = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_news_type2, parent, false);
+                break;
+            case 2:
+                newsView = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_news_type3, parent, false);
+                break;
+            default:
+                newsView = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_news_type1, parent, false);
+        }
+        return new NewsViewHolder(newsView);
     }
 
     @Override
@@ -87,6 +98,7 @@ public class FavNewsAdapter extends RecyclerView.Adapter<FavNewsAdapter.NewsView
 
         final NewsItem newsItem = newsList.get(position);
 
+        // News Image
         GlideApp.with(newsViewHolder.itemView.getContext())
                 .load(newsItem.getImageUrl())
                 .centerCrop()
@@ -95,6 +107,7 @@ public class FavNewsAdapter extends RecyclerView.Adapter<FavNewsAdapter.NewsView
                 .error(R.drawable.placeholder_icon_landscape)
                 .into(newsViewHolder.newsImage);
 
+        // Source Logo
         GlideApp.with(newsViewHolder.itemView.getContext())
                 .load(newsItem.getLogoUrl())
                 .diskCacheStrategy(DiskCacheStrategy.AUTOMATIC)
@@ -105,16 +118,6 @@ public class FavNewsAdapter extends RecyclerView.Adapter<FavNewsAdapter.NewsView
 
         newsViewHolder.sourceName.setText(newsItem.getSource());
         newsViewHolder.newsTitle.setText(newsItem.getTitle());
-        newsViewHolder.newsSummary.setText(newsItem.getSummary());
-
-        // If summary is empty, set the visibility of summary area to GONE, to align Title center vertical wrt the image.
-        if(! newsItem.getSummary().equals("")){
-            newsViewHolder.newsSummary.setVisibility(View.VISIBLE);
-        } else {
-            newsViewHolder.newsSummary.setVisibility(View.GONE);
-        }
-
-        newsViewHolder.saveNews.setImageResource(R.drawable.ic_remove_news);
 
         // News Relative Time Ago
         String relativeTime = DateUtils.getRelativeTimeSpanString(
@@ -128,32 +131,19 @@ public class FavNewsAdapter extends RecyclerView.Adapter<FavNewsAdapter.NewsView
             @Override
             public void onClick(View v) {
 
-                // If detail field is empty, open the link in the web browser (With CHROME CUSTOM TABS or WEBVIEW)
-                if ( newsItem.getDetail() == null || newsItem.getDetail().equals("") ) {
-                    // If user preferred to open the link with browser, Open with Chrome Custom Tabs
-                    if (customKeys.getBoolean(context.getResources().getString(R.string.open_with_browser_key), false)){
-                        // Create chrome custom tabs in WebUtils class and open
-                        CustomTabsIntent customTabsIntent = WebUtils
-                                .createChromeTab(context, newsItem.getNewsUrl());
-                        customTabsIntent.launchUrl(context, Uri.parse(newsItem.getNewsUrl()));
-                    // Otherwise open the news link in Webview
-                    } else {
-                        Intent intentDetail = new Intent(context, ShowInWebviewActivity.class);
-                        intentDetail.putExtra(context.getResources().getString(R.string.news_url), newsItem.getNewsUrl());
-                        intentDetail.putExtra(context.getResources().getString(R.string.news_source_for_display), newsItem.getSource());
-                        intentDetail.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                        context.startActivity(intentDetail);
-                    }
-                // If there is valid detail info, open the newsDetailActivity
+                // If user preferred to open the link with browser, Open with Chrome Custom Tabs
+                if (customKeys.getBoolean(context.getResources().getString(R.string.open_with_browser_key), false)){
+                    // Create chrome custom tabs in WebUtils class and open
+                    CustomTabsIntent customTabsIntent = WebUtils
+                            .createChromeTab(context, newsItem.getNewsUrl());
+                    customTabsIntent.launchUrl(context, Uri.parse(newsItem.getNewsUrl()));
+                // Otherwise open the news link in Webview
                 } else {
-                    // Open the activity that shows the news' details, put the necessary items on it
-                    Intent newsDetail = new Intent(context, NewsDetailActivity.class);
-                    // Convert the newsItem (object) into string
-                    Gson gson = new Gson();
-                    String json = gson.toJson(newsItem);
-                    newsDetail.putExtra(context.getResources().getString(R.string.news_item), json);
-                    newsDetail.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                    context.startActivity(newsDetail);
+                    Intent intentDetail = new Intent(context, ShowInWebviewActivity.class);
+                    intentDetail.putExtra(context.getResources().getString(R.string.news_url), newsItem.getNewsUrl());
+                    intentDetail.putExtra(context.getResources().getString(R.string.news_source_for_display), newsItem.getSource());
+                    intentDetail.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                    context.startActivity(intentDetail);
                 }
 
                 // tell the adapter that there is change in the clicked item
@@ -161,33 +151,45 @@ public class FavNewsAdapter extends RecyclerView.Adapter<FavNewsAdapter.NewsView
             }
         });
 
-        // Delete news from Room Database when clicked on the image
-        newsViewHolder.saveNews.setOnClickListener(new View.OnClickListener() {
+        // POPUP MENU OPERATIONS (Delete & Share)
+        newsViewHolder.moreVertical.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-            //Delete news from favorite news database
-            FavNewsRepository repository = new FavNewsRepository(context);
-            repository.delete(newsItem);
-            // Show toast message
-            Toast.makeText(context.getApplicationContext(), context.getResources().getString(R.string.news_deleted_from_favorite), Toast.LENGTH_SHORT).show();
-            // update shared preference file
-            SharedPreferences.Editor editor = savedNews.edit();
-            editor.remove(newsItem.getNewsUrl());
-            editor.apply();
+                // Create the Popup Menu
+                final PopupMenu popup = new PopupMenu(context, v);
+                popup.getMenuInflater().inflate(R.menu.news_more_menu, popup.getMenu());
+                // Set the title of Save News Menu item (Favorilerden Çıkar)
+                MenuItem saveMenuItem = popup.getMenu().getItem(0);
+                saveMenuItem.setTitle(context.getResources().getString(R.string.unsave_news_column));
+
+                // Set the click operations
+                popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+                    @Override
+                    public boolean onMenuItemClick(MenuItem menuItem) {
+
+                        // DELETE OPERATIONS
+                        if(menuItem.getItemId() == R.id.more_save_news){
+                            //Delete news from favorite news database
+                            FavNewsRepository repository = new FavNewsRepository(context);
+                            repository.delete(newsItem);
+                            // Show toast message
+                            Toast.makeText(context.getApplicationContext(), context.getResources().getString(R.string.news_deleted_from_favorite), Toast.LENGTH_SHORT).show();
+                            // update shared preference file
+                            savedNews.edit().remove(newsItem.getNewsUrl()).apply();
+
+                        // SHARE OPERATIONS
+                        } else if(menuItem.getItemId() == R.id.more_share_news){
+                            Intent intent = new Intent(Intent.ACTION_SEND);
+                            intent.putExtra(Intent.EXTRA_TEXT, newsItem.getNewsUrl());
+                            intent.setType("text/plain");
+                            context.startActivity(intent);
+                        }
+                        return true;
+                    }
+                });
+                popup.show();
             }
         });
-
-        // Share the news
-        newsViewHolder.shareNews.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(Intent.ACTION_SEND);
-                intent.putExtra(Intent.EXTRA_TEXT, newsItem.getNewsUrl());
-                intent.setType("text/plain");
-                context.startActivity(intent);
-            }
-        });
-
     }
 
     @Override

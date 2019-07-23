@@ -34,22 +34,4 @@ public interface API {
     @GET("{path}/{category}")
     Call<List<SourceItem>> getSourcesByCategory(@Path("path") String path, @Path("category") String category);
 
-
-    /*
-    @GET("allnews/mansetler")
-    Call<List<NewsItem>> getHeadlines();
-
-    @GET("allnews/gundem")
-    Call<List<NewsItem>> getTopNews();
-
-    @GET("allnews/yazarlar")
-    Call<List<Columnist>> getColumns();
-
-    @GET("allsources/yazarlar")
-    Call<List<Columnist>> getColumnists();
-
-    @GET("allsources/{category}")
-    Call<List<SourceItem>> getSourcesByCategory(@Path("category") String category);
-     */
-
 }

@@ -2,8 +2,8 @@ package com.haberinadresi.androidapp.adapters;
 
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.support.annotation.NonNull;
-import android.support.v7.widget.RecyclerView;
+import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -57,6 +57,7 @@ public class EditCategoriesAdapter extends RecyclerView.Adapter<EditCategoriesAd
         return new CategoryViewHolder(view);
     }
 
+    @SuppressWarnings("ApplySharedPref") // TO SUPPRESS SHARED PREFERENCE COMMIT WARNING
     @Override
     public void onBindViewHolder(@NonNull final CategoryViewHolder viewHolder, int position) {
 

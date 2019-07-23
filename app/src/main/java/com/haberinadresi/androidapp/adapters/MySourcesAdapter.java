@@ -2,8 +2,8 @@ package com.haberinadresi.androidapp.adapters;
 
 import android.content.Context;
 import android.content.Intent;
-import android.support.annotation.NonNull;
-import android.support.v7.widget.RecyclerView;
+import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,7 +17,7 @@ import com.haberinadresi.androidapp.activities.OneSrcNewsActivity;
 import com.haberinadresi.androidapp.R;
 import com.haberinadresi.androidapp.models.SourceItem;
 import com.haberinadresi.androidapp.utilities.GlideApp;
-import com.haberinadresi.androidapp.utilities.SourceLogos;
+import com.haberinadresi.androidapp.utilities.BackupLogosDrive;
 
 import java.util.List;
 
@@ -71,7 +71,7 @@ public class MySourcesAdapter extends RecyclerView.Adapter<MySourcesAdapter.Sour
             .error(
                 // If failed to load primary logo, then use the secondary logo in the Google Drive
                 GlideApp.with(viewHolder.itemView.getContext())
-                    .load(SourceLogos.getLogoUrl(sourceItem.getKey()))
+                    .load(BackupLogosDrive.getLogoUrl(sourceItem.getKey()))
                     .diskCacheStrategy(DiskCacheStrategy.AUTOMATIC)
                     .apply(RequestOptions.circleCropTransform())
                     .error(R.drawable.placeholder_icon_round))

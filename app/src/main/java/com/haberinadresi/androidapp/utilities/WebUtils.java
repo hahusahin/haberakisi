@@ -6,7 +6,7 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.support.customtabs.CustomTabsIntent;
+import androidx.browser.customtabs.CustomTabsIntent;
 
 import com.haberinadresi.androidapp.R;
 
@@ -27,11 +27,23 @@ public class WebUtils {
                 context, requestCode, intentShare, PendingIntent.FLAG_UPDATE_CURRENT);
 
         // Set the share button
-        customTabBuilder.setActionButton(bitmap, context.getResources().getString(R.string.share), pendingIntent, true);
+        customTabBuilder.setActionButton(bitmap, context.getResources().getString(R.string.share_news), pendingIntent, true);
         // Color of the chrome tab
         customTabBuilder.setToolbarColor(context.getResources().getColor(R.color.colorPrimary));
 
         return customTabBuilder.build();
+    }
+
+    // Checks whether the app is updated (instead of newly installed) by comparing the times
+    public static boolean isInstallFromUpdate(Context context) {
+        try {
+            long firstInstallTime = context.getPackageManager().getPackageInfo(context.getPackageName(), 0).firstInstallTime;
+            long lastUpdateTime = context.getPackageManager().getPackageInfo(context.getPackageName(), 0).lastUpdateTime;
+            return firstInstallTime != lastUpdateTime;
+        } catch (PackageManager.NameNotFoundException e) {
+            e.printStackTrace();
+            return false;
+        }
     }
 
     // Method to check whether an app is installed in the device (by getting the package name)

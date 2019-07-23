@@ -6,13 +6,14 @@ import android.content.SharedPreferences;
 import android.graphics.ColorMatrix;
 import android.graphics.ColorMatrixColorFilter;
 import android.net.Uri;
-import android.support.annotation.NonNull;
-import android.support.constraint.ConstraintLayout;
-import android.support.constraint.Guideline;
-import android.support.customtabs.CustomTabsIntent;
-import android.support.v7.widget.RecyclerView;
+import androidx.annotation.NonNull;
+import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.browser.customtabs.CustomTabsIntent;
+import androidx.appcompat.widget.PopupMenu;
+import androidx.recyclerview.widget.RecyclerView;
 import android.text.format.DateUtils;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -27,12 +28,12 @@ import com.haberinadresi.androidapp.activities.NewsDetailActivity;
 import com.haberinadresi.androidapp.activities.ShowInWebviewActivity;
 import com.haberinadresi.androidapp.models.NewsItem;
 import com.haberinadresi.androidapp.repository.FavNewsRepository;
+import com.haberinadresi.androidapp.utilities.BackupNewsImages;
 import com.haberinadresi.androidapp.utilities.GlideApp;
 import com.haberinadresi.androidapp.utilities.NetworkUtils;
-import com.haberinadresi.androidapp.utilities.SourceLogos;
+import com.haberinadresi.androidapp.utilities.BackupLogosDrive;
 import com.haberinadresi.androidapp.utilities.WebUtils;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class NewsAdapterWithoutAd extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
@@ -54,30 +55,24 @@ public class NewsAdapterWithoutAd extends RecyclerView.Adapter<RecyclerView.View
     private static class NewsViewHolder extends RecyclerView.ViewHolder {
 
         private TextView newsTitle;
-        private TextView newsSummary;
         private ImageView newsImage;
         private TextView newsTime;
         private ImageView sourceLogo;
         private TextView sourceName;
-        private ImageView shareNews;
-        private ImageView saveNews;
+        private ImageView moreVertical;
         private ConstraintLayout constraintLayout;
-        private Guideline guideline;
 
         private NewsViewHolder(View itemView) {
 
             super(itemView);
 
             newsTitle = itemView.findViewById(R.id.tv_news_title);
-            newsSummary = itemView.findViewById(R.id.tv_news_summary);
             newsImage = itemView.findViewById(R.id.iv_news_image);
             newsTime = itemView.findViewById(R.id.tv_news_time);
             sourceLogo = itemView.findViewById(R.id.iv_source_logo);
             sourceName = itemView.findViewById(R.id.tv_news_source);
-            shareNews = itemView.findViewById(R.id.iv_share_news);
-            saveNews = itemView.findViewById(R.id.iv_save_news);
+            moreVertical = itemView.findViewById(R.id.iv_more_vertical);
             constraintLayout = itemView.findViewById(R.id.cl_news_item); // container that holds the whole news items above
-            guideline = itemView.findViewById(R.id.guideline1); // Guidline of constraint layout to be used for news image
         }
     }
 
@@ -85,7 +80,22 @@ public class NewsAdapterWithoutAd extends RecyclerView.Adapter<RecyclerView.View
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
 
-        View newsView = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_news_normal, parent, false);
+        // Inflate the news view type that user preferred
+        int news_view_preference = customKeys.getInt(context.getResources().getString(R.string.news_item_view_preference), 0);
+        View newsView;
+        switch (news_view_preference){
+            case 0:
+                newsView = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_news_type1, parent, false);
+                break;
+            case 1:
+                newsView = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_news_type2, parent, false);
+                break;
+            case 2:
+                newsView = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_news_type3, parent, false);
+                break;
+            default:
+                newsView = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_news_type1, parent, false);
+        }
         return new NewsViewHolder(newsView);
     }
 
@@ -95,25 +105,26 @@ public class NewsAdapterWithoutAd extends RecyclerView.Adapter<RecyclerView.View
         final NewsViewHolder newsViewHolder = (NewsViewHolder) holder;
         final NewsItem newsItem = newsList.get(position);
 
-        ConstraintLayout.LayoutParams params = (ConstraintLayout.LayoutParams) newsViewHolder.guideline.getLayoutParams();
-
         // If mobile data usage is not restricted by user, then show images
         if(! displayOnlyInWifi){
-            //Show news image and keep the guidelines default position
+            //Show news image
             newsViewHolder.newsImage.setVisibility(View.VISIBLE);
-            params.guidePercent = 0.7f;
-            // News Image
             GlideApp.with(holder.itemView.getContext())
                     .load(newsItem.getImageUrl())
-                    .diskCacheStrategy(DiskCacheStrategy.NONE) // TÜM RESİMLERİ HAFIZAYA ATMASIN DİYE
-                    .error(R.drawable.placeholder_icon_landscape)
+                    .diskCacheStrategy(DiskCacheStrategy.NONE)
+                    .error(
+                            // If failed to load news image, then load backup image in the Google Drive
+                            GlideApp.with(holder.itemView.getContext())
+                                    .load(BackupNewsImages.getLogoUrl(newsItem.getKey()))
+                                    .diskCacheStrategy(DiskCacheStrategy.AUTOMATIC)
+                                    .error(R.drawable.placeholder_icon_landscape))
                     .centerCrop()
                     .dontAnimate()
                     .into(newsViewHolder.newsImage);
+
+        // Hide the news image
         } else {
-            // Hide the news image AND push the guideline to end of parent (to show only the Title + Summary)
             newsViewHolder.newsImage.setVisibility(View.GONE);
-            params.guidePercent = 1;
         }
 
         // Primary Source Logo
@@ -125,7 +136,7 @@ public class NewsAdapterWithoutAd extends RecyclerView.Adapter<RecyclerView.View
                 .error(
                         // If failed to load primary logo, then use the secondary logo in the Google Drive
                         GlideApp.with(holder.itemView.getContext())
-                                .load(SourceLogos.getLogoUrl(newsItem.getKey()))
+                                .load(BackupLogosDrive.getLogoUrl(newsItem.getKey()))
                                 .diskCacheStrategy(DiskCacheStrategy.AUTOMATIC)
                                 .apply(RequestOptions.circleCropTransform())
                                 .error(R.drawable.placeholder_icon_round))
@@ -133,14 +144,6 @@ public class NewsAdapterWithoutAd extends RecyclerView.Adapter<RecyclerView.View
 
         newsViewHolder.sourceName.setText(newsItem.getSource());
         newsViewHolder.newsTitle.setText(newsItem.getTitle());
-        newsViewHolder.newsSummary.setText(newsItem.getSummary());
-
-        // If summary is empty, set the visibility of summary area to GONE, to align Title center vertical wrt the image.
-        if(! newsItem.getSummary().equals("")){
-            newsViewHolder.newsSummary.setVisibility(View.VISIBLE);
-        } else {
-            newsViewHolder.newsSummary.setVisibility(View.GONE);
-        }
 
         // News Relative Time Ago
         String relativeTime = DateUtils.getRelativeTimeSpanString(
@@ -150,19 +153,10 @@ public class NewsAdapterWithoutAd extends RecyclerView.Adapter<RecyclerView.View
                 DateUtils.FORMAT_ABBREV_RELATIVE).toString();
         newsViewHolder.newsTime.setText(relativeTime);
 
-
-        // Put the correct image wrt the news state (saved/not saved) when it is first attached
-        if (savedNews.contains(newsItem.getNewsUrl())) {
-            newsViewHolder.saveNews.setImageResource(R.drawable.ic_remove_news);
-        } else {
-            newsViewHolder.saveNews.setImageResource(R.drawable.ic_save_news);
-        }
-
         // Highlight the news that are clicked before
         if (clickedNews.contains(newsItem.getNewsUrl())){
 
             newsViewHolder.newsTitle.setTextColor(context.getResources().getColor(R.color.colorSecondaryText));
-            newsViewHolder.newsSummary.setTextColor(context.getResources().getColor(R.color.colorSecondaryText));
 
             final ColorMatrix grayscaleMatrix = new ColorMatrix();
             grayscaleMatrix.setSaturation(0);
@@ -173,7 +167,6 @@ public class NewsAdapterWithoutAd extends RecyclerView.Adapter<RecyclerView.View
             // restore the color of unclicked items (necessary due to recyclerview logic)
         } else {
             newsViewHolder.newsTitle.setTextColor(context.getResources().getColor(R.color.colorPrimaryText));
-            newsViewHolder.newsSummary.setTextColor(context.getResources().getColor(R.color.colorPrimaryText));
 
             final ColorMatrix grayscaleMatrix = new ColorMatrix();
             grayscaleMatrix.setSaturation(1);
@@ -230,71 +223,61 @@ public class NewsAdapterWithoutAd extends RecyclerView.Adapter<RecyclerView.View
             }
         });
 
-        // Insert to OR delete news from Room Database when clicked on the save image
-        newsViewHolder.saveNews.setOnClickListener(new View.OnClickListener() {
+        // POPUP MENU OPERATIONS (Save & Share)
+        newsViewHolder.moreVertical.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // if news is already in the saved list
+                // Create the Popup Menu
+                final PopupMenu popup = new PopupMenu(context, v);
+                popup.getMenuInflater().inflate(R.menu.news_more_menu, popup.getMenu());
+                // Set the title of Save News Menu item ( Haberi Kaydet / Favorilerden Çıkar)
+                MenuItem saveMenuItem = popup.getMenu().getItem(0);
                 if (savedNews.contains(newsItem.getNewsUrl())) {
-                    // change the image
-                    newsViewHolder.saveNews.setImageResource(R.drawable.ic_save_news);
-                    //Delete news from favorite news database
-                    FavNewsRepository repository = new FavNewsRepository(context);
-                    repository.delete(newsItem);
-                    // Show toast message
-                    Toast.makeText(context.getApplicationContext(), context.getResources().getString(R.string.news_deleted_from_favorite), Toast.LENGTH_SHORT).show();
-                    // update shared preference file
-                    SharedPreferences.Editor editor = savedNews.edit();
-                    editor.remove(newsItem.getNewsUrl());
-                    editor.apply();
-
-                    // News is not saved before, so save it into database
+                    saveMenuItem.setTitle(context.getResources().getString(R.string.unsave_news_column));
                 } else {
-                    // change the image
-                    newsViewHolder.saveNews.setImageResource(R.drawable.ic_remove_news);
-                    //Add news to favorite news database
-                    FavNewsRepository repository = new FavNewsRepository(context);
-                    repository.insert(newsItem);
-                    // Show toast message
-                    Toast.makeText(context.getApplicationContext(), context.getResources().getString(R.string.news_added_to_favorite), Toast.LENGTH_SHORT).show();
-                    // update shared preference file
-                    SharedPreferences.Editor editor = savedNews.edit();
-                    editor.putBoolean(newsItem.getNewsUrl() ,true);
-                    editor.apply();
+                    saveMenuItem.setTitle(context.getResources().getString(R.string.save_news));
                 }
+                // Set the click operations
+                popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+                    @Override
+                    public boolean onMenuItemClick(MenuItem menuItem) {
+
+                        // SAVE OPERATIONS
+                        if(menuItem.getItemId() == R.id.more_save_news){
+                            // if news is already in the saved list
+                            if (savedNews.contains(newsItem.getNewsUrl())) {
+                                //Delete news from favorite news database
+                                FavNewsRepository repository = new FavNewsRepository(context);
+                                repository.delete(newsItem);
+                                // Show toast message
+                                Toast.makeText(context.getApplicationContext(), context.getResources().getString(R.string.news_deleted_from_favorite), Toast.LENGTH_SHORT).show();
+                                // update shared preference file
+                                savedNews.edit().remove(newsItem.getNewsUrl()).apply();
+
+                                // News is not saved before, so save it into database
+                            } else {
+                                //Add news to favorite news database
+                                FavNewsRepository repository = new FavNewsRepository(context);
+                                repository.insert(newsItem);
+                                // Show toast message
+                                Toast.makeText(context.getApplicationContext(), context.getResources().getString(R.string.news_added_to_favorite), Toast.LENGTH_SHORT).show();
+                                // update shared preference file
+                                savedNews.edit().putBoolean(newsItem.getNewsUrl(), true).apply();
+                            }
+
+                        // SHARE OPERATIONS
+                        } else if(menuItem.getItemId() == R.id.more_share_news){
+                            Intent intent = new Intent(Intent.ACTION_SEND);
+                            intent.putExtra(Intent.EXTRA_TEXT, newsItem.getNewsUrl());
+                            intent.setType("text/plain");
+                            context.startActivity(intent);
+                        }
+                        return true;
+                    }
+                });
+                popup.show();
             }
         });
-
-        // Share the news
-        newsViewHolder.shareNews.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(Intent.ACTION_SEND);
-                intent.putExtra(Intent.EXTRA_TEXT, newsItem.getNewsUrl());
-                intent.setType("text/plain");
-                context.startActivity(intent);
-            }
-        });
-
-        /*
-        // Open the OneSourceNews activity if source logo is clicked (ŞİMDİLİK İPTAL)
-        newsViewHolder.sourceLogo.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-                String source = newsItem.getKey().split("_")[0];
-                String category = newsItem.getKey().split("_")[1];
-                Intent oneSourceNews = new Intent(context, OneSrcNewsActivity.class);
-                oneSourceNews.putExtra(context.getResources().getString(R.string.news_category), category);
-                oneSourceNews.putExtra(context.getResources().getString(R.string.news_source_for_display), newsItem.getSource());
-                oneSourceNews.putExtra(context.getResources().getString(R.string.news_source_for_query), source);
-                oneSourceNews.putExtra(context.getResources().getString(R.string.news_source_key), newsItem.getKey());
-
-                oneSourceNews.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                context.startActivity(oneSourceNews);
-            }
-        });
-        */
     }
 
     @Override
@@ -311,6 +294,7 @@ public class NewsAdapterWithoutAd extends RecyclerView.Adapter<RecyclerView.View
         notifyDataSetChanged();
     }
 
+    /*
     public List<NewsItem> getNewsList(){
         if(newsList != null){
             return newsList;
@@ -318,5 +302,6 @@ public class NewsAdapterWithoutAd extends RecyclerView.Adapter<RecyclerView.View
             return new ArrayList<>();
         }
     }
+    */
 
 }

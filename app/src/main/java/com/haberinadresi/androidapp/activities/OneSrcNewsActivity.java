@@ -1,15 +1,16 @@
 package com.haberinadresi.androidapp.activities;
 
-import android.arch.lifecycle.Observer;
-import android.arch.lifecycle.ViewModelProviders;
+import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProviders;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.Toolbar;
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+import androidx.appcompat.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ProgressBar;
@@ -35,7 +36,7 @@ public class OneSrcNewsActivity extends AppCompatActivity {
     private ProgressBar progressBar;
     Intent oneSourceIntent;
     private List<Object> recyclerViewItems = new ArrayList<>(); // List of banner ads and NewsItems that populate the RecyclerView.
-    public static final int ITEMS_PER_AD = 12; // A banner ad is placed in every 12th position in the RecyclerView.
+    public static final int ITEMS_PER_AD = 13; // A banner ad is placed in every 6 + 13th position in the RecyclerView.
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -72,9 +73,27 @@ public class OneSrcNewsActivity extends AppCompatActivity {
         if(getSupportActionBar() != null){
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         }
-        //initialize recyclerview and viewmodel
+
+        //initialize recyclerview
         RecyclerView recyclerView = findViewById(R.id.rv_one_source_news);
-        recyclerView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this, RecyclerView.VERTICAL, false);
+        GridLayoutManager gridLayoutManager = new GridLayoutManager(this, 2);
+        // When it is the ads turn in the recyclerview, only show one item ( don't show news)
+        gridLayoutManager.setSpanSizeLookup(new GridLayoutManager.SpanSizeLookup() {
+            @Override
+            public int getSpanSize(int position) {
+                if ((position + 7) % ITEMS_PER_AD == 0) {
+                    return 2;
+                }
+                return 1;
+            }
+        });
+        // If user prefers to view news as grid then set gridlayout, else set normal layout (0 and 1 for normal view, 2 for grid)
+        if(customPrefs.getInt(getResources().getString(R.string.news_item_view_preference), 0) == 2){
+            recyclerView.setLayoutManager(gridLayoutManager);
+        } else {
+            recyclerView.setLayoutManager(linearLayoutManager);
+        }
         recyclerView.setHasFixedSize(true);
 
         newsAdapter = new NewsAdapterWithAds(this, recyclerViewItems);
@@ -123,7 +142,7 @@ public class OneSrcNewsActivity extends AppCompatActivity {
     //Adds banner ads to the items list.
     private void addBannerAds() {
         // Loop through the items array and place a new banner ad in every ith position in the items List.
-        for (int i = 4; i <= recyclerViewItems.size(); i += ITEMS_PER_AD) {
+        for (int i = 6; i <= recyclerViewItems.size(); i += ITEMS_PER_AD) {
             final AdView adView = new AdView(this);
             adView.setAdSize(AdSize.MEDIUM_RECTANGLE);
             adView.setAdUnitId(getResources().getString(R.string.admob_banner_buyuk_unit_id));
@@ -134,7 +153,7 @@ public class OneSrcNewsActivity extends AppCompatActivity {
     //Sets up and loads the banner ads.
     private void loadBannerAds() {
         // Load the first banner ad in the items list (subsequent ads will be loaded automatically in sequence)
-        loadBannerAd(4);
+        loadBannerAd(6);
     }
 
     // Loads the banner ads in the items list.

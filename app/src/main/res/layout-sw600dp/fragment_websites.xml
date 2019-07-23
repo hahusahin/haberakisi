@@ -12,7 +12,7 @@
         android:layout_height="match_parent"
         android:layout_above="@+id/bannerAdView">
 
-        <android.support.v4.widget.NestedScrollView
+        <androidx.core.widget.NestedScrollView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
@@ -24,7 +24,7 @@
                 android:layout_height="wrap_content"
                 android:orientation="vertical">
 
-                <android.support.v7.widget.RecyclerView
+                <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/rv_websites_general"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
@@ -36,7 +36,7 @@
                     android:layout_height="1dp"
                     android:background="@color/colorPrimaryText"/>
 
-                <android.support.v7.widget.RecyclerView
+                <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/rv_websites_sport"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
@@ -48,7 +48,7 @@
                     android:layout_height="1dp"
                     android:background="@color/colorPrimaryText"/>
 
-                <android.support.v7.widget.RecyclerView
+                <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/rv_websites_others"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
@@ -60,7 +60,7 @@
                     android:layout_height="1dp"
                     android:background="@color/colorPrimaryText"/>
 
-                <android.support.v7.widget.RecyclerView
+                <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/rv_websites_foreign"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
@@ -68,7 +68,7 @@
 
             </LinearLayout>
 
-        </android.support.v4.widget.NestedScrollView>
+        </androidx.core.widget.NestedScrollView>
 
         <Button
             android:id="@+id/btn_source_alert"
@@ -103,6 +103,7 @@
                 android:id="@+id/tv_no_internet_connection"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:gravity="center"
                 android:padding="12dp"
                 android:layout_marginBottom="12dp"
                 android:text="@string/check_network_connection"

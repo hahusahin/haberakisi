@@ -4,9 +4,9 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
-import android.support.annotation.NonNull;
-import android.support.customtabs.CustomTabsIntent;
-import android.support.v7.widget.RecyclerView;
+import androidx.annotation.NonNull;
+import androidx.browser.customtabs.CustomTabsIntent;
+import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,7 +20,7 @@ import com.haberinadresi.androidapp.R;
 import com.haberinadresi.androidapp.activities.ShowInWebviewActivity;
 import com.haberinadresi.androidapp.models.SourceItem;
 import com.haberinadresi.androidapp.utilities.GlideApp;
-import com.haberinadresi.androidapp.utilities.SourceLogos;
+import com.haberinadresi.androidapp.utilities.BackupLogosDrive;
 import com.haberinadresi.androidapp.utilities.WebUtils;
 
 import java.util.List;
@@ -77,7 +77,7 @@ public class MyWebsitesAdapter extends RecyclerView.Adapter<MyWebsitesAdapter.So
             .error(
                     // If failed to load primary logo, then use the secondary logo in the Google Drive
                     GlideApp.with(viewHolder.itemView.getContext())
-                        .load(SourceLogos.getLogoUrl(sourceItem.getKey()))
+                        .load(BackupLogosDrive.getLogoUrl(sourceItem.getKey()))
                         .diskCacheStrategy(DiskCacheStrategy.AUTOMATIC)
                         .apply(RequestOptions.circleCropTransform())
                         .error(R.drawable.placeholder_icon_round))

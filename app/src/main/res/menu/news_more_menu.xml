@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/more_save_news"
+        android:title="@string/save_news"
+        android:orderInCategory="101"/>
+    <item
+        android:id="@+id/more_share_news"
+        android:title="@string/share_news"
+        android:orderInCategory="102"/>
+</menu>

@@ -2,9 +2,9 @@ package com.haberinadresi.androidapp.activities;
 
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -19,7 +19,6 @@ import com.bumptech.glide.request.target.Target;
 import com.haberinadresi.androidapp.R;
 import com.github.chrisbanes.photoview.PhotoView;
 import com.haberinadresi.androidapp.utilities.GlideApp;
-import com.haberinadresi.androidapp.utilities.NetworkUtils;
 
 import java.util.ArrayList;
 
@@ -28,7 +27,6 @@ public class ShowHeadlinesActivity extends AppCompatActivity {
     private int headlinePosition;
     private ArrayList<String> headlineList;
     PhotoView fullScreenImageView;
-    boolean displayOnlyInWifi = false;
     private ProgressBar progressBar;
 
     @Override
@@ -53,8 +51,6 @@ public class ShowHeadlinesActivity extends AppCompatActivity {
         headlinePosition = getIntent().getIntExtra(getResources().getString(R.string.headline_position), -1);
 
         if(headlineList != null && headlinePosition >= 0) {
-            // Get the user's mobile data saving preference
-            displayOnlyInWifi = NetworkUtils.displayOnlyInWifi(this);
             // Load the related headline image
             loadHeadline();
         }
@@ -96,7 +92,6 @@ public class ShowHeadlinesActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-
     public void loadHeadline(){
 
         progressBar.setVisibility(View.VISIBLE);
@@ -104,7 +99,6 @@ public class ShowHeadlinesActivity extends AppCompatActivity {
         GlideApp.with(ShowHeadlinesActivity.this)
                 .load(headlineList.get(headlinePosition))
                 .diskCacheStrategy(DiskCacheStrategy.NONE)
-                .onlyRetrieveFromCache(displayOnlyInWifi)
                 .error(R.drawable.placeholder_icon_portrait)
                 // Add listener to hide progressbar when image is loaded
                 .listener(new RequestListener<Drawable>() {

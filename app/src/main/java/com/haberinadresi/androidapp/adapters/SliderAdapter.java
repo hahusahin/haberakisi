@@ -1,8 +1,8 @@
 package com.haberinadresi.androidapp.adapters;
 
 import android.content.Context;
-import android.support.annotation.NonNull;
-import android.support.v4.view.PagerAdapter;
+import androidx.annotation.NonNull;
+import androidx.viewpager.widget.PagerAdapter;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,8 +18,8 @@ public class SliderAdapter extends PagerAdapter {
 
     private static final String SLIDE_DESC_1 = "Sol üstteki açılır menü ikonundan kaynaklarınızı düzenleyebilir, " +
             "kayıtlı haber/köşe yazılarınıza ve diğer ayarlara ulaşabilirsiniz.";
-    private static final String SLIDE_DESC_2 = "Favori kaynaklarınızın sergilendiği sayfaya ulaşabilir, " +
-            "sergilenen haberler arasında kelime bazlı arama yapabilirsiniz.";
+    private static final String SLIDE_DESC_2 = "Sergilenen haberler arasında kelime bazlı arama yapabilir, " +
+            "3 farklı haber gösterim şeklinden dilediğinizi seçebilirsiniz.";
     private static final String SLIDE_DESC_3 = "Haberi, favorilerinize ekleyebilir / arkadaşlarınızla paylaşabilirsiniz";
     private static final String SLIDE_DESC_4 = "İstediğiniz kaynağa tıklayarak sadece o haber kaynağına ait haberleri görebilirsiniz.";
     private static final String SLIDE_DESC_5 = "Haber kaynağı kutucuğunun herhangi bir yerine tıklayarak ekleme veya çıkarma " +

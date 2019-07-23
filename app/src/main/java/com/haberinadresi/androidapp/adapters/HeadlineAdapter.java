@@ -2,8 +2,8 @@ package com.haberinadresi.androidapp.adapters;
 
 import android.content.Context;
 import android.content.Intent;
-import android.support.annotation.NonNull;
-import android.support.v7.widget.RecyclerView;
+import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,7 +16,6 @@ import com.haberinadresi.androidapp.R;
 import com.haberinadresi.androidapp.activities.ShowHeadlinesActivity;
 import com.haberinadresi.androidapp.models.NewsItem;
 import com.haberinadresi.androidapp.utilities.GlideApp;
-import com.haberinadresi.androidapp.utilities.NetworkUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -25,12 +24,10 @@ public class HeadlineAdapter extends RecyclerView.Adapter<HeadlineAdapter.Manset
 
     private Context context;
     private List<NewsItem> headlineList;
-    private boolean displayOnlyInWifi;
 
     public HeadlineAdapter(Context context, List<NewsItem> headlineList) {
         this.context = context;
         this.headlineList = headlineList;
-        displayOnlyInWifi = NetworkUtils.displayOnlyInWifi(context); // Get the user's mobile data saving preference
     }
 
     static class MansetViewHolder extends RecyclerView.ViewHolder {
@@ -66,7 +63,6 @@ public class HeadlineAdapter extends RecyclerView.Adapter<HeadlineAdapter.Manset
         GlideApp.with(mansetViewHolder.itemView.getContext())
             .load(mansetItem.getNewsUrl())
             .diskCacheStrategy(DiskCacheStrategy.NONE)
-            .onlyRetrieveFromCache(displayOnlyInWifi)
             .error(R.drawable.placeholder_icon_portrait)
             .into(mansetViewHolder.mansetImage);
 

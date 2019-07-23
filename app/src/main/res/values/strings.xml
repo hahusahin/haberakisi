@@ -8,14 +8,18 @@
     <string name="search_news">Filtrele\.\.\.</string>
     <string name="search_sources">Kaynak Ara\.\.\.</string>
     <string name="search_columnist">Yazar Ara\.\.\.</string>
-    <string name="share">Paylaş</string>
-    <string name="save">Kaydet</string>
+    <string name="share_news">Haberi Paylaş</string>
+    <string name="share_column">Yazıyı Paylaş</string>
+    <string name="save_news">Haberi Kaydet</string>
+    <string name="save_column">Yazıyı Kaydet</string>
+    <string name="unsave_news_column">Favorilerden Çıkar</string>
     <string name="refresh">Yenile</string>
     <string name="navigate_back">Önceki</string>
     <string name="navigate_forward">Sonraki</string>
     <string name="okay">Tamam</string>
     <string name="try_again">Tekrar Dene</string>
     <string name="share_app">Uygulamayı Paylaş</string>
+    <string name="news_view_type">Haber Görünümü</string>
     <string name="app_full_name">Haber Akışı: Haberler ve Köşe Yazıları</string>
     <string name="send_comment_app">Sorun/Öneri Bildir</string>
     <string name="evaluate_app">Uygulamaya Puan Ver</string>
@@ -103,6 +107,7 @@
     <string name="first_select_columnist">Öncelikle Köşe \nYazarlarınızı Seçiniz</string>
     <string name="first_select_website">Öncelikle Haber \nSitelerini Seçiniz</string>
     <string name="check_network_connection">İnternet Bağlantınızı Kontrol Ediniz</string>
+    <string name="close_mobiledata_saver">Öncelikle Mobil Veri \nTasarrufunu Kapatınız</string>
     <string name="view_source">Haberin Devamı İçin Tıklayınız</string>
     <string name="news_added_to_favorite">Haber Favorilere Eklendi</string>
     <string name="news_deleted_from_favorite">Haber Favorilerden Çıkarıldı</string>
@@ -145,6 +150,7 @@
     <string name="subscribed_to_general_notifications">Genel Bildirimlere Abone Olundu</string>
     <string name="subscribed_to_lastminute_notifications">Haber Bildirimlerine Abone Olundu</string>
     <string name="last_notified_time">Son Bildirim Zamani</string>
+    <string name="news_item_view_preference">Haber Gosterim Secenegi</string>
 
     <!-- Strings for Settings -->
     <string name="title_activity_settings">Ayarlar</string>
@@ -216,7 +222,8 @@
 
 
     <!-- TEK SEFERLİK ÇALIŞAN ANAHTAR'LAR (SHARED PREFERENCES) -->
-    <string name="whats_new_dialog_v4">Whats New Dialog v4 Seen</string> <!-- BİR KERE ÇALIŞTI, SONRAKİ VERSİYONLARDA SİL -->
+    <string name="whats_new_dialog_v5">Whats New Dialog v5 Seen</string> <!-- BİR KERE ÇALIŞTI, SONRAKİ VERSİYONLARDA SİL -->
+    <string name="whats_new_dialog_v4">Whats New Dialog v4 Seen</string> <!-- BİR KERE ÇALIŞTI, V22'DE SİLDİM AMA KULLANMA -->
     <string name="whats_new_dialog_v3">Whats New Dialog v3 Seen</string> <!-- BİR KERE ÇALIŞTI, V19'DA SİLDİM AMA KULLANMA -->
     <string name="whats_new_dialog_v2">Whats New Dialog v2 Seen</string> <!-- BİR KERE ÇALIŞTI,  V14'DA SİLDİM AMA KULLANMA  -->
     <string name="is_whats_new_dialog_seen">Neler Yeni Ekranı Görüldü</string> <!-- BİR KERE ÇALIŞTI, V10'DA SİLDİM AMA KULLANMA -->

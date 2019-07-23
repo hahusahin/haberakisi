@@ -4,11 +4,12 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
-import android.support.v7.widget.GridLayoutManager;
-import android.support.v7.widget.RecyclerView;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -163,68 +164,90 @@ public class WebsitesFragment extends Fragment implements SharedPreferences.OnSh
                         break;
                 }
             }
+
             // gazete, int.medyası, yerel
+            Collections.sort(list1, new Comparator<SourceItem>() {
+                @Override
+                public int compare(SourceItem item1, SourceItem item2) {
+                    return item1.getSourceName().compareTo(item2.getSourceName());
+                }
+            });
+            // load website sources to adapter
+            MyWebsitesAdapter adapter1 = new MyWebsitesAdapter(requireActivity(), list1);
+            //recyclerView1.addItemDecoration(new DividerItemDecoration(requireActivity(), DividerItemDecoration.VERTICAL));
+            recyclerView1.setAdapter(adapter1);
             if(! list1.isEmpty()){
-                // Sort the list wrt the website names
-                Collections.sort(list1, new Comparator<SourceItem>() {
-                    @Override
-                    public int compare(SourceItem item1, SourceItem item2) {
-                        return item1.getSourceName().compareTo(item2.getSourceName());
-                    }
-                });
-                // load website sources to adapter
-                MyWebsitesAdapter adapter1 = new MyWebsitesAdapter(requireActivity(), list1);
-                //recyclerView1.addItemDecoration(new DividerItemDecoration(requireActivity(), DividerItemDecoration.VERTICAL));
-                recyclerView1.setAdapter(adapter1);
-            }
-            // spor
-            if(! list2.isEmpty()){
-                //Show the first divider
+                recyclerView1.setVisibility(View.VISIBLE);
                 divider1.setVisibility(View.VISIBLE);
-                // Sort the list wrt the website names
-                Collections.sort(list2, new Comparator<SourceItem>() {
-                    @Override
-                    public int compare(SourceItem item1, SourceItem item2) {
-                        return item1.getSourceName().compareTo(item2.getSourceName());
-                    }
-                });
-                // load website sources to adapter
-                MyWebsitesAdapter adapter2 = new MyWebsitesAdapter(requireActivity(), list2);
-                recyclerView2.setAdapter(adapter2);
+            } else {
+                recyclerView1.setVisibility(View.GONE);
+                divider1.setVisibility(View.GONE);
             }
-            // kültür sanat, bilim, teknoloji, sağlık vs...
-            if(! list3.isEmpty()){
-                //Show the second divider
+
+            // spor
+            Collections.sort(list2, new Comparator<SourceItem>() {
+                @Override
+                public int compare(SourceItem item1, SourceItem item2) {
+                    return item1.getSourceName().compareTo(item2.getSourceName());
+                }
+            });
+            // load website sources to adapter
+            MyWebsitesAdapter adapter2 = new MyWebsitesAdapter(requireActivity(), list2);
+            recyclerView2.setAdapter(adapter2);
+            //Show/Hide the first divider
+            if(! list2.isEmpty()){
+                recyclerView2.setVisibility(View.VISIBLE);
                 divider2.setVisibility(View.VISIBLE);
-                // Sort the list wrt the website names
-                Collections.sort(list3, new Comparator<SourceItem>() {
-                    @Override
-                    public int compare(SourceItem item1, SourceItem item2) {
-                        return item1.getSourceName().compareTo(item2.getSourceName());
-                    }
-                });
-                // load website sources to adapter
-                MyWebsitesAdapter adapter3 = new MyWebsitesAdapter(requireActivity(), list3);
-                recyclerView3.setAdapter(adapter3);
+            } else {
+                recyclerView2.setVisibility(View.GONE);
+                divider2.setVisibility(View.GONE);
             }
-            // yabancı basın
-            if(! list4.isEmpty()){
-                //Show the third divider
+
+            // kültür sanat, bilim, teknoloji, sağlık vs...
+            Collections.sort(list3, new Comparator<SourceItem>() {
+                @Override
+                public int compare(SourceItem item1, SourceItem item2) {
+                    return item1.getSourceName().compareTo(item2.getSourceName());
+                }
+            });
+            // load website sources to adapter
+            MyWebsitesAdapter adapter3 = new MyWebsitesAdapter(requireActivity(), list3);
+            recyclerView3.setAdapter(adapter3);
+            //Show/Hide the second divider
+            if(! list3.isEmpty()){
+                recyclerView3.setVisibility(View.VISIBLE);
                 divider3.setVisibility(View.VISIBLE);
-                // Sort the list wrt the website names
-                Collections.sort(list4, new Comparator<SourceItem>() {
-                    @Override
-                    public int compare(SourceItem item1, SourceItem item2) {
-                        return item1.getSourceName().compareTo(item2.getSourceName());
-                    }
-                });
-                // load website sources to adapter
-                MyWebsitesAdapter adapter4 = new MyWebsitesAdapter(requireActivity(), list4);
-                recyclerView4.setAdapter(adapter4);
+            } else {
+                recyclerView3.setVisibility(View.GONE);
+                divider3.setVisibility(View.GONE);
+            }
+
+            // yabancı basın
+            Collections.sort(list4, new Comparator<SourceItem>() {
+                @Override
+                public int compare(SourceItem item1, SourceItem item2) {
+                    return item1.getSourceName().compareTo(item2.getSourceName());
+                }
+            });
+            // load website sources to adapter
+            MyWebsitesAdapter adapter4 = new MyWebsitesAdapter(requireActivity(), list4);
+            recyclerView4.setAdapter(adapter4);
+            //Show/Hide the third divider
+            if(! list4.isEmpty()){
+                recyclerView4.setVisibility(View.VISIBLE);
+            } else {
+                recyclerView4.setVisibility(View.GONE);
             }
 
         // If the user has no source
         } else {
+            recyclerView1.setVisibility(View.GONE);
+            recyclerView2.setVisibility(View.GONE);
+            recyclerView3.setVisibility(View.GONE);
+            recyclerView4.setVisibility(View.GONE);
+            divider1.setVisibility(View.GONE);
+            divider2.setVisibility(View.GONE);
+            divider3.setVisibility(View.GONE);
             // show source warning
             sourceWarning.setVisibility(View.VISIBLE);
             // Open the source selection page when user clicks the warning

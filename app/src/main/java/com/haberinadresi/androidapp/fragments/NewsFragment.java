@@ -1,19 +1,19 @@
 package com.haberinadresi.androidapp.fragments;
 
-import android.arch.lifecycle.Observer;
-import android.arch.lifecycle.ViewModelProviders;
-import android.content.Context;
+import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProviders;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
-import android.support.v4.widget.SwipeRefreshLayout;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.SearchView;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+import androidx.appcompat.widget.SearchView;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -40,13 +40,15 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
+import static android.content.Context.MODE_PRIVATE;
+
 public class NewsFragment extends Fragment implements SharedPreferences.OnSharedPreferenceChangeListener {
 
     private RecyclerView recyclerView;
     private NewsAdapterWithAds newsAdapter;
     private NewsAdapterWithoutAd searchAdapter;
     private NewsVM newsViewModel;
-    private SharedPreferences sourcePreferences;
+    private SharedPreferences sourcePreferences, customPreferences;
     private ProgressBar progressBar;
     private SwipeRefreshLayout swipeContainer;
     private Button sourceWarning;
@@ -54,14 +56,16 @@ public class NewsFragment extends Fragment implements SharedPreferences.OnShared
     private boolean onPauseFlag = false;
     private boolean isPreferenceChanged = false;
     private List<Object> recyclerViewItems = new ArrayList<>(); // List of banner ads and NewsItems that populate the RecyclerView.
-    public static final int ITEMS_PER_AD = 12; // A banner ad is placed in every 12th position in the RecyclerView.
+    private static final int ITEMS_PER_AD = 13; // A banner ad is placed in every (6 + 13)th position in the RecyclerView.
     private String categoryKey;
     private String categoryName;
+    private LinearLayoutManager linearLayoutManager;
+    private GridLayoutManager gridLayoutManager;
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup parent,
                              @Nullable Bundle savedInstanceState) {
-        setHasOptionsMenu(true); // To show the search menu item on actionbar
+        setHasOptionsMenu(true); // To show menu item on actionbar
         Bundle bundle = getArguments(); // Get the category name and key
         if(bundle != null){
             categoryKey = bundle.getString(getResources().getString(R.string.news_category_key));
@@ -85,14 +89,36 @@ public class NewsFragment extends Fragment implements SharedPreferences.OnShared
         internetAlert.setVisibility(View.GONE);
         Button checkConnection = view.findViewById(R.id.btn_check_internet);
         //get the sharedpreferences and register
-        sourcePreferences = requireActivity().getSharedPreferences(requireActivity().getResources().getString(R.string.source_prefs_key), Context.MODE_PRIVATE);
+        sourcePreferences = requireActivity().getSharedPreferences(requireActivity().getResources().getString(R.string.source_prefs_key), MODE_PRIVATE);
         sourcePreferences.registerOnSharedPreferenceChangeListener(this);
-        // İnitialize recyclerview, viewmodel
+
+        customPreferences = requireActivity().getSharedPreferences(getResources().getString(R.string.custom_keys), MODE_PRIVATE);
+
+        // Initialize recyclerview types
         recyclerView = view.findViewById(R.id.rv_news);
-        recyclerView.setLayoutManager(new LinearLayoutManager(requireActivity(), LinearLayoutManager.VERTICAL, false));
+        linearLayoutManager = new LinearLayoutManager(requireActivity(), RecyclerView.VERTICAL, false);
+        gridLayoutManager = new GridLayoutManager(requireActivity(), 2);
+        // When it is the ads turn in the recyclerview, only show one item ( don't show news)
+        gridLayoutManager.setSpanSizeLookup(new GridLayoutManager.SpanSizeLookup() {
+            @Override
+            public int getSpanSize(int position) {
+                if ((position + 7) % ITEMS_PER_AD == 0) {
+                    return 2;
+                }
+                return 1;
+            }
+        });
+        // If user prefers to view news as grid then set gridlayout, else set normal layout (0 and 1 for normal view, 2 for grid)
+        if(customPreferences.getInt(getResources().getString(R.string.news_item_view_preference), 0) == 2){
+            recyclerView.setLayoutManager(gridLayoutManager);
+        } else {
+            recyclerView.setLayoutManager(linearLayoutManager);
+        }
+
         recyclerView.setHasFixedSize(true);
         //recyclerView.setItemViewCacheSize(20); //number of offscreen views to retain
 
+        // İnitialize viewmodel
         newsViewModel = ViewModelProviders.of(this).get(NewsVM.class);
 
         // Configure the swipe refresh
@@ -130,7 +156,7 @@ public class NewsFragment extends Fragment implements SharedPreferences.OnShared
         }
     }
 
-    public void fetchNews(boolean isPreferenceChanged, boolean isRefreshed) {
+    private void fetchNews(boolean isPreferenceChanged, boolean isRefreshed) {
         // Get the recent source preferences of the user
         final ArrayList<String> mySourceList = getSourceList();
         // if user has at least one source, fetch the news
@@ -218,9 +244,6 @@ public class NewsFragment extends Fragment implements SharedPreferences.OnShared
                 fetchNews(true, false);
                 isPreferenceChanged = false;
             }
-            if (newsAdapter != null){
-                newsAdapter.notifyDataSetChanged();
-            }
             onPauseFlag = false;
         }
         //resume the adMob
@@ -250,8 +273,13 @@ public class NewsFragment extends Fragment implements SharedPreferences.OnShared
     // Added to make search in the news list
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        inflater.inflate(R.menu.search_toolbar, menu);
+
+        inflater.inflate(R.menu.news_fragment_menu, menu);
+
         MenuItem searchMenuItem = menu.findItem(R.id.action_search);
+        final MenuItem newsViewMenuItem = menu.findItem(R.id.action_news_view_type);
+
+        // Search Menu Item Operations
         final SearchView searchView = (SearchView) searchMenuItem.getActionView();
         searchView.setQueryHint(getResources().getString(R.string.search_news));
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
@@ -276,6 +304,7 @@ public class NewsFragment extends Fragment implements SharedPreferences.OnShared
                     }
                     // set the filtered list to adapter/recyclerview
                     searchAdapter.setNewsList(filteredNews);
+                    newsViewMenuItem.setVisible(false);
                     recyclerView.setAdapter(searchAdapter);
                 }
                 searchView.clearFocus(); //To hide keyboard
@@ -297,18 +326,70 @@ public class NewsFragment extends Fragment implements SharedPreferences.OnShared
             @Override
             public boolean onMenuItemActionCollapse(MenuItem item) {
                 // When backpressed to close search set the original news adapter (load all news)
+                newsViewMenuItem.setVisible(true);
                 recyclerView.setAdapter(newsAdapter);
                 swipeContainer.setEnabled(true); // enable swipe refreshing
                 return true;
             }
         });
 
+        // News View Type Menu Item Operations
+        int news_view_type = customPreferences.getInt(getResources().getString(R.string.news_item_view_preference), 0);
+        // Set the correct image wrt the user's news view preference type
+        switch (news_view_type){
+            case 0:
+                newsViewMenuItem.setIcon(R.drawable.ic_newsview2);
+                break;
+            case 1:
+                newsViewMenuItem.setIcon(R.drawable.ic_newsview3);
+                break;
+            case 2:
+                newsViewMenuItem.setIcon(R.drawable.ic_newsview1);
+                break;
+            default:
+                newsViewMenuItem.setIcon(R.drawable.ic_newsview2);
+        }
+
         super.onCreateOptionsMenu(menu, inflater);
     }
 
+    @SuppressWarnings("ApplySharedPref") // TO SUPPRESS SHARED PREFERENCE COMMIT WARNING
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+
+        if (id == R.id.action_news_view_type) {
+            // Get the news view preference and increment it by one (also get the modulus) to show the new view type
+            int news_view_type = customPreferences.getInt(getResources().getString(R.string.news_item_view_preference), 0);
+            news_view_type = (news_view_type + 1) % 3;
+            // Update the shared preferences file immediately
+            customPreferences.edit().putInt(getResources().getString(R.string.news_item_view_preference), news_view_type).commit();
+            switch (news_view_type){
+                case 0:
+                    item.setIcon(R.drawable.ic_newsview2);
+                    recyclerView.setLayoutManager(linearLayoutManager);
+                    break;
+                case 1:
+                    item.setIcon(R.drawable.ic_newsview3);
+                    recyclerView.setLayoutManager(linearLayoutManager);
+                    break;
+                case 2:
+                    item.setIcon(R.drawable.ic_newsview1);
+                    recyclerView.setLayoutManager(gridLayoutManager);
+                    break;
+                default:
+                    item.setIcon(R.drawable.ic_newsview2);
+                    recyclerView.setLayoutManager(linearLayoutManager);
+            }
+            recyclerView.setAdapter(newsAdapter);
+            return true;
+        }
+
+        return super.onOptionsItemSelected(item);
+    }
 
     // Gets the source preferences from SharedPreferences file
-    public ArrayList<String> getSourceList() {
+    private ArrayList<String> getSourceList() {
         ArrayList<String> mySourceList = new ArrayList<>();
         // Get all the source preferences (in map format)
         Map<String, ?> preferences = sourcePreferences.getAll();
@@ -327,7 +408,7 @@ public class NewsFragment extends Fragment implements SharedPreferences.OnShared
     //Adds banner ads to the items list.
     private void addBannerAds() {
         // Loop through the items array and place a new banner ad in every ith position in the items List.
-        for (int i = 4; i <= recyclerViewItems.size(); i += ITEMS_PER_AD) {
+        for (int i = 6; i <= recyclerViewItems.size(); i += ITEMS_PER_AD) {
             final AdView adView = new AdView(requireActivity());
 
             // If  device is tablet use LEADERBOARD Banner Size, For all others use MEDIUM RECTANGLE
@@ -347,7 +428,7 @@ public class NewsFragment extends Fragment implements SharedPreferences.OnShared
     //Sets up and loads the banner ads.
     private void loadBannerAds() {
         // Load the first banner ad in the items list (subsequent ads will be loaded automatically in sequence
-        loadBannerAd(4);
+        loadBannerAd(6);
     }
 
     // Loads the banner ads in the items list.

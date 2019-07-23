@@ -12,7 +12,7 @@
         android:layout_height="match_parent"
         android:layout_above="@+id/bannerAdView">
 
-        <android.support.v7.widget.RecyclerView
+        <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rv_mansetler"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
@@ -48,6 +48,7 @@
                 android:id="@+id/tv_no_internet_connection"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:gravity="center"
                 android:padding="8dp"
                 android:layout_marginBottom="8dp"
                 android:text="@string/check_network_connection"
@@ -63,6 +64,18 @@
                 android:textSize="14sp"/>
 
         </LinearLayout>
+
+        <Button
+            android:id="@+id/btn_mobiledata_warning"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="12dp"
+            android:drawableStart="@mipmap/ic_warning_vertical"
+            android:drawablePadding="8dp"
+            android:layout_gravity="center"
+            android:gravity="center_vertical"
+            android:text="@string/close_mobiledata_saver"
+            android:textSize="16sp"/>
 
     </FrameLayout>
 
