@@ -15,7 +15,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 
-import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -26,10 +25,12 @@ import com.haberinadresi.androidapp.models.SourceItem;
 import com.haberinadresi.androidapp.utilities.NetworkUtils;
 
 import java.lang.reflect.Type;
+import java.text.Collator;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 public class WebsitesFragment extends Fragment implements SharedPreferences.OnSharedPreferenceChangeListener {
@@ -52,11 +53,11 @@ public class WebsitesFragment extends Fragment implements SharedPreferences.OnSh
     public void onViewCreated(@NonNull final View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        //Admob
-        bannerAdView = view.findViewById(R.id.bannerAdView);
-        AdRequest adRequest = new AdRequest.Builder().build();
-        bannerAdView.loadAd(adRequest);
-
+        // Get the banner ad from main activity and show it if this fragment is visible to user
+        bannerAdView = requireActivity().findViewById(R.id.bannerAdView);
+        if(getUserVisibleHint() && bannerAdView != null){
+            bannerAdView.setVisibility(View.VISIBLE);
+        }
         // The button to display if user didn't select any news source
         sourceWarning = view.findViewById(R.id.btn_source_alert);
         sourceWarning.setVisibility(View.GONE);
@@ -165,13 +166,20 @@ public class WebsitesFragment extends Fragment implements SharedPreferences.OnSh
                 }
             }
 
+            // To sort the lists in Turkish
+            final Locale turkish = new Locale("tr", "TR");
+            final Collator collator = Collator.getInstance(turkish);
+            collator.setStrength(Collator.PRIMARY);
+
             // gazete, int.medyası, yerel
             Collections.sort(list1, new Comparator<SourceItem>() {
                 @Override
                 public int compare(SourceItem item1, SourceItem item2) {
-                    return item1.getSourceName().compareTo(item2.getSourceName());
+                    return collator.compare(item1.getSourceName(), item2.getSourceName());
+                    // ESKİSİ return item1.getSourceName().compareTo(item2.getSourceName());
                 }
             });
+
             // load website sources to adapter
             MyWebsitesAdapter adapter1 = new MyWebsitesAdapter(requireActivity(), list1);
             //recyclerView1.addItemDecoration(new DividerItemDecoration(requireActivity(), DividerItemDecoration.VERTICAL));
@@ -188,7 +196,7 @@ public class WebsitesFragment extends Fragment implements SharedPreferences.OnSh
             Collections.sort(list2, new Comparator<SourceItem>() {
                 @Override
                 public int compare(SourceItem item1, SourceItem item2) {
-                    return item1.getSourceName().compareTo(item2.getSourceName());
+                    return collator.compare(item1.getSourceName(), item2.getSourceName());
                 }
             });
             // load website sources to adapter
@@ -207,7 +215,7 @@ public class WebsitesFragment extends Fragment implements SharedPreferences.OnSh
             Collections.sort(list3, new Comparator<SourceItem>() {
                 @Override
                 public int compare(SourceItem item1, SourceItem item2) {
-                    return item1.getSourceName().compareTo(item2.getSourceName());
+                    return collator.compare(item1.getSourceName(), item2.getSourceName());
                 }
             });
             // load website sources to adapter
@@ -226,7 +234,7 @@ public class WebsitesFragment extends Fragment implements SharedPreferences.OnSh
             Collections.sort(list4, new Comparator<SourceItem>() {
                 @Override
                 public int compare(SourceItem item1, SourceItem item2) {
-                    return item1.getSourceName().compareTo(item2.getSourceName());
+                    return collator.compare(item1.getSourceName(), item2.getSourceName());
                 }
             });
             // load website sources to adapter
@@ -272,9 +280,7 @@ public class WebsitesFragment extends Fragment implements SharedPreferences.OnSh
     @Override
     public void onPause() {
         onPauseFlag = true;
-        if (bannerAdView != null) {
-            bannerAdView.pause();
-        }
+
         super.onPause();
     }
 
@@ -290,9 +296,7 @@ public class WebsitesFragment extends Fragment implements SharedPreferences.OnSh
             }
             onPauseFlag = false;
         }
-        if (bannerAdView != null) {
-            bannerAdView.resume();
-        }
+
         super.onResume();
     }
 
@@ -300,10 +304,16 @@ public class WebsitesFragment extends Fragment implements SharedPreferences.OnSh
     public void onDestroy() {
         //unregister the sharedpreferences
         sourcePreferences.unregisterOnSharedPreferenceChangeListener(this);
-        if (bannerAdView != null) {
-            bannerAdView.destroy();
-        }
+
         super.onDestroy();
     }
 
+    @Override
+    public void setUserVisibleHint(boolean isVisibleToUser) {
+        super.setUserVisibleHint(isVisibleToUser);
+
+        if(isVisibleToUser && isResumed() && bannerAdView != null){
+            bannerAdView.setVisibility(View.VISIBLE);
+        }
+    }
 }

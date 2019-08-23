@@ -1,18 +1,11 @@
 package com.haberinadresi.androidapp.activities;
 
-import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.drawable.Drawable;
-import android.net.Uri;
 import android.os.Bundle;
 import androidx.annotation.Nullable;
-import androidx.browser.customtabs.CustomTabsCallback;
-import androidx.browser.customtabs.CustomTabsClient;
-import androidx.browser.customtabs.CustomTabsIntent;
-import androidx.browser.customtabs.CustomTabsServiceConnection;
-import androidx.browser.customtabs.CustomTabsSession;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.widget.NestedScrollView;
@@ -34,6 +27,7 @@ import com.bumptech.glide.load.engine.GlideException;
 import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.RequestOptions;
 import com.bumptech.glide.request.target.Target;
+import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
 import com.haberinadresi.androidapp.R;
@@ -45,7 +39,6 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.haberinadresi.androidapp.utilities.NetworkUtils;
 import com.haberinadresi.androidapp.utilities.BackupLogosDrive;
-import com.haberinadresi.androidapp.utilities.WebUtils;
 
 import java.lang.reflect.Type;
 import java.util.List;
@@ -55,16 +48,14 @@ public class NewsDetailActivity extends AppCompatActivity {
     private NewsItem newsItem;
     private AdView bannerAdView;
     Intent newsDetail;
-    private SharedPreferences customKeys, savedNews;
-    private CustomTabsClient customTabsClient;
-    private CustomTabsServiceConnection serviceConnection;
+    private SharedPreferences savedNews;
     private boolean displayOnlyInWifi;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        customKeys = getSharedPreferences(getResources().getString(R.string.custom_keys), MODE_PRIVATE);
+        SharedPreferences customKeys = getSharedPreferences(getResources().getString(R.string.custom_keys), MODE_PRIVATE);
         // Set the text style (size) of user's preference
         String fontPreference = customKeys.getString(getResources().getString(R.string.pref_font_key), "medium");
         if(fontPreference != null){
@@ -101,6 +92,13 @@ public class NewsDetailActivity extends AppCompatActivity {
         bannerAdView = findViewById(R.id.bannerAdView);
         AdRequest adRequest = new AdRequest.Builder().build();
         bannerAdView.loadAd(adRequest);
+        bannerAdView.setAdListener(new AdListener(){
+            @Override
+            public void onAdFailedToLoad(int i) {
+                // If failed, then load a new one
+                bannerAdView.loadAd(new AdRequest.Builder().build());
+            }
+        });
 
         TextView newsSource = findViewById(R.id.news_detail_source);
         TextView newsTitle = findViewById(R.id.news_detail_title);
@@ -219,24 +217,15 @@ public class NewsDetailActivity extends AppCompatActivity {
 
         }
 
-        // Open the news link on the webpage (With CHROME CUSTOM TABS or WEBVIEW)
+        // Open the news link with Webview
         Button newsLink = findViewById(R.id.news_detail_click);
         newsLink.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // If user preferred to open the link with browser, Open with Chrome Custom Tabs
-                if (customKeys.getBoolean(getResources().getString(R.string.open_with_browser_key), false)){
-                    // Create chrome custom tabs in WebUtils class and open
-                    CustomTabsIntent customTabsIntent = WebUtils
-                            .createChromeTab(NewsDetailActivity.this, newsItem.getNewsUrl());
-                    customTabsIntent.launchUrl(NewsDetailActivity.this, Uri.parse(newsItem.getNewsUrl()));
-                // Open the news link in Webview
-                } else {
-                    Intent intentWebview = new Intent(NewsDetailActivity.this, ShowInWebviewActivity.class);
-                    intentWebview.putExtra(getResources().getString(R.string.news_source_for_display), newsItem.getSource());
-                    intentWebview.putExtra(getResources().getString(R.string.news_url), newsItem.getNewsUrl());
-                    startActivity(intentWebview);
-                }
+                Intent intentWebview = new Intent(NewsDetailActivity.this, ShowInWebviewActivity.class);
+                intentWebview.putExtra(getResources().getString(R.string.news_source_for_display), newsItem.getSource());
+                intentWebview.putExtra(getResources().getString(R.string.news_url), newsItem.getNewsUrl());
+                startActivity(intentWebview);
 
             }
         });
@@ -357,24 +346,17 @@ public class NewsDetailActivity extends AppCompatActivity {
                 layouts[i].setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
+
                         // Increment the click counter (used for displaying Interstitial Ad in Main Activity OnResume)
                         SharedPreferences customKeys = getSharedPreferences(getResources().getString(R.string.custom_keys), MODE_PRIVATE);
                         int counter = customKeys.getInt(getResources().getString(R.string.news_click_counter),0);
                         customKeys.edit().putInt(getResources().getString(R.string.news_click_counter), counter + 1).apply();
 
-                        // If user preferred to open the link with browser, Open with Chrome Custom Tabs
-                        if (customKeys.getBoolean(getResources().getString(R.string.open_with_browser_key), false)){
-                            // Create chrome custom tabs in WebUtils class and open
-                            CustomTabsIntent customTabsIntent = WebUtils
-                                    .createChromeTab(NewsDetailActivity.this, extraNewsList.get(index).getNewsUrl());
-                            customTabsIntent.launchUrl(NewsDetailActivity.this, Uri.parse(extraNewsList.get(index).getNewsUrl()));
-                            // Open the news link in Webview
-                        } else {
-                            Intent intentWebview = new Intent(NewsDetailActivity.this, ShowInWebviewActivity.class);
-                            intentWebview.putExtra(getResources().getString(R.string.news_url), extraNewsList.get(index).getNewsUrl());
-                            intentWebview.putExtra(getResources().getString(R.string.news_source_for_display), extraNewsList.get(index).getSource());
-                            startActivity(intentWebview);
-                        }
+                        // Open the link with Webview
+                        Intent intentWebview = new Intent(NewsDetailActivity.this, ShowInWebviewActivity.class);
+                        intentWebview.putExtra(getResources().getString(R.string.news_url), extraNewsList.get(index).getNewsUrl());
+                        intentWebview.putExtra(getResources().getString(R.string.news_source_for_display), extraNewsList.get(index).getSource());
+                        startActivity(intentWebview);
                     }
                 });
 
@@ -385,30 +367,6 @@ public class NewsDetailActivity extends AppCompatActivity {
             moreNewsTextview.setVisibility(View.GONE);
             extraNewsContainer.setVisibility(View.GONE);
         }
-
-        /////////  Start the Chrome Custom Tabs service  /////////////
-        serviceConnection = new CustomTabsServiceConnection() {
-            @Override
-            public void onCustomTabsServiceConnected(ComponentName name, CustomTabsClient client) {
-                // mClient is now valid.
-                customTabsClient = client;
-                // Warms-up the Chrome Custom Tabs to open the News Link with Chrome faster
-                customTabsClient.warmup(0L);
-                CustomTabsSession session = customTabsClient.newSession(new CustomTabsCallback());
-                if(session != null && newsItem != null){
-                    session.mayLaunchUrl(Uri.parse(newsItem.getNewsUrl()), null, null);
-                }
-            }
-
-            @Override
-            public void onServiceDisconnected(ComponentName name) {
-                // mClient is no longer valid. This also invalidates sessions.
-                customTabsClient = null;
-            }
-        };
-
-        CustomTabsClient.bindCustomTabsService(this, "com.android.chrome", serviceConnection);
-
     }
 
     @Override
@@ -504,17 +462,10 @@ public class NewsDetailActivity extends AppCompatActivity {
 
     @Override
     public void onDestroy() {
-        // Unregister chrome service to avoid memory leak
-        if(serviceConnection != null){
-            this.unbindService(serviceConnection);
-            customTabsClient = null;
-            serviceConnection = null;
-        }
+        super.onDestroy();
         if (bannerAdView != null) {
             bannerAdView.destroy();
         }
-        super.onDestroy();
     }
-
 
 }

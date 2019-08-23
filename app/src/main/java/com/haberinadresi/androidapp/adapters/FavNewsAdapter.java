@@ -3,10 +3,8 @@ package com.haberinadresi.androidapp.adapters;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.net.Uri;
 import androidx.annotation.NonNull;
 import androidx.constraintlayout.widget.ConstraintLayout;
-import androidx.browser.customtabs.CustomTabsIntent;
 import androidx.appcompat.widget.PopupMenu;
 import androidx.recyclerview.widget.RecyclerView;
 import android.text.format.DateUtils;
@@ -26,7 +24,6 @@ import com.haberinadresi.androidapp.models.NewsItem;
 import com.haberinadresi.androidapp.repository.FavNewsRepository;
 import com.haberinadresi.androidapp.utilities.GlideApp;
 import com.haberinadresi.androidapp.utilities.NetworkUtils;
-import com.haberinadresi.androidapp.utilities.WebUtils;
 
 import java.util.List;
 
@@ -131,23 +128,10 @@ public class FavNewsAdapter extends RecyclerView.Adapter<FavNewsAdapter.NewsView
             @Override
             public void onClick(View v) {
 
-                // If user preferred to open the link with browser, Open with Chrome Custom Tabs
-                if (customKeys.getBoolean(context.getResources().getString(R.string.open_with_browser_key), false)){
-                    // Create chrome custom tabs in WebUtils class and open
-                    CustomTabsIntent customTabsIntent = WebUtils
-                            .createChromeTab(context, newsItem.getNewsUrl());
-                    customTabsIntent.launchUrl(context, Uri.parse(newsItem.getNewsUrl()));
-                // Otherwise open the news link in Webview
-                } else {
-                    Intent intentDetail = new Intent(context, ShowInWebviewActivity.class);
-                    intentDetail.putExtra(context.getResources().getString(R.string.news_url), newsItem.getNewsUrl());
-                    intentDetail.putExtra(context.getResources().getString(R.string.news_source_for_display), newsItem.getSource());
-                    intentDetail.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                    context.startActivity(intentDetail);
-                }
-
-                // tell the adapter that there is change in the clicked item
-                notifyItemChanged(newsViewHolder.getAdapterPosition());
+                Intent intentDetail = new Intent(context, ShowInWebviewActivity.class);
+                intentDetail.putExtra(context.getResources().getString(R.string.news_url), newsItem.getNewsUrl());
+                intentDetail.putExtra(context.getResources().getString(R.string.news_source_for_display), newsItem.getSource());
+                context.startActivity(intentDetail);
             }
         });
 

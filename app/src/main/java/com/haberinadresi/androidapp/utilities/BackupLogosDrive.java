@@ -355,6 +355,8 @@ public class BackupLogosDrive {
                 return "https://docs.google.com/uc?id=15-iKttywaPmAFqqtpgfDueZxIT0_wV_1";
             case "cukurovaexpres_habersiteleri":
                 return "https://docs.google.com/uc?id=1RpR9dJs3xMjwv4q8xGWDHzFh2U5biP_S";
+            case "cukurovametropol_habersiteleri":
+                return "https://docs.google.com/uc?id=1geud9BbZ8PVs-8KWqfyaNlYeV4oIC-87";
             case "denizlihaber_habersiteleri":
                 return "https://docs.google.com/uc?id=1iSlzSv1hdbWii1HAk5BFUy88fPr9anbX";
             case "diyarinsesi_habersiteleri":
@@ -365,6 +367,8 @@ public class BackupLogosDrive {
                 return "https://docs.google.com/uc?id=1l2kYOxXgE2DYjnLW6ebW5HtRHYL_g1s6";
             case "eskisehiranadolu_habersiteleri":
                 return "https://docs.google.com/uc?id=1tqQkq4USgzYdT2OGLSMZcK6RonNC-KVs";
+            case "eskisehiresgazete_habersiteleri":
+                return "https://docs.google.com/uc?id=1mO_C15gvr7Mx7et4xY2SahvBaDShmPP-";
             case "gazianteppusula_habersiteleri":
                 return "https://docs.google.com/uc?id=1tKZTqPIRwRu9MIV50fR2X6_EwsbwGM_J";
             case "gercekhaberci_habersiteleri":

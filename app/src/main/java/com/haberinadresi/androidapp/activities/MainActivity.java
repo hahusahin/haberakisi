@@ -11,6 +11,8 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import androidx.annotation.NonNull;
+
+import com.google.android.gms.ads.AdView;
 import com.google.android.material.tabs.TabLayout;
 import androidx.viewpager.widget.ViewPager;
 import com.google.android.material.navigation.NavigationView;
@@ -34,8 +36,6 @@ import com.google.firebase.messaging.FirebaseMessaging;
 import com.haberinadresi.androidapp.R;
 import com.haberinadresi.androidapp.adapters.TabPagerAdapter;
 import com.haberinadresi.androidapp.utilities.SharedPreferenceUtils;
-import com.haberinadresi.androidapp.utilities.WebUtils;
-import com.haberinadresi.androidapp.utilities.WhatsNewDialog;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener{
@@ -43,6 +43,7 @@ public class MainActivity extends AppCompatActivity
     private NavigationView navigationView;
     private SharedPreferences customPreferences;
     private InterstitialAd interstitialAd;
+    private AdView bannerAdView;
     private boolean onPauseFlag = false;
     public static final int MAX_COUNT = 10; //If user clicks more than ... news detail, show Interstitial ad when backpressed
 
@@ -151,6 +152,18 @@ public class MainActivity extends AppCompatActivity
             public void onAdClosed() {
                 // Load the next interstitial
                 interstitialAd.loadAd(new AdRequest.Builder().build());
+            }
+        });
+
+        //Initialize Banner Ad
+        bannerAdView = findViewById(R.id.bannerAdView);
+        AdRequest adRequest = new AdRequest.Builder().build();
+        bannerAdView.loadAd(adRequest);
+        bannerAdView.setAdListener(new AdListener(){
+            @Override
+            public void onAdFailedToLoad(int i) {
+                // If failed, then load a new one
+                bannerAdView.loadAd(new AdRequest.Builder().build());
             }
         });
 
@@ -295,6 +308,11 @@ public class MainActivity extends AppCompatActivity
     @Override
     public void onPause() {
         onPauseFlag = true;
+
+        if (bannerAdView != null) {
+            bannerAdView.pause();
+        }
+
         super.onPause();
     }
 
@@ -310,16 +328,10 @@ public class MainActivity extends AppCompatActivity
             onPauseFlag = false;
         }
 
-        // Show What's New Dialog for once if it is not seen by user AND it is updated (not newly installed)
-        if(! customPreferences.getBoolean(getResources().getString(R.string.whats_new_dialog_v5), false) &&
-                WebUtils.isInstallFromUpdate(MainActivity.this)) {
-            try {
-                WhatsNewDialog dialog = new WhatsNewDialog();
-                dialog.show(getSupportFragmentManager(), "What's New In This Update");
-            } catch (java.lang.IllegalStateException e) {
-                customPreferences.edit().putBoolean(getResources().getString(R.string.whats_new_dialog_v5), true).apply();
-            }
+        if (bannerAdView != null) {
+            bannerAdView.resume();
         }
+
         super.onResume();
     }
 
@@ -330,6 +342,10 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public void onDestroy() {
+        if (bannerAdView != null) {
+            bannerAdView.destroy();
+        }
+
         super.onDestroy();
     }
 
@@ -373,6 +389,19 @@ public class MainActivity extends AppCompatActivity
 
 
 ////////// ÖNCEDEN KULLANDIKLARIM ///////////
+
+/*
+// Show What's New Dialog for once if it is not seen by user AND it is updated (not newly installed)
+if(! customPreferences.getBoolean(getResources().getString(R.string.whats_new_dialog_v5), false) &&
+        WebUtils.isInstallFromUpdate(MainActivity.this)) {
+    try {
+        WhatsNewDialog dialog = new WhatsNewDialog();
+        dialog.show(getSupportFragmentManager(), "What's New In This Update");
+    } catch (java.lang.IllegalStateException e) {
+        customPreferences.edit().putBoolean(getResources().getString(R.string.whats_new_dialog_v5), true).apply();
+    }
+}
+ */
 
 /*
 /////////////////// YAZARLARIN KEY'LERININ KUCUK HARFE ÇEVRİLMESİ ///////////////////////////

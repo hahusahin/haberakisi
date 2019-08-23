@@ -14,6 +14,7 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.appcompat.widget.SearchView;
+
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -61,6 +62,7 @@ public class NewsFragment extends Fragment implements SharedPreferences.OnShared
     private String categoryName;
     private LinearLayoutManager linearLayoutManager;
     private GridLayoutManager gridLayoutManager;
+    private AdView bannerAdView;
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup parent,
@@ -78,6 +80,11 @@ public class NewsFragment extends Fragment implements SharedPreferences.OnShared
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+        // Get the banner ad from main activity and Hide it if this fragment is visible to user
+        bannerAdView = requireActivity().findViewById(R.id.bannerAdView);
+        if(getUserVisibleHint() && bannerAdView != null){
+            bannerAdView.setVisibility(View.GONE);
+        }
         // The button to display if user didn't select any news source
         sourceWarning = view.findViewById(R.id.btn_source_alert);
         sourceWarning.setVisibility(View.GONE);
@@ -93,6 +100,7 @@ public class NewsFragment extends Fragment implements SharedPreferences.OnShared
         sourcePreferences.registerOnSharedPreferenceChangeListener(this);
 
         customPreferences = requireActivity().getSharedPreferences(getResources().getString(R.string.custom_keys), MODE_PRIVATE);
+        customPreferences.registerOnSharedPreferenceChangeListener(this);
 
         // Initialize recyclerview types
         recyclerView = view.findViewById(R.id.rv_news);
@@ -219,6 +227,22 @@ public class NewsFragment extends Fragment implements SharedPreferences.OnShared
         if(key.contains("_" + categoryKey)){
             isPreferenceChanged = true;
         }
+
+        // If the news view type preference changed, then update the recyclerview layout and adapter
+        if (key.equals(getResources().getString(R.string.news_item_view_preference))){
+            int news_view_type = customPreferences.getInt(getResources().getString(R.string.news_item_view_preference), 0);
+            switch (news_view_type){
+                case 0: case 1:
+                    recyclerView.setLayoutManager(linearLayoutManager);
+                    break;
+                case 2:
+                    recyclerView.setLayoutManager(gridLayoutManager);
+                    break;
+                default:
+                    recyclerView.setLayoutManager(linearLayoutManager);
+            }
+            recyclerView.setAdapter(newsAdapter);
+        }
     }
 
     @Override
@@ -260,6 +284,7 @@ public class NewsFragment extends Fragment implements SharedPreferences.OnShared
     public void onDestroy() {
         //unregister the sharedpreferences
         sourcePreferences.unregisterOnSharedPreferenceChangeListener(this);
+        customPreferences.unregisterOnSharedPreferenceChangeListener(this);
         //destroy the adMob
         for (Object item : recyclerViewItems) {
             if (item instanceof AdView) {
@@ -268,6 +293,15 @@ public class NewsFragment extends Fragment implements SharedPreferences.OnShared
             }
         }
         super.onDestroy();
+    }
+
+    @Override
+    public void setUserVisibleHint(boolean isVisibleToUser) {
+        super.setUserVisibleHint(isVisibleToUser);
+
+        if(isVisibleToUser && isResumed() && bannerAdView != null){
+            bannerAdView.setVisibility(View.GONE);
+        }
     }
 
     // Added to make search in the news list
@@ -364,24 +398,20 @@ public class NewsFragment extends Fragment implements SharedPreferences.OnShared
             news_view_type = (news_view_type + 1) % 3;
             // Update the shared preferences file immediately
             customPreferences.edit().putInt(getResources().getString(R.string.news_item_view_preference), news_view_type).commit();
+            // Update the icon wrt the view preference
             switch (news_view_type){
                 case 0:
                     item.setIcon(R.drawable.ic_newsview2);
-                    recyclerView.setLayoutManager(linearLayoutManager);
                     break;
                 case 1:
                     item.setIcon(R.drawable.ic_newsview3);
-                    recyclerView.setLayoutManager(linearLayoutManager);
                     break;
                 case 2:
                     item.setIcon(R.drawable.ic_newsview1);
-                    recyclerView.setLayoutManager(gridLayoutManager);
                     break;
                 default:
                     item.setIcon(R.drawable.ic_newsview2);
-                    recyclerView.setLayoutManager(linearLayoutManager);
             }
-            recyclerView.setAdapter(newsAdapter);
             return true;
         }
 

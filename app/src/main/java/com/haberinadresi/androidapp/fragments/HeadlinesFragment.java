@@ -9,13 +9,13 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ProgressBar;
 
-import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
 import com.haberinadresi.androidapp.R;
 import com.haberinadresi.androidapp.activities.SettingsActivity;
@@ -45,6 +45,11 @@ public class HeadlinesFragment extends Fragment {
     public void onViewCreated(@NonNull final View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+        // Get the banner ad from main activity and show it if this fragment is visible to user
+        bannerAdView = requireActivity().findViewById(R.id.bannerAdView);
+        if(getUserVisibleHint() && bannerAdView != null){
+            bannerAdView.setVisibility(View.VISIBLE);
+        }
         // The ProgressBar that will indicate to the user that news are loading
         progressBar = view.findViewById(R.id.pb_manset_fragment);
         progressBar.setVisibility(View.GONE);
@@ -59,11 +64,6 @@ public class HeadlinesFragment extends Fragment {
         recyclerView.setHasFixedSize(true);
 
         headlinesVM = ViewModelProviders.of(this).get(HeadlinesVM.class);
-
-        //Admob
-        bannerAdView = view.findViewById(R.id.bannerAdView);
-        AdRequest adRequest = new AdRequest.Builder().build();
-        bannerAdView.loadAd(adRequest);
 
         // The mobile data save alert view
         Button mobileDataAlert = view.findViewById(R.id.btn_mobiledata_warning);
@@ -128,25 +128,25 @@ public class HeadlinesFragment extends Fragment {
 
     @Override
     public void onPause() {
-        if (bannerAdView != null) {
-            bannerAdView.pause();
-        }
         super.onPause();
     }
 
     @Override
     public void onResume() {
-        if (bannerAdView != null) {
-            bannerAdView.resume();
-        }
         super.onResume();
     }
 
     @Override
     public void onDestroy() {
-        if (bannerAdView != null) {
-            bannerAdView.destroy();
-        }
         super.onDestroy();
+    }
+
+    @Override
+    public void setUserVisibleHint(boolean isVisibleToUser) {
+        super.setUserVisibleHint(isVisibleToUser);
+
+        if(isVisibleToUser && isResumed() && bannerAdView != null){
+            bannerAdView.setVisibility(View.VISIBLE);
+        }
     }
 }

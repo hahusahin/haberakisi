@@ -5,10 +5,10 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginStart="12dp"
-    android:layout_marginTop="8dp"
-    android:layout_marginEnd="12dp"
-    android:layout_marginBottom="8dp"
+    android:layout_marginStart="10dp"
+    android:layout_marginTop="6dp"
+    android:layout_marginEnd="10dp"
+    android:layout_marginBottom="6dp"
     app:cardCornerRadius="8dp"
     app:cardElevation="8dp">
 
@@ -16,7 +16,7 @@
         android:id="@+id/cl_news_item"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="12dp">
+        android:layout_margin="10dp">
 
         <TextView
             android:id="@+id/tv_news_source"

@@ -108,17 +108,6 @@ public class SettingsFragment extends PreferenceFragmentCompat {
             }
         });
 
-        // Open with Web Browser Switch Change Listener
-        Preference chromePreference = findPreference(getResources().getString(R.string.open_with_browser_key));
-        chromePreference.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
-            @Override
-            public boolean onPreferenceChange(Preference preference, Object newValue) {
-                // Update shared preferences key
-                SharedPreferences.Editor editor = sharedPreferences.edit();
-                editor.putBoolean(getResources().getString(R.string.open_with_browser_key), (Boolean) newValue).apply();
-                return true;
-            }
-        });
 
         // Privacy Policy
         Preference privacyPolicy = findPreference(getResources().getString(R.string.privacy_policy_key));
@@ -175,7 +164,21 @@ public class SettingsFragment extends PreferenceFragmentCompat {
     };
 
 
-    /* ŞİMDİLİK İPTAL GEREK YOK RESİMLERİ YÜKLEMİYORUM ZATEN TELEFONA
+    /*
+    CHROME DA AÇ - ŞİMDİLİK İPTAL
+    // Open with Web Browser Switch Change Listener
+        Preference chromePreference = findPreference(getResources().getString(R.string.open_with_browser_key));
+        chromePreference.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
+            @Override
+            public boolean onPreferenceChange(Preference preference, Object newValue) {
+                // Update shared preferences key
+                SharedPreferences.Editor editor = sharedPreferences.edit();
+                editor.putBoolean(getResources().getString(R.string.open_with_browser_key), (Boolean) newValue).apply();
+                return true;
+            }
+        });
+
+    ŞİMDİLİK İPTAL GEREK YOK RESİMLERİ YÜKLEMİYORUM ZATEN TELEFONA
     // Clear Image Cache Button
         Preference clearCache = findPreference(getResources().getString(R.string.clear_cache_key));
         // Get the cache size and set it to the summary as kB, MB etc.. (ŞİMDİLİK BOYUTU GÖSTERME)

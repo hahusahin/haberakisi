@@ -6,8 +6,8 @@ android {
         applicationId "com.haberinadresi.androidapp"
         minSdkVersion 19
         targetSdkVersion 28
-        versionCode 22
-        versionName "2.2"
+        versionCode 23
+        versionName "2.3"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables.useSupportLibrary = true
         multiDexEnabled true
@@ -44,7 +44,7 @@ dependencies {
     annotationProcessor 'androidx.lifecycle:lifecycle-compiler:2.0.0'
     implementation 'androidx.room:room-runtime:2.1.0'
     annotationProcessor 'androidx.room:room-compiler:2.1.0'
-    implementation 'com.google.android.gms:play-services-ads:18.1.0'
+    implementation 'com.google.android.gms:play-services-ads:18.1.1'
 
     implementation 'com.google.firebase:firebase-core:17.0.1'
     implementation 'com.google.firebase:firebase-messaging:19.0.1'

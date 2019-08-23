@@ -17,15 +17,22 @@
         app:showAsAction="always" />
 
     <item
-        android:id="@+id/action_refresh"
+        android:id="@+id/action_openinbrowser"
         android:orderInCategory="102"
+        android:icon="@drawable/ic_open_in_browser"
+        android:title="@string/open_in_browser"
+        app:showAsAction="ifRoom" />
+
+    <item
+        android:id="@+id/action_refresh"
+        android:orderInCategory="103"
         android:icon="@drawable/ic_refresh"
         android:title="@string/refresh"
         app:showAsAction="ifRoom" />
 
     <item
         android:id="@+id/action_share"
-        android:orderInCategory="103"
+        android:orderInCategory="104"
         android:icon="@drawable/ic_share_white"
         android:title="@string/share_news"
         app:showAsAction="ifRoom" />

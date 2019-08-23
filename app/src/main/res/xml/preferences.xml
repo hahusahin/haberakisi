@@ -47,13 +47,6 @@
             android:targetClass="com.haberinadresi.androidapp.activities.EditCategoriesActivity"/>
     </Preference>
 
-    <SwitchPreference
-        android:icon="@drawable/ic_openwithbrowser"
-        android:key="@string/open_with_browser_key"
-        android:summaryOff="@string/open_with_browser_off"
-        android:summaryOn="@string/open_with_browser_on"
-        android:title="@string/open_with_browser_title" />
-
     <Preference
         android:icon="@drawable/ic_security"
         android:key="@string/privacy_policy_key"
@@ -61,6 +54,13 @@
     </Preference>
 
     <!--
+    <SwitchPreference
+        android:icon="@drawable/ic_openbrowser_black"
+        android:key="@string/open_with_browser_key"
+        android:summaryOff="@string/open_with_browser_off"
+        android:summaryOn="@string/open_with_browser_on"
+        android:title="@string/open_with_browser_title" />
+
     <Preference
         android:icon="@drawable/ic_cached"
         android:key="@string/clear_cache_key"

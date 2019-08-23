@@ -5,10 +5,8 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.ColorMatrix;
 import android.graphics.ColorMatrixColorFilter;
-import android.net.Uri;
 import androidx.annotation.NonNull;
 import androidx.constraintlayout.widget.ConstraintLayout;
-import androidx.browser.customtabs.CustomTabsIntent;
 import androidx.appcompat.widget.PopupMenu;
 import androidx.recyclerview.widget.RecyclerView;
 import android.text.format.DateUtils;
@@ -27,7 +25,6 @@ import com.haberinadresi.androidapp.models.Columnist;
 import com.haberinadresi.androidapp.repository.FavColumnsRepository;
 import com.haberinadresi.androidapp.utilities.GlideApp;
 import com.haberinadresi.androidapp.utilities.NetworkUtils;
-import com.haberinadresi.androidapp.utilities.WebUtils;
 
 import java.util.List;
 
@@ -133,21 +130,12 @@ public class ColumnAdapter extends RecyclerView.Adapter<ColumnAdapter.ColumnView
                 // Save the clicked item's link to sharedpreference (to gray out it later on)
                 clickedColumns.edit().putLong(columnItem.getColumnUrl(), System.currentTimeMillis()).apply();
 
-                // Open the news link on the webpage (With CHROME CUSTOM TABS or WEBVIEW)
-                // If user preferred to open the link with browser, Open with Chrome Custom Tabs
-                if (customKeys.getBoolean(context.getResources().getString(R.string.open_with_browser_key), false)){
-                    // Create chrome custom tabs in WebUtils class and open
-                    CustomTabsIntent customTabsIntent = WebUtils
-                            .createChromeTab(context, columnItem.getColumnUrl());
-                    customTabsIntent.launchUrl(context, Uri.parse(columnItem.getColumnUrl()));
-                    // Open the news link in Webview
-                } else {
-                    Intent intentUrl = new Intent(context, ShowInWebviewActivity.class);
-                    intentUrl.putExtra(context.getResources().getString(R.string.news_url), columnItem.getColumnUrl());
-                    intentUrl.putExtra(context.getResources().getString(R.string.news_source_for_display), columnItem.getName());
-                    intentUrl.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                    context.startActivity(intentUrl);
-                }
+                // Open the link with Webview
+                Intent intentUrl = new Intent(context, ShowInWebviewActivity.class);
+                intentUrl.putExtra(context.getResources().getString(R.string.news_url), columnItem.getColumnUrl());
+                intentUrl.putExtra(context.getResources().getString(R.string.news_source_for_display), columnItem.getName());
+                intentUrl.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                context.startActivity(intentUrl);
 
                 // tell the adapter that there is change in the clicked item
                 notifyItemChanged(columnViewHolder.getAdapterPosition());

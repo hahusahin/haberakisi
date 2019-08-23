@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
+
 <FrameLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
@@ -17,7 +18,6 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:paddingTop="8dp"
-            android:paddingBottom="100dp"
             android:clipToPadding="false"
             style="@style/FontStyle"/>
 
@@ -28,6 +28,7 @@
         android:layout_height="60dp"
         android:layout_width="60dp"
         android:layout_gravity="center"
+        android:layout_marginBottom="?attr/actionBarSize"
         style="@style/Widget.AppCompat.ProgressBar"/>
 
     <Button
@@ -39,6 +40,7 @@
         android:drawablePadding="12dp"
         android:layout_gravity="center"
         android:gravity="center_vertical"
+        android:layout_marginBottom="?attr/actionBarSize"
         android:text="@string/first_select_columnist"
         android:textSize="22sp"/>
 
@@ -47,7 +49,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:layout_gravity="center">
+        android:layout_gravity="center"
+        android:layout_marginBottom="?attr/actionBarSize">
 
         <ImageView
             android:id="@+id/iv_wifi_grey"
@@ -56,7 +59,8 @@
             android:adjustViewBounds="true"
             android:layout_gravity="center_horizontal"
             app:srcCompat ="@drawable/ic_wifi_grey"
-            android:layout_marginBottom="8dp"/>
+            android:layout_marginBottom="8dp"
+            tools:ignore="ContentDescription"/>
 
         <TextView
             android:id="@+id/tv_no_internet_connection"
@@ -79,15 +83,5 @@
             android:textSize="24sp"/>
 
     </LinearLayout>
-
-    <com.google.android.gms.ads.AdView
-        xmlns:ads="http://schemas.android.com/apk/res-auto"
-        android:id="@+id/bannerAdView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="bottom|center"
-        ads:adSize="SMART_BANNER"
-        ads:adUnitId="@string/admob_banner_kucuk_unit_id">
-    </com.google.android.gms.ads.AdView>
 
 </FrameLayout>

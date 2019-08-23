@@ -16,6 +16,7 @@ import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
 import com.haberinadresi.androidapp.R;
@@ -74,6 +75,13 @@ public class FavNewsActivity extends AppCompatActivity {
         bannerAdView = findViewById(R.id.bannerAdView);
         AdRequest adRequest = new AdRequest.Builder().build();
         bannerAdView.loadAd(adRequest);
+        bannerAdView.setAdListener(new AdListener(){
+            @Override
+            public void onAdFailedToLoad(int i) {
+                // If failed, then load a new one
+                bannerAdView.loadAd(new AdRequest.Builder().build());
+            }
+        });
 
         // Don't show empty favorite dialog at the beginning
         emptyFavNewsWarning = findViewById(R.id.tv_empty_fav_dialog);

@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
+
+<FrameLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
@@ -7,132 +8,114 @@
     android:layout_height="match_parent"
     tools:context=".activities.MainActivity">
 
-    <FrameLayout
+    <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_above="@+id/bannerAdView">
-
-        <androidx.core.widget.NestedScrollView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="6dp"
-            android:layout_marginBottom="4dp"
-            app:layout_behavior="@string/appbar_scrolling_view_behavior">
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical">
-
-                <androidx.recyclerview.widget.RecyclerView
-                    android:id="@+id/rv_websites_general"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    style="@style/FontStyle"/>
-
-                <View
-                    android:id="@+id/divider_1"
-                    android:layout_width="match_parent"
-                    android:layout_height="1dp"
-                    android:background="@color/colorPrimaryText"/>
-
-                <androidx.recyclerview.widget.RecyclerView
-                    android:id="@+id/rv_websites_sport"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    style="@style/FontStyle"/>
-
-                <View
-                    android:id="@+id/divider_2"
-                    android:layout_width="match_parent"
-                    android:layout_height="1dp"
-                    android:background="@color/colorPrimaryText"/>
-
-                <androidx.recyclerview.widget.RecyclerView
-                    android:id="@+id/rv_websites_others"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    style="@style/FontStyle"/>
-
-                <View
-                    android:id="@+id/divider_3"
-                    android:layout_width="match_parent"
-                    android:layout_height="1dp"
-                    android:background="@color/colorPrimaryText"/>
-
-                <androidx.recyclerview.widget.RecyclerView
-                    android:id="@+id/rv_websites_foreign"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    style="@style/FontStyle"/>
-
-            </LinearLayout>
-
-        </androidx.core.widget.NestedScrollView>
-
-        <Button
-            android:id="@+id/btn_source_alert"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:padding="12dp"
-            android:drawableStart="@mipmap/ic_warning_vertical"
-            android:drawablePadding="8dp"
-            android:layout_gravity="center"
-            android:gravity="center_vertical"
-            android:text="@string/first_select_website"
-            android:textSize="16sp"/>
+        android:layout_height="wrap_content"
+        android:layout_marginTop="6dp"
+        android:layout_marginBottom="4dp"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
         <LinearLayout
-            android:id="@+id/layout_internet_alert"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:layout_gravity="center">
+            android:orientation="vertical">
 
-            <ImageView
-                android:id="@+id/iv_wifi_grey"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:adjustViewBounds="true"
-                android:layout_gravity="center_horizontal"
-                app:srcCompat="@drawable/ic_wifi_grey"
-                android:layout_marginBottom="8dp"
-                tools:ignore="ContentDescription"/>
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rv_websites_general"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                style="@style/FontStyle"/>
 
-            <TextView
-                android:id="@+id/tv_no_internet_connection"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:gravity="center"
-                android:padding="8dp"
-                android:layout_marginBottom="8dp"
-                android:text="@string/check_network_connection"
-                android:textSize="18sp"
-                android:textStyle="bold" />
+            <View
+                android:id="@+id/divider_1"
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@color/colorPrimaryText"/>
 
-            <Button
-                android:id="@+id/btn_check_internet"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
-                android:text="@string/try_again"
-                android:textSize="14sp"/>
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rv_websites_sport"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                style="@style/FontStyle"/>
+
+            <View
+                android:id="@+id/divider_2"
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@color/colorPrimaryText"/>
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rv_websites_others"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                style="@style/FontStyle"/>
+
+            <View
+                android:id="@+id/divider_3"
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@color/colorPrimaryText"/>
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rv_websites_foreign"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                style="@style/FontStyle"/>
 
         </LinearLayout>
 
-    </FrameLayout>
+    </androidx.core.widget.NestedScrollView>
 
-    <!-- Banner Ad -->
-    <com.google.android.gms.ads.AdView
-        xmlns:ads="http://schemas.android.com/apk/res-auto"
-        android:id="@+id/bannerAdView"
+    <Button
+        android:id="@+id/btn_source_alert"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true"
-        ads:adSize="SMART_BANNER"
-        ads:adUnitId="@string/admob_banner_kucuk_unit_id">
-    </com.google.android.gms.ads.AdView>
+        android:padding="12dp"
+        android:drawableStart="@mipmap/ic_warning_vertical"
+        android:drawablePadding="8dp"
+        android:layout_gravity="center"
+        android:gravity="center_vertical"
+        android:layout_marginBottom="?attr/actionBarSize"
+        android:text="@string/first_select_website"
+        android:textSize="16sp"/>
 
-</RelativeLayout>
+    <LinearLayout
+        android:id="@+id/layout_internet_alert"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_gravity="center"
+        android:layout_marginBottom="?attr/actionBarSize">
+
+        <ImageView
+            android:id="@+id/iv_wifi_grey"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:adjustViewBounds="true"
+            android:layout_gravity="center_horizontal"
+            app:srcCompat="@drawable/ic_wifi_grey"
+            android:layout_marginBottom="8dp"
+            tools:ignore="ContentDescription"/>
+
+        <TextView
+            android:id="@+id/tv_no_internet_connection"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:padding="8dp"
+            android:layout_marginBottom="8dp"
+            android:text="@string/check_network_connection"
+            android:textSize="18sp"
+            android:textStyle="bold" />
+
+        <Button
+            android:id="@+id/btn_check_internet"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:text="@string/try_again"
+            android:textSize="14sp"/>
+
+    </LinearLayout>
+
+</FrameLayout>

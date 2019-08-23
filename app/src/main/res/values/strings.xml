@@ -12,6 +12,7 @@
     <string name="share_column">Yazıyı Paylaş</string>
     <string name="save_news">Haberi Kaydet</string>
     <string name="save_column">Yazıyı Kaydet</string>
+    <string name="open_in_browser">Tarayıcıda Aç</string>
     <string name="unsave_news_column">Favorilerden Çıkar</string>
     <string name="refresh">Yenile</string>
     <string name="navigate_back">Önceki</string>
@@ -170,10 +171,6 @@
     <string name="open_notification_settings_key">Notification Settings</string>
     <string name="open_notification_settings_title">Bildirim Ayarları</string>
     <string name="edit_categories_summary">Haber Kategorilerinin Yerini Değiştir</string>
-    <string name="open_with_browser_title">Bağlantıları Açma Tercihi</string>
-    <string name="open_with_browser_on">Haber bağlantılarını tarayıcı (Chrome vb) ile açar</string>
-    <string name="open_with_browser_off">Haber bağlantılarını uygulama arayüzü ile açar</string>
-    <string name="open_with_browser_key">Open With Web Browser</string>
     <string name="change_font_size">Haber Yazı Boyutu</string>
     <string name="pref_font_key">fontsize</string>
     <string name="pref_font_label_small">Küçük</string>
@@ -186,10 +183,17 @@
     <string name="pref_font_value_extra_large">xlarge</string>
     <string name="privacy_policy_title">Gizlilik Sözleşmesi</string>
     <string name="privacy_policy_key">Privacy Policy</string>
+
+    <!-- KULLANILMIYOR -->
     <string name="clear_cache_title">Önbelleği Temizle</string>
     <string name="clear_cache_key">Clear Cache</string>
     <string name="clear_cache_summary">-</string>
     <string name="clear_cache_toast">Resim Önbelleği Temizlendi</string>
+    <string name="open_with_browser_title">Bağlantıları Açma Tercihi</string>
+    <string name="open_with_browser_on">Haber bağlantılarını tarayıcı (Chrome vb) ile açar</string>
+    <string name="open_with_browser_off">Haber bağlantılarını uygulama arayüzü ile açar</string>
+    <string name="open_with_browser_key">Open With Web Browser</string>
+
 
     <!-- Intro Activity -->
     <string name="intro_finish">Bitti</string>

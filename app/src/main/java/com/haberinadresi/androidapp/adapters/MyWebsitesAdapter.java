@@ -3,9 +3,7 @@ package com.haberinadresi.androidapp.adapters;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.net.Uri;
 import androidx.annotation.NonNull;
-import androidx.browser.customtabs.CustomTabsIntent;
 import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -21,7 +19,6 @@ import com.haberinadresi.androidapp.activities.ShowInWebviewActivity;
 import com.haberinadresi.androidapp.models.SourceItem;
 import com.haberinadresi.androidapp.utilities.GlideApp;
 import com.haberinadresi.androidapp.utilities.BackupLogosDrive;
-import com.haberinadresi.androidapp.utilities.WebUtils;
 
 import java.util.List;
 
@@ -88,27 +85,16 @@ public class MyWebsitesAdapter extends RecyclerView.Adapter<MyWebsitesAdapter.So
             @Override
             public void onClick(View view) {
 
+                // Open the link with Webview
+                Intent intentUrl = new Intent(context, ShowInWebviewActivity.class);
+                intentUrl.putExtra(context.getResources().getString(R.string.news_url), sourceItem.getSourceKey());
+                intentUrl.putExtra(context.getResources().getString(R.string.news_source_for_display), sourceItem.getSourceName());
+                intentUrl.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                context.startActivity(intentUrl);
+
                 // Increment the click counter (used for displaying Interstitial Ad in Main Activity OnResume)
                 int counter = customKeys.getInt(context.getResources().getString(R.string.news_click_counter),0);
-                SharedPreferences.Editor counterEditor = customKeys.edit();
-                counterEditor.putInt(context.getResources().getString(R.string.news_click_counter), counter + 1);
-                counterEditor.apply();
-
-                // Open the news website (With CHROME CUSTOM TABS or WEBVIEW)
-                // If user preferred to open the link with browser, Open with Chrome Custom Tabs
-                if (customKeys.getBoolean(context.getResources().getString(R.string.open_with_browser_key), false)){
-                    // Create chrome custom tabs in WebUtils class and open
-                    CustomTabsIntent customTabsIntent = WebUtils
-                            .createChromeTab(context, sourceItem.getSourceKey());
-                    customTabsIntent.launchUrl(context, Uri.parse(sourceItem.getSourceKey()));
-                // Otherwise open the news link in Webview
-                } else {
-                    Intent intentUrl = new Intent(context, ShowInWebviewActivity.class);
-                    intentUrl.putExtra(context.getResources().getString(R.string.news_url), sourceItem.getSourceKey());
-                    intentUrl.putExtra(context.getResources().getString(R.string.news_source_for_display), sourceItem.getSourceName());
-                    //intentUrl.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                    context.startActivity(intentUrl);
-                }
+                customKeys.edit().putInt(context.getResources().getString(R.string.news_click_counter), counter + 1).apply();
             }
         });
 

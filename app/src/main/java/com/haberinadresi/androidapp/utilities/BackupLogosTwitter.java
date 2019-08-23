@@ -350,11 +350,13 @@ public class BackupLogosTwitter {
             case "bursaolay_habersiteleri":
                 return "https://pbs.twimg.com/profile_images/862981528040689664/U8Qted_v_200x200.jpg";
             case "buyuksivas_habersiteleri":
-                return "https://pbs.twimg.com/profile_images/1074001087370280960/dxxAKjgT_200x200.jpg";
+                return "https://pbs.twimg.com/profile_images/1155122813059158017/liy5ydgs_200x200.jpg";
             case "canakkalehedef_habersiteleri":
                 return "https://pbs.twimg.com/profile_images/892046387961049088/-LN9mC0s_200x200.jpg";
             case "cukurovaexpres_habersiteleri":
                 return "https://pbs.twimg.com/profile_images/558599247986061313/wYBqYJya_200x200.jpeg";
+            case "cukurovametropol_habersiteleri":
+                return "https://pbs.twimg.com/profile_images/1065902871596736512/aCnA884-_200x200.jpg";
             case "denizlihaber_habersiteleri":
                 return "https://pbs.twimg.com/profile_images/1058155810/dhbr_200x200.jpg";
             case "diyarinsesi_habersiteleri":
@@ -365,6 +367,8 @@ public class BackupLogosTwitter {
                 return "https://pbs.twimg.com/profile_images/747850492894674944/EIwmLUcm_200x200.jpg";
             case "eskisehiranadolu_habersiteleri":
                 return "https://pbs.twimg.com/profile_images/697533970246987776/qxBxihq0_200x200.png";
+            case "eskisehiresgazete_habersiteleri":
+                return "https://pbs.twimg.com/profile_images/1087786124238573568/CfpJgu01_200x200.jpg";
             case "gazianteppusula_habersiteleri":
                 return "https://pbs.twimg.com/profile_images/559979480823779328/NnY3in6r_200x200.png";
             case "gercekhaberci_habersiteleri":

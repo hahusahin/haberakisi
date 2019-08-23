@@ -1,7 +1,12 @@
 package com.haberinadresi.androidapp.activities;
 
 import android.content.Intent;
+
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+
+import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import androidx.appcompat.widget.Toolbar;
 import android.view.KeyEvent;
@@ -11,6 +16,8 @@ import android.view.View;
 import android.webkit.JsPromptResult;
 import android.webkit.JsResult;
 import android.webkit.WebChromeClient;
+import android.webkit.WebResourceResponse;
+import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.FrameLayout;
@@ -18,13 +25,19 @@ import android.widget.ProgressBar;
 
 import com.haberinadresi.androidapp.R;
 
+import java.io.ByteArrayInputStream;
+
 public class ShowInWebviewActivity extends AppCompatActivity {
 
     private WebView webView;
     private ProgressBar progressBar;
     private FrameLayout frameLayout;
     private String source;
+    public static final String[] adKeywords =
+            {"googleadservices", "googleads", "pagead", "pubads", ".click", "/clicks", ".doubleclick", "adclick.", "/banner."};
 
+
+    @SuppressWarnings("SetJavaScriptEnabled")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -51,12 +64,19 @@ public class ShowInWebviewActivity extends AppCompatActivity {
         webView.setWebChromeClient(new MyChromeClient());
 
         webView.getSettings().setJavaScriptEnabled(true);
-        //webView.getSettings().setJavaScriptCanOpenWindowsAutomatically(true);
+        webView.getSettings().setDomStorageEnabled(true);
+        webView.getSettings().setUseWideViewPort(true);
+        webView.getSettings().setLoadWithOverviewMode(true); // To load the page without zoom
+        webView.getSettings().setLayoutAlgorithm(WebSettings.LayoutAlgorithm.TEXT_AUTOSIZING); // To avoid big font size
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            webView.getSettings().setMixedContentMode(WebSettings.MIXED_CONTENT_ALWAYS_ALLOW); // To show pictures (not seen in some websites)
+        }
+
+        //webView.getSettings().setSupportZoom(true);
         //webView.getSettings().setBuiltInZoomControls(true);
         //webView.getSettings().setDisplayZoomControls(true);
-        //webView.setVerticalScrollBarEnabled(false);
-        webView.getSettings().setDomStorageEnabled(true);
-        webView.setOverScrollMode(WebView.OVER_SCROLL_NEVER);
+        //webView.setOverScrollMode(WebView.OVER_SCROLL_NEVER);
+
         webView.loadUrl(newsUrl);
 
         progressBar.setProgress(0);
@@ -68,6 +88,23 @@ public class ShowInWebviewActivity extends AppCompatActivity {
             view.loadUrl(url);
             frameLayout.setVisibility(View.VISIBLE);
             return true;
+        }
+
+        // To block ads
+        @Nullable
+        @Override
+        public WebResourceResponse shouldInterceptRequest(WebView view, String url) {
+            boolean adFound = false;
+            for(String item : adKeywords){
+                if(url.contains(item)){
+                    adFound = true;
+                }
+            }
+            if(adFound){
+                return new WebResourceResponse("text/plain", "utf-8", new ByteArrayInputStream("".getBytes()));
+            } else {
+                return super.shouldInterceptRequest(view, url);
+            }
         }
     }
 
@@ -85,6 +122,7 @@ public class ShowInWebviewActivity extends AppCompatActivity {
             super.onProgressChanged(view, progress);
         }
 
+        // To block ads
         @Override
         public boolean onJsAlert(WebView view, String url, String message, JsResult result) {
             result.cancel();
@@ -106,7 +144,7 @@ public class ShowInWebviewActivity extends AppCompatActivity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.activity_show_in_webview, menu);
+        getMenuInflater().inflate(R.menu.activity_webview, menu);
         return true;
     }
 
@@ -129,6 +167,13 @@ public class ShowInWebviewActivity extends AppCompatActivity {
 
             if(webView.canGoForward()){
                 webView.goForward();
+            }
+
+        }else if(id == R.id.action_openinbrowser){
+
+            Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(webView.getUrl()));
+            if (browserIntent.resolveActivity(getPackageManager()) != null) {
+                startActivity(browserIntent);
             }
 
         }else if(id == R.id.action_refresh){

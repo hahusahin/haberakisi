@@ -12,13 +12,13 @@ import androidx.fragment.app.Fragment;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ProgressBar;
 
-import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
 import com.haberinadresi.androidapp.R;
 import com.haberinadresi.androidapp.activities.ColumnistSelectActivity;
@@ -58,6 +58,11 @@ public class ColumnsFragment extends Fragment implements SharedPreferences.OnSha
     public void onViewCreated(@NonNull final View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+        // Get the banner ad from main activity and show it if this fragment is visible to user
+        bannerAdView = requireActivity().findViewById(R.id.bannerAdView);
+        if(getUserVisibleHint() && bannerAdView != null){
+            bannerAdView.setVisibility(View.VISIBLE);
+        }
         // The button to display if user didn't select any news source
         sourceWarning = view.findViewById(R.id.btn_source_alert);
         sourceWarning.setVisibility(View.INVISIBLE);
@@ -94,11 +99,6 @@ public class ColumnsFragment extends Fragment implements SharedPreferences.OnSha
                 fetchColumns(isPreferenceChanged, true);
             }
         });
-
-        //Admob
-        bannerAdView = view.findViewById(R.id.bannerAdView);
-        AdRequest adRequest = new AdRequest.Builder().build();
-        bannerAdView.loadAd(adRequest);
 
         // If device is connected to the internet
         if (NetworkUtils.isConnected(requireActivity())){
@@ -197,9 +197,7 @@ public class ColumnsFragment extends Fragment implements SharedPreferences.OnSha
     @Override
     public void onPause() {
         onPauseFlag = true;
-        if (bannerAdView != null) {
-            bannerAdView.pause();
-        }
+
         super.onPause();
     }
 
@@ -215,9 +213,7 @@ public class ColumnsFragment extends Fragment implements SharedPreferences.OnSha
             }
             onPauseFlag = false;
         }
-        if (bannerAdView != null) {
-            bannerAdView.resume();
-        }
+
         super.onResume();
     }
 
@@ -225,12 +221,17 @@ public class ColumnsFragment extends Fragment implements SharedPreferences.OnSha
     public void onDestroy() {
         //unregister the sharedpreferences
         myColumnists.unregisterOnSharedPreferenceChangeListener(this);
-        if (bannerAdView != null) {
-            bannerAdView.destroy();
-        }
+
         super.onDestroy();
     }
 
+    @Override
+    public void setUserVisibleHint(boolean isVisibleToUser) {
+        super.setUserVisibleHint(isVisibleToUser);
 
+        if(isVisibleToUser && isResumed() && bannerAdView != null){
+            bannerAdView.setVisibility(View.VISIBLE);
+        }
+    }
 }
 
