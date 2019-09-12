@@ -3,9 +3,9 @@
 
     <string-array name="tabs">
         <item>@string/gundem_normal</item>
-        <item>@string/spor_normal</item>
         <item>@string/koseyazilari_normal</item>
         <item>@string/ekonomi_normal</item>
+        <item>@string/spor_normal</item>
         <item>@string/teknoloji_normal</item>
         <item>@string/kultursanat_normal</item>
         <item>@string/saglik_normal</item>

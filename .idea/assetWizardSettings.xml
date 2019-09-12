@@ -24,7 +24,8 @@
                                             <option name="values">
                                               <map>
                                                 <entry key="color" value="000000" />
-                                                <entry key="paddingPercent" value="5" />
+                                                <entry key="opacityPercent" value="80" />
+                                                <entry key="paddingPercent" value="10" />
                                                 <entry key="trimmed" value="true" />
                                               </map>
                                             </option>
@@ -36,7 +37,7 @@
                                           <PersistentState>
                                             <option name="values">
                                               <map>
-                                                <entry key="url" value="jar:file:/C:/Program%20Files/Android/Android%20Studio/plugins/android/lib/android.jar!/images/material_design_icons/action/ic_open_in_browser_black_24dp.xml" />
+                                                <entry key="url" value="jar:file:/C:/Program%20Files/Android/Android%20Studio/plugins/android/lib/android.jar!/images/material_design_icons/editor/ic_format_list_bulleted_black_24dp.xml" />
                                               </map>
                                             </option>
                                           </PersistentState>
@@ -70,9 +71,9 @@
                                   </option>
                                   <option name="values">
                                     <map>
-                                      <entry key="outputName" value="ic_openbrowser_white" />
+                                      <entry key="outputName" value="ic_list2" />
                                       <entry key="theme" value="CUSTOM" />
-                                      <entry key="themeColor" value="ffffff" />
+                                      <entry key="themeColor" value="e0e0e0" />
                                     </map>
                                   </option>
                                 </PersistentState>

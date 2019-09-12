@@ -1,7 +1,10 @@
 package com.haberinadresi.androidapp.activities;
 
+import androidx.core.app.JobIntentService;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
+
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import androidx.annotation.Nullable;
@@ -15,9 +18,11 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ProgressBar;
 
+import com.google.gson.Gson;
 import com.haberinadresi.androidapp.R;
 import com.haberinadresi.androidapp.adapters.ColumnistAdapter;
 import com.haberinadresi.androidapp.models.Columnist;
+import com.haberinadresi.androidapp.services.UpdateMyColumnists;
 import com.haberinadresi.androidapp.viewmodels.ColumnistSelectVM;
 
 import java.util.ArrayList;
@@ -84,9 +89,16 @@ public class ColumnistSelectActivity extends AppCompatActivity implements Search
 
                 columnistAdapter.setColumnistList(columnistList);
                 progressBar.setVisibility(View.INVISIBLE);
+
+                // Start the service that deletes the outdated columnists from preferences
+                Intent updateMyColumnists = new Intent(ColumnistSelectActivity.this, UpdateMyColumnists.class);
+                Gson gson = new Gson();
+                String json = gson.toJson(columnistList);
+                updateMyColumnists.putExtra(getResources().getString(R.string.columnists_list), json);
+                JobIntentService.enqueueWork(ColumnistSelectActivity.this, UpdateMyColumnists.class,
+                        201, updateMyColumnists);
             }
         });
-
 
     }
 

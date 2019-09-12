@@ -23,19 +23,6 @@
         android:entries="@array/pref_font_size_labels"
         android:entryValues="@array/pref_font_size_values"/>
 
-    <SwitchPreference
-        android:icon="@drawable/ic_notification"
-        android:key="@string/last_minute_notifications_key"
-        android:title="@string/last_minute_notifications_title"
-        android:summaryOff="@string/last_minute_notifications_off"
-        android:summaryOn="@string/last_minute_notifications_on"/>
-
-    <Preference
-        android:icon="@drawable/ic_settings"
-        android:key="@string/open_notification_settings_key"
-        android:title="@string/open_notification_settings_title">
-    </Preference>
-
     <Preference
         android:icon="@drawable/ic_edit_tabs"
         android:key="intent_edit_categories"
@@ -47,25 +34,35 @@
             android:targetClass="com.haberinadresi.androidapp.activities.EditCategoriesActivity"/>
     </Preference>
 
+    <SwitchPreference
+        android:icon="@drawable/ic_notification"
+        android:key="@string/last_minute_notifications_key"
+        android:title="@string/last_minute_notifications_title"
+        android:summaryOff="@string/last_minute_notifications_off"
+        android:summaryOn="@string/last_minute_notifications_on"/>
+
+    <Preference
+        android:icon="@drawable/ic_list"
+        android:key="@string/notification_source_selection_key"
+        android:title="@string/notification_source_selection_title">
+    </Preference>
+
+    <Preference
+        android:icon="@drawable/ic_settings"
+        android:key="@string/open_notification_settings_key"
+        android:title="@string/open_notification_settings_title">
+    </Preference>
+
+    <Preference
+        android:icon="@drawable/ic_clear"
+        android:key="@string/clear_cache_key"
+        android:title="@string/clear_cache_title">
+    </Preference>
+
     <Preference
         android:icon="@drawable/ic_security"
         android:key="@string/privacy_policy_key"
         android:title="@string/privacy_policy_title">
     </Preference>
-
-    <!--
-    <SwitchPreference
-        android:icon="@drawable/ic_openbrowser_black"
-        android:key="@string/open_with_browser_key"
-        android:summaryOff="@string/open_with_browser_off"
-        android:summaryOn="@string/open_with_browser_on"
-        android:title="@string/open_with_browser_title" />
-
-    <Preference
-        android:icon="@drawable/ic_cached"
-        android:key="@string/clear_cache_key"
-        android:title="@string/clear_cache_title">
-    </Preference>
-    -->
 
 </PreferenceScreen>

@@ -6,8 +6,8 @@ android {
         applicationId "com.haberinadresi.androidapp"
         minSdkVersion 19
         targetSdkVersion 28
-        versionCode 23
-        versionName "2.3"
+        versionCode 24
+        versionName "2.4"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables.useSupportLibrary = true
         multiDexEnabled true
@@ -15,7 +15,7 @@ android {
     buildTypes {
         release {
             minifyEnabled true
-            //shrinkResources true
+            shrinkResources true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
@@ -44,26 +44,26 @@ dependencies {
     annotationProcessor 'androidx.lifecycle:lifecycle-compiler:2.0.0'
     implementation 'androidx.room:room-runtime:2.1.0'
     annotationProcessor 'androidx.room:room-compiler:2.1.0'
-    implementation 'com.google.android.gms:play-services-ads:18.1.1'
+    implementation 'com.google.android.gms:play-services-ads:18.2.0'
 
-    implementation 'com.google.firebase:firebase-core:17.0.1'
-    implementation 'com.google.firebase:firebase-messaging:19.0.1'
+    implementation 'com.google.firebase:firebase-core:17.2.0'
+    implementation 'com.google.firebase:firebase-messaging:20.0.0'
 
     implementation 'com.google.code.gson:gson:2.8.5'
-    implementation 'com.squareup.retrofit2:retrofit:2.6.0'
-    implementation 'com.squareup.retrofit2:converter-gson:2.5.0'
-    implementation "com.squareup.retrofit2:adapter-rxjava2:2.5.0"
-    implementation "io.reactivex.rxjava2:rxjava:2.2.8"
+    implementation 'com.squareup.retrofit2:retrofit:2.6.1'
+    implementation 'com.squareup.retrofit2:converter-gson:2.6.1'
+    implementation "com.squareup.retrofit2:adapter-rxjava2:2.6.1"
+    implementation "io.reactivex.rxjava2:rxjava:2.2.12"
     implementation "io.reactivex.rxjava2:rxandroid:2.1.1"
     implementation 'com.squareup.okhttp3:logging-interceptor:3.12.1'
 
     implementation 'com.github.bumptech.glide:glide:4.9.0'
     annotationProcessor 'com.github.bumptech.glide:compiler:4.9.0'
-    implementation 'com.github.chrisbanes:PhotoView:2.1.4'
+    implementation 'com.github.chrisbanes:PhotoView:2.3.0'
 
-    testİmplementation 'junit:junit:4.12'
-    androidTestİmplementation 'androidx.test:runner:1.2.0'
-    androidTestİmplementation 'androidx.test.espresso:espresso-core:3.2.0'
+    testImplementation 'junit:junit:4.12'
+    androidTestImplementation 'androidx.test:runner:1.2.0'
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
 
 }
 

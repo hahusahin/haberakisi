@@ -60,7 +60,6 @@ public class NewsVM extends AndroidViewModel {
             // If user has more than 20 gundem sources, then fetch all news (instead of making multiple requests)
             if(category.equals(getApplication().getResources().getString(R.string.gundem_key)) && sourceList.size() >= 20){
                 loadAllNewsFromServer();
-
             // For all other cases, fetch the files that are user's favorite sources
             } else {
                 loadSourceNewsFromServer(category, sourceList);
@@ -75,7 +74,7 @@ public class NewsVM extends AndroidViewModel {
 
     // Fetches news from only the sources that are in user's favorites
 
-    //@SuppressWarnings("unchecked cast")
+    @SuppressWarnings("unchecked cast")
     private void loadSourceNewsFromServer(final String category, ArrayList<String> sourceList) {
 
         Gson gson = new GsonBuilder().setLenient().create();
@@ -101,7 +100,7 @@ public class NewsVM extends AndroidViewModel {
 
         Observable.zip(requests, new Function<Object[], List<NewsItem>>() {
             @Override
-            public List<NewsItem> apply(Object[] objects) throws Exception {
+            public List<NewsItem> apply(Object[] objects) {
                 List<NewsItem> combinedNews = new ArrayList<>();
                 for (Object response : objects) {
                     if (response instanceof List<?>) {
@@ -235,6 +234,8 @@ public class NewsVM extends AndroidViewModel {
 
         if(category.equals(getApplication().getResources().getString(R.string.gundem_key))){
             return getApplication().getResources().getString(R.string.tops_last_fetch_time);
+        } else if(category.equals(getApplication().getResources().getString(R.string.ekonomi_key))){
+            return getApplication().getResources().getString(R.string.ekonomi_last_fetch_time);
         } else if(category.equals(getApplication().getResources().getString(R.string.spor_key))){
             return getApplication().getResources().getString(R.string.sport_last_fetch_time);
         } else if(category.equals(getApplication().getResources().getString(R.string.kultursanat_key))){
@@ -255,7 +256,7 @@ public class NewsVM extends AndroidViewModel {
         if(category.equals(getApplication().getResources().getString(R.string.gundem_key))){
             return 900000L; // 15 * 60 * 1000 = 900000 (15 dk)
         } else {
-            return 1800000L; // 30 * 60 * 1000 = 900000 (30dk)
+            return 1800000L; // 30 * 60 * 1000 = 1800000 (30dk)
         }
     }
 }

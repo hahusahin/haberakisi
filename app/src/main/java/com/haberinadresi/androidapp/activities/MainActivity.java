@@ -36,6 +36,8 @@ import com.google.firebase.messaging.FirebaseMessaging;
 import com.haberinadresi.androidapp.R;
 import com.haberinadresi.androidapp.adapters.TabPagerAdapter;
 import com.haberinadresi.androidapp.utilities.SharedPreferenceUtils;
+import com.haberinadresi.androidapp.utilities.WebUtils;
+import com.haberinadresi.androidapp.utilities.WhatsNewDialog;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener{
@@ -45,7 +47,7 @@ public class MainActivity extends AppCompatActivity
     private InterstitialAd interstitialAd;
     private AdView bannerAdView;
     private boolean onPauseFlag = false;
-    public static final int MAX_COUNT = 10; //If user clicks more than ... news detail, show Interstitial ad when backpressed
+    public static final int MAX_COUNT = 12; //If user clicks more than ... news detail, show Interstitial ad when backpressed
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -93,8 +95,9 @@ public class MainActivity extends AppCompatActivity
             //////////////// Clear the old clicked news and columns from sharedprefs
             // All clicked news are cleared in each session
             getSharedPreferences(getResources().getString(R.string.clicked_news_key), Context.MODE_PRIVATE).edit().clear().apply();
-            // Columns are cleared wrt their dates (since they are not changing rapidly)
+            // Columns AND Notified News are cleared wrt their dates (since they are not changing rapidly)
             SharedPreferenceUtils.clearColumns(this);
+            SharedPreferenceUtils.clearNotifiedNews(this);
         }
 
         /////////////Initialize Admob
@@ -322,7 +325,7 @@ public class MainActivity extends AppCompatActivity
         if(onPauseFlag){
             // If user clicked at least ... news AND Ad is loaded, show the interstitial Ad.
             int counter = customPreferences.getInt(getResources().getString(R.string.news_click_counter), 0);
-            if(counter > MAX_COUNT && interstitialAd.isLoaded()){
+            if(counter >= MAX_COUNT && interstitialAd.isLoaded()){
                 interstitialAd.show();
             }
             onPauseFlag = false;
@@ -330,6 +333,24 @@ public class MainActivity extends AppCompatActivity
 
         if (bannerAdView != null) {
             bannerAdView.resume();
+        }
+        // Show What's New Dialog for once if it is not seen by user AND it is updated (not newly installed)
+        if(! customPreferences.getBoolean(getResources().getString(R.string.whats_new_dialog_v6), false) &&
+                WebUtils.isInstallFromUpdate(MainActivity.this)) {
+            try {
+                WhatsNewDialog dialog = new WhatsNewDialog();
+                dialog.show(getSupportFragmentManager(), "What's New In This Update");
+            } catch (Exception e) {
+                e.printStackTrace();
+            } finally {
+                SharedPreferences.Editor editor = customPreferences.edit();
+                // Delete the previous keys that are used
+                editor.remove(getResources().getString(R.string.whats_new_dialog_v4));
+                editor.remove(getResources().getString(R.string.whats_new_dialog_v5));
+                // Put the new key
+                editor.putBoolean(getResources().getString(R.string.whats_new_dialog_v6), true);
+                editor.apply();
+            }
         }
 
         super.onResume();
@@ -348,14 +369,6 @@ public class MainActivity extends AppCompatActivity
 
         super.onDestroy();
     }
-
-    /* TO AVOID OUT OF MEMORY ERRORS
-    @Override
-    public void onLowMemory() {
-        super.onLowMemory();
-        GlideApp.get(this).clearMemory();
-    }
-    */
 
     // To increase text size of navigation items in tablets
     private void setMenuHeadTitleSize(int itemId) {
@@ -392,13 +405,13 @@ public class MainActivity extends AppCompatActivity
 
 /*
 // Show What's New Dialog for once if it is not seen by user AND it is updated (not newly installed)
-if(! customPreferences.getBoolean(getResources().getString(R.string.whats_new_dialog_v5), false) &&
+if(! customPreferences.getBoolean(getResources().getString(R.string.whats_new_dialog_v6), false) &&
         WebUtils.isInstallFromUpdate(MainActivity.this)) {
     try {
         WhatsNewDialog dialog = new WhatsNewDialog();
         dialog.show(getSupportFragmentManager(), "What's New In This Update");
     } catch (java.lang.IllegalStateException e) {
-        customPreferences.edit().putBoolean(getResources().getString(R.string.whats_new_dialog_v5), true).apply();
+        customPreferences.edit().putBoolean(getResources().getString(R.string.whats_new_dialog_v6), true).apply();
     }
 }
  */

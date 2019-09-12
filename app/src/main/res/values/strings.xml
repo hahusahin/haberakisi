@@ -57,6 +57,7 @@
     <string name="koseyazilari_normal">Köşe Yazıları</string>
     <string name="koseyazarlari_normal">Köşe Yazarları</string>
     <string name="gundem_ekonomi_normal">Gündem / Ekonomi</string>
+    <string name="bildirim_normal">Bildirim</string>
     <string name="diger">Diğer</string>
 
     <string name="website_categories">Haber Kategorileri</string>
@@ -83,6 +84,7 @@
     <string name="manset_key">mansetler</string>
     <string name="habersiteleri_key">haber_siteleri</string>
     <string name="tum_kaynaklar_key">tum_kaynaklar</string>
+    <string name="bildirim_key">bildirim</string>
 
     <!-- Örnek Haber-->
     <string name="news_category_key">Category Key</string>
@@ -101,6 +103,7 @@
     <string name="extra_news">Extra News</string>
     <string name="column_item">Column Item</string>
     <string name="source_list">Source List</string>
+    <string name="columnists_list">Columnists List</string>
     <string name="headline_list">Headline List</string>
     <string name="headline_position">Headline Position</string>
 
@@ -119,7 +122,6 @@
     <string name="added_to_favorite">Favorilere Eklendi</string>
     <string name="deleted_from_favorite">Favorilerden Çıkarıldı</string>
 
-
     <string name="tumu_path">cumle</string>
     <string name="kaynak_path">menba</string>
     <string name="manset_path">gazetemanset</string>
@@ -129,17 +131,20 @@
     <!-- Shared Preference File/Keys-->
     <string name="clicked_news_key">CLICKED NEWS</string>
     <string name="clicked_columns_key">CLICKED COLUMNS</string>
+    <string name="notified_news_key">NOTIFIED NEWS</string>
     <string name="saved_news_key">SAVED NEWS</string>
     <string name="cached_news_key">CACHED NEWS</string>
     <string name="saved_columns_key">SAVED COLUMNS</string>
     <string name="source_prefs_key">MY SOURCES</string>
     <string name="columnist_prefs_key">MY COLUMNISTS</string>
     <string name="favorite_news_key">MY FAVORITE NEWS</string>
+    <string name="notification_prefs_key">NOTIFICATION SOURCES</string>
     <string name="all_sources_key">ALL SOURCES</string>
     <string name="custom_keys">CUSTOM KEYS</string>
 
     <string name="news_click_counter">Click Counter</string>
     <string name="tops_last_fetch_time">Gundem Son Kaydedilen Zaman</string>
+    <string name="ekonomi_last_fetch_time">Ekonomi Son Kaydedilen Zaman</string>
     <string name="sport_last_fetch_time">Spor Son Kaydedilen Zaman</string>
     <string name="techno_last_fetch_time">Teknoloji Son Kaydedilen Zaman</string>
     <string name="magazine_last_fetch_time">Magazin Son Kaydedilen Zaman</string>
@@ -152,6 +157,7 @@
     <string name="subscribed_to_lastminute_notifications">Haber Bildirimlerine Abone Olundu</string>
     <string name="last_notified_time">Son Bildirim Zamani</string>
     <string name="news_item_view_preference">Haber Gosterim Secenegi</string>
+
 
     <!-- Strings for Settings -->
     <string name="title_activity_settings">Ayarlar</string>
@@ -170,6 +176,8 @@
     <string name="last_minute_notifications_key">Last Minute Notifications</string>
     <string name="open_notification_settings_key">Notification Settings</string>
     <string name="open_notification_settings_title">Bildirim Ayarları</string>
+    <string name="notification_source_selection_key">Notification Source Selection</string>
+    <string name="notification_source_selection_title">Bildirim Kaynaklarını Seç</string>
     <string name="edit_categories_summary">Haber Kategorilerinin Yerini Değiştir</string>
     <string name="change_font_size">Haber Yazı Boyutu</string>
     <string name="pref_font_key">fontsize</string>
@@ -183,16 +191,10 @@
     <string name="pref_font_value_extra_large">xlarge</string>
     <string name="privacy_policy_title">Gizlilik Sözleşmesi</string>
     <string name="privacy_policy_key">Privacy Policy</string>
-
-    <!-- KULLANILMIYOR -->
     <string name="clear_cache_title">Önbelleği Temizle</string>
     <string name="clear_cache_key">Clear Cache</string>
     <string name="clear_cache_summary">-</string>
     <string name="clear_cache_toast">Resim Önbelleği Temizlendi</string>
-    <string name="open_with_browser_title">Bağlantıları Açma Tercihi</string>
-    <string name="open_with_browser_on">Haber bağlantılarını tarayıcı (Chrome vb) ile açar</string>
-    <string name="open_with_browser_off">Haber bağlantılarını uygulama arayüzü ile açar</string>
-    <string name="open_with_browser_key">Open With Web Browser</string>
 
 
     <!-- Intro Activity -->
@@ -226,12 +228,14 @@
 
 
     <!-- TEK SEFERLİK ÇALIŞAN ANAHTAR'LAR (SHARED PREFERENCES) -->
-    <string name="whats_new_dialog_v5">Whats New Dialog v5 Seen</string> <!-- BİR KERE ÇALIŞTI, SONRAKİ VERSİYONLARDA SİL -->
+    <string name="whats_new_dialog_v6">Whats New Dialog v6 Seen</string> <!-- BİR KERE ÇALIŞTI, SONRAKİ VERSİYONLARDA SİL -->
+    <string name="whats_new_dialog_v5">Whats New Dialog v5 Seen</string> <!-- BİR KERE ÇALIŞTI, V24'DE SİLDİM AMA KULLANMA -->
     <string name="whats_new_dialog_v4">Whats New Dialog v4 Seen</string> <!-- BİR KERE ÇALIŞTI, V22'DE SİLDİM AMA KULLANMA -->
     <string name="whats_new_dialog_v3">Whats New Dialog v3 Seen</string> <!-- BİR KERE ÇALIŞTI, V19'DA SİLDİM AMA KULLANMA -->
     <string name="whats_new_dialog_v2">Whats New Dialog v2 Seen</string> <!-- BİR KERE ÇALIŞTI,  V14'DA SİLDİM AMA KULLANMA  -->
     <string name="is_whats_new_dialog_seen">Neler Yeni Ekranı Görüldü</string> <!-- BİR KERE ÇALIŞTI, V10'DA SİLDİM AMA KULLANMA -->
 
+    <string name="notification_source_info_seen">Bildirim Kaynagi Bilgilendirmesi Goruldu</string> <!-- BİR KERE ÇALIŞTI, GEÇİCİ -->
     <string name="is_columnist_keys_lowercased">Kose Yazarları Kucuk Harfe Cevrildi Mi</string> <!-- BİR KERE ÇALIŞTI, ARTIK KULLANMA -->
     <string name="new_categories_added_v1">New Categories Added v1</string> <!-- BİR KERE ÇALIŞTI, GEÇİCİ -->
 

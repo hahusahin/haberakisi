@@ -45,6 +45,8 @@ public class BackupLogosDrive {
                 return "https://docs.google.com/uc?id=1v1H8p3R1uBFn0l4usDfLoLrCH1OepJBH";
             case "borsagundem_ekonomi": case "borsagundem_habersiteleri":
                 return "https://docs.google.com/uc?id=10V1Kj_TQ2g1tkqX_UOk6RhvgK1ofLBVM";
+            case "bugunguncel_habersiteleri":
+                return "https://docs.google.com/uc?id=1P1dC7ZppNry4bs8achbOPzGQxCUZcYYR";
             case "chip_teknoloji": case "chip_habersiteleri":
                 return "https://docs.google.com/uc?id=1WnZyKEoCjGdSviQY_Ndvot9hHJeAzzW7";
             case "cnnturk_ekonomi":
@@ -85,7 +87,7 @@ public class BackupLogosDrive {
                 return "https://docs.google.com/uc?id=1bwhA0E4uB98YERIeX3W768EKI6pyu154";
             case "epsikiyatri_habersiteleri":
                 return "https://docs.google.com/uc?id=1rrUAj_bwwapeI7VW0oPoc778oLleUFqu";
-            case "euronews_gundem": case "euronewstr_habersiteleri":
+            case "euronewstr_gundem": case "euronewstr_habersiteleri":
                 return "https://docs.google.com/uc?id=1cOjie8vWRd8v_MtR2-V8DLv-RIkrq6DM";
             case "evrensel_gundem": case "evrensel_habersiteleri":
                 return "https://docs.google.com/uc?id=1F7PbDzeA9byQUnBfaFCgKp_0zKyz-mcM";

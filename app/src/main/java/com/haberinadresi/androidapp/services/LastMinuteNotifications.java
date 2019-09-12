@@ -4,6 +4,7 @@ import android.app.Notification;
 import android.app.PendingIntent;
 import android.content.Intent;
 import android.content.SharedPreferences;
+
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
 import androidx.core.app.TaskStackBuilder;
@@ -32,14 +33,16 @@ public class LastMinuteNotifications extends FirebaseMessagingService {
 
         SharedPreferences customKeys = getSharedPreferences(getResources().getString(R.string.custom_keys), MODE_PRIVATE);
         long lastNotificationTime = customKeys.getLong(getResources().getString(R.string.last_notified_time), 0L);
+        SharedPreferences notifiedNews = getSharedPreferences(getResources().getString(R.string.notified_news_key), MODE_PRIVATE);
+
         String topic = remoteMessage.getFrom();
 
         //Log.d(TAG, topic);
         //Log.d(TAG, String.valueOf(System.currentTimeMillis() - lastNotificationTime));
 
         // If message includes topic AND
-        // if the last notification is at most 5 minutes old (to avoid showing notification over and over again)
-        if(topic != null && System.currentTimeMillis() - lastNotificationTime > 300000L){
+        // if the last notification is at most 4 minutes old (to avoid showing notification over and over again)
+        if(topic != null && System.currentTimeMillis() - lastNotificationTime > 240000L){
             // If message is coming from SON DAKIKA topic
             // Başlık şu şekilde çıkıyor (/topics/Son_Dakika), o yüzden contains kullandım
             if(topic.contains(getResources().getString(R.string.last_minute_notifications_topic))){
@@ -54,9 +57,10 @@ public class LastMinuteNotifications extends FirebaseMessagingService {
                         List<NotificationItem> newsList = gson.fromJson(json, type);
 
                         // Find the appropriate news for user from the list (if exists)
-                        NotificationItem notificationItem = findItem(newsList);
+                        NotificationItem notificationItem = findItem(newsList, notifiedNews);
 
                         if(notificationItem != null){
+
                             // Intent to Open the clicked news in Webview
                             Intent newsDetailIntent = new Intent(this, ShowInWebviewActivity.class);
                             newsDetailIntent.putExtra(getResources().getString(R.string.news_url), notificationItem.getNewsUrl());
@@ -68,8 +72,7 @@ public class LastMinuteNotifications extends FirebaseMessagingService {
                             stackBuilder.addNextIntent(newsDetailIntent);
 
                             // Create pending intent (To give unique request codes to each intent, pass a random integer)
-                            PendingIntent pendingIntent = stackBuilder.getPendingIntent(new Random().nextInt(),
-                                    PendingIntent.FLAG_ONE_SHOT);
+                            PendingIntent pendingIntent = stackBuilder.getPendingIntent(new Random().nextInt(), PendingIntent.FLAG_ONE_SHOT);
 
                             // Build the "Son Dakika" notification
                             Notification notification = new NotificationCompat.Builder(this, getResources().getString(R.string.last_minute_channel_id))
@@ -92,6 +95,9 @@ public class LastMinuteNotifications extends FirebaseMessagingService {
 
                             // Update last notification time in sharedpreferences
                             customKeys.edit().putLong(getResources().getString(R.string.last_notified_time), System.currentTimeMillis()).apply();
+                            // Add the news to the notified items
+                            notifiedNews.edit().putLong(notificationItem.getNewsUrl(), System.currentTimeMillis()).apply();
+
                         }
                     }
                 }
@@ -100,21 +106,24 @@ public class LastMinuteNotifications extends FirebaseMessagingService {
             // ELSE IF message is coming from another topic...
         }
 
-
     }
 
     // Get the first news/column item that is appropriate for the user (i.e. news source is in user's favorite sources)
-    private NotificationItem findItem(List<NotificationItem> newsList){
+    private NotificationItem findItem(List<NotificationItem> newsList, SharedPreferences notifiedNews){
 
         // Iterate over each news OR columns to check whether it is in user's preference sources
-        SharedPreferences mySources = getSharedPreferences(getResources().getString(R.string.source_prefs_key), MODE_PRIVATE);
+        SharedPreferences notificationSources = getSharedPreferences(getResources().getString(R.string.notification_prefs_key), MODE_PRIVATE);
         SharedPreferences myColumnists = getSharedPreferences(getResources().getString(R.string.columnist_prefs_key), MODE_PRIVATE);
         final Locale turkish = new Locale("tr", "TR");
 
         List<NotificationItem> filteredList = new ArrayList<>();
         for(NotificationItem newsItem : newsList){
-            if(mySources.contains(newsItem.getKey()) || myColumnists.contains(newsItem.getKey().toLowerCase(turkish))){
-                filteredList.add(newsItem);
+            // If the news' source is preferred as notification source by user
+            if(notificationSources.contains(newsItem.getKey()) || myColumnists.contains(newsItem.getKey().toLowerCase(turkish))){
+                // If this news is not notified before then add to list
+                if(! notifiedNews.contains(newsItem.getNewsUrl())){
+                    filteredList.add(newsItem);
+                }
             }
         }
 

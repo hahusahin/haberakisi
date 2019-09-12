@@ -143,7 +143,7 @@ public class NewsAdapterWithAds extends RecyclerView.Adapter<RecyclerView.ViewHo
                     newsViewHolder.newsImage.setVisibility(View.VISIBLE);
                     GlideApp.with(holder.itemView.getContext())
                             .load(newsItem.getImageUrl())
-                            .diskCacheStrategy(DiskCacheStrategy.NONE)
+                            .diskCacheStrategy(DiskCacheStrategy.AUTOMATIC)
                             .error(
                                 // If failed to load news image, then load backup image in the Google Drive
                                 GlideApp.with(holder.itemView.getContext())

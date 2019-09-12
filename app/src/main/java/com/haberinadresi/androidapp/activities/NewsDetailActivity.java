@@ -128,14 +128,12 @@ public class NewsDetailActivity extends AppCompatActivity {
             // Load news image
             GlideApp.with(this)
                     .load(newsItem.getImageUrl())
-                    .diskCacheStrategy(DiskCacheStrategy.NONE)
                     .onlyRetrieveFromCache(displayOnlyInWifi)
                     .dontAnimate()
                     .error(
                             // If failed to load news image, then load backup image in the Google Drive
                             GlideApp.with(this)
                                     .load(BackupNewsImages.getLogoUrl(newsItem.getKey()))
-                                    .diskCacheStrategy(DiskCacheStrategy.AUTOMATIC)
                                     .error(R.drawable.placeholder_icon_landscape))
                     // Add listener to hide progressbar when image is loaded and to show all views
                     .listener(new RequestListener<Drawable>() {
@@ -329,7 +327,7 @@ public class NewsDetailActivity extends AppCompatActivity {
                 imageViews[i] = layouts[i].findViewById(R.id.iv_news_image);
                 GlideApp.with(this)
                         .load(extraNewsList.get(i).getImageUrl())
-                        .diskCacheStrategy(DiskCacheStrategy.NONE)
+                        .diskCacheStrategy(DiskCacheStrategy.RESOURCE)
                         .onlyRetrieveFromCache(displayOnlyInWifi)
                         .error(
                             // If failed to load news image, then load backup image in the Google Drive

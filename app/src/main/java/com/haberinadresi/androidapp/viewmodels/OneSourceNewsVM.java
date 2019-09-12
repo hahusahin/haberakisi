@@ -73,7 +73,7 @@ public class OneSourceNewsVM extends AndroidViewModel {
         API api = retrofit.create(API.class);
 
         //Make the related http request depending on the clicked news category and source
-        String source = key.split("_")[0];  // Example: ahaber_gundem
+        String source = key.split("_")[0];
         String category = key.split("_")[1];
         Call<List<NewsItem>> call = api.getNewsFromOneSource(category, source);
 
@@ -101,7 +101,7 @@ public class OneSourceNewsVM extends AndroidViewModel {
     }
 
     private List<NewsItem> loadNewsFromSP(String key) {
-        String category = key.split("_")[1]; // Example: ahaber_gundem
+        String category = key.split("_")[1];
         Gson gson = new Gson();
         SharedPreferences sharedPreferences = getApplication().getSharedPreferences(getApplication().getResources().getString(R.string.cached_news_key), MODE_PRIVATE);
         String json = sharedPreferences.getString(category, null);

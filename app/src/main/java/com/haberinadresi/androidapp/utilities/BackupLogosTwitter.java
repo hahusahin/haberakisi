@@ -45,6 +45,8 @@ public class BackupLogosTwitter {
                 return "https://pbs.twimg.com/profile_images/875596290674917378/UlUSTfJn_200x200.jpg";
             case "borsagundem_ekonomi": case "borsagundem_habersiteleri":
                 return "https://pbs.twimg.com/profile_images/910804994559012864/TRpwfRm3_200x200.jpg";
+            case "bugunguncel_habersiteleri":
+                return "https://pbs.twimg.com/profile_images/1058327659019677697/EC7sxeyL_200x200.jpg";
             case "chip_teknoloji": case "chip_habersiteleri":
                 return "https://pbs.twimg.com/profile_images/1115360563608129536/VgD5xEef_200x200.png";
             case "cnnturk_ekonomi":
@@ -85,8 +87,8 @@ public class BackupLogosTwitter {
                 return "https://pbs.twimg.com/profile_images/469003318463721472/dcVcQtWG_200x200.jpeg";
             case "epsikiyatri_habersiteleri":
                 return "https://pbs.twimg.com/profile_images/700666609078136833/twUucVnR_200x200.jpg";
-            case "euronews_gundem": case "euronewstr_habersiteleri":
-                return "https://pbs.twimg.com/profile_images/700666609078136833/twUucVnR_200x200.jpg";
+            case "euronewstr_gundem": case "euronewstr_habersiteleri":
+                return "https://pbs.twimg.com/profile_images/1168803689563348992/Nqt3-lXz_200x200.jpg";
             case "evrensel_gundem": case "evrensel_habersiteleri":
                 return "https://pbs.twimg.com/profile_images/876763434326646784/5UUG-66D_200x200.jpg";
             case "f5haber_habersiteleri":
@@ -172,7 +174,7 @@ public class BackupLogosTwitter {
             case "medimagazin_saglik": case "medimagazin_habersiteleri":
                 return "https://pbs.twimg.com/profile_images/678683373146107913/nE6Stw74_200x200.jpg";
             case "medyafaresi_habersiteleri":
-                return "https://pbs.twimg.com/profile_images/644563657909751808/F1apXAq9_200x200.png";
+                return "https://pbs.twimg.com/profile_images/1151393852097478656/fIB5B0DY_200x200.jpg";
             case "medyatava_habersiteleri":
                 return "https://pbs.twimg.com/profile_images/378800000570887723/c7bbc7aa7274dacd6ad8cf70057911e1_200x200.png";
             case "memurlarnet_gundem": case "memurlarnet_habersiteleri":
@@ -312,7 +314,7 @@ public class BackupLogosTwitter {
             case "yeniakit_gundem": case "yeniakit_habersiteleri":
                 return "https://pbs.twimg.com/profile_images/1110497236880900096/nvJaPgc5_200x200.png";
             case "yeniasir_habersiteleri":
-                return "https://pbs.twimg.com/profile_images/1070241237595242496/b_SlEnnb_200x200.jpg";
+                return "https://pbs.twimg.com/profile_images/1165252410673106947/mXo5ScOy_200x200.jpg";
             case "yeniasya_gundem": case "yeniasya_habersiteleri":
                 return "https://pbs.twimg.com/profile_images/1099788050945789952/X82c8v6o_200x200.png";
             case "yenibirlik_habersiteleri":
@@ -350,7 +352,7 @@ public class BackupLogosTwitter {
             case "bursaolay_habersiteleri":
                 return "https://pbs.twimg.com/profile_images/862981528040689664/U8Qted_v_200x200.jpg";
             case "buyuksivas_habersiteleri":
-                return "https://pbs.twimg.com/profile_images/1155122813059158017/liy5ydgs_200x200.jpg";
+                return "https://pbs.twimg.com/profile_images/1163173517812281350/9TuoHnVW_200x200.jpg";
             case "canakkalehedef_habersiteleri":
                 return "https://pbs.twimg.com/profile_images/892046387961049088/-LN9mC0s_200x200.jpg";
             case "cukurovaexpres_habersiteleri":
@@ -382,7 +384,7 @@ public class BackupLogosTwitter {
             case "ispartahaber32_habersiteleri":
                 return "https://pbs.twimg.com/profile_images/2024835960/haber32_avatar_200x200.jpg";
             case "karamanorg_habersiteleri":
-                return "https://www.karaman.org/images/banner/karaman-haberleri.png";
+                return "http://www.karaman.org/images/banner/karaman.png";
             case "karsmanset_habersiteleri":
                 return "https://pbs.twimg.com/profile_images/1096800275044683778/lEA6DG4H_200x200.png";
             case "kayseriolay_habersiteleri":
@@ -392,7 +394,7 @@ public class BackupLogosTwitter {
             case "kusadasihaberajansi_habersiteleri":
                 return "https://pbs.twimg.com/profile_images/465822090050797571/aMMminf0_200x200.jpeg";
             case "malatyaguncel_habersiteleri":
-                return "https://pbs.twimg.com/profile_images/626572464462508032/y2BZYJ4L_200x200.jpg";
+                return "https://pbs.twimg.com/profile_images/1156934825007357952/BpPZRVyt_200x200.jpg";
             case "marasanahaber_habersiteleri":
                 return "https://pbs.twimg.com/profile_images/1048121692336410624/vGcP9b-K_200x200.jpg";
             case "mavikocaeli_habersiteleri":
@@ -424,7 +426,7 @@ public class BackupLogosTwitter {
             case "afpen_habersiteleri":
                 return "https://pbs.twimg.com/profile_images/697343883630481408/c08JBfBB_200x200.jpg";
             case "bbcnews_habersiteleri":
-                return "https://pbs.twimg.com/profile_images/875702138680246273/BfQLzf7G_200x200.jpg";
+                return "https://pbs.twimg.com/profile_images/1150717770478379008/8-XiwK-s_200x200.png";
             case "bild_habersiteleri":
                 return "https://pbs.twimg.com/profile_images/916254721274515458/72vChEJI_200x200.jpg";
             case "cnbc_habersiteleri":
@@ -434,7 +436,7 @@ public class BackupLogosTwitter {
             case "deutschewelle_habersiteleri":
                 return "https://pbs.twimg.com/profile_images/900269457976823808/nkod9w_m_200x200.jpg";
             case "euronews_habersiteleri":
-                return "https://pbs.twimg.com/profile_images/965975098317508613/buixv2CG_200x200.jpg";
+                return "https://pbs.twimg.com/profile_images/1166354303415738368/Q5asWCht_200x200.jpg";
             case "financialtimes_habersiteleri":
                 return "https://pbs.twimg.com/profile_images/931156393108885504/EqEMtLhM_200x200.jpg";
             case "foxnews_habersiteleri":

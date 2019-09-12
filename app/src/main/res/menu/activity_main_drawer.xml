@@ -35,13 +35,13 @@
                 android:icon="@drawable/ic_yazarlar"
                 android:title="@string/koseyazarlari_normal" />
             <item
-                android:id="@+id/nav_spor"
-                android:icon="@drawable/ic_spor"
-                android:title="@string/spor_normal" />
-            <item
                 android:id="@+id/nav_ekonomi"
                 android:icon="@drawable/ic_ekonomi"
                 android:title="@string/ekonomi_normal" />
+            <item
+                android:id="@+id/nav_spor"
+                android:icon="@drawable/ic_spor"
+                android:title="@string/spor_normal" />
             <item
                 android:id="@+id/nav_teknoloji"
                 android:icon="@drawable/ic_teknoloji"

@@ -30,9 +30,7 @@ public class IntroActivity extends AppCompatActivity {
 
         // Make changes to not show the intro slides again
         SharedPreferences sharedPreferences = getSharedPreferences(getResources().getString(R.string.custom_keys), MODE_PRIVATE);
-        SharedPreferences.Editor editor = sharedPreferences.edit();
-        editor.putBoolean(getResources().getString(R.string.is_intro_displayed), true);
-        editor.apply();
+        sharedPreferences.edit().putBoolean(getResources().getString(R.string.is_intro_displayed), true).apply();
 
         slideViewPager = findViewById(R.id.intro_viewpager);
         dotLayout = findViewById(R.id.dot_layout);

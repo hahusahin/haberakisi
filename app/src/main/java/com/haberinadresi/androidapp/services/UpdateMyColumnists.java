@@ -1,47 +1,70 @@
 package com.haberinadresi.androidapp.services;
 
-import android.app.IntentService;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 
-import com.haberinadresi.androidapp.R;
+import androidx.annotation.NonNull;
+import androidx.core.app.JobIntentService;
 
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
+import com.haberinadresi.androidapp.R;
+import com.haberinadresi.androidapp.models.Columnist;
+
+import java.lang.reflect.Type;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
-public class UpdateMyColumnists extends IntentService {
-
-    public UpdateMyColumnists() {
-        super("to_update_user's_columnist_preferences");
-    }
+public class UpdateMyColumnists extends JobIntentService {
 
     @Override
     public void onCreate() {
         super.onCreate();
     }
 
-    // FAVORİLERDEKİ YAZARLARIN KEY'LERİNİ HEPSİ KÜÇÜK HARF OLACAK ŞEKİLDE DÜZELTMEK İÇİN
-    // (GÜNCELLEMEDEN ÖNCEKİ KULLANICILAR İÇİN SADECE, SONRAKİLERDE ZATEN HEPSİ KÜÇÜK HARF OLARAK KAYDEDİLECEK)
-    // SADECE BİR DEFA ÇALIŞTIRILACAK
-    @Override
-    protected void onHandleIntent(Intent intent) {
+    // ESKİDEN LİSTEDE OLUP FAVORİLERE EKLENMİŞ
+    // AMA DAHA SONRA GÜNCEL YAZAR LİSTESİNDEN ÇIKARILAN YAZARLARIN
+    // FAVORİ LİSTESİNDEN DE SİLİNMESİ
 
-        // Get the user's favorite columnists in map format
+    @Override
+    protected void onHandleWork(@NonNull Intent intent) {
+
+        // Get the user's favorite columnists AND columnist sources in map format
         SharedPreferences myColumnists = getSharedPreferences(getResources().getString(R.string.columnist_prefs_key), Context.MODE_PRIVATE);
-        SharedPreferences.Editor editor = myColumnists.edit();
+        Locale turkish = new Locale("tr", "TR");
+
         Map<String,?> columnistsMap = myColumnists.getAll();
         //If at least one columnist is in favorite
-        if(! columnistsMap.isEmpty()){
-            for (Map.Entry<String, ?> entry : columnistsMap.entrySet()) {
-                String originalKey = entry.getKey();
-                String lowercasedKey = entry.getKey().toLowerCase(new Locale("tr", "TR"));
-                if(! originalKey.equals(lowercasedKey)){
-                    editor.putBoolean(lowercasedKey, true);
-                    editor.remove(originalKey);
+        if(! columnistsMap.isEmpty()) {
+            // Get the most recent columnist list from intent as String
+            Gson gson = new Gson();
+            String json = intent.getStringExtra(getResources().getString(R.string.columnists_list));
+            if (json != null) {
+                // Convert the columnists list from String to ArrayList
+                Type type = new TypeToken<ArrayList<Columnist>>() {}.getType();
+                List<Columnist> columnistList = gson.fromJson(json, type);
+                // Iterate over the whole list
+                if(columnistList != null) {
+                    for (Map.Entry<String, ?> entry : columnistsMap.entrySet()) {
+                        boolean columnistExists = false;
+                        for (Columnist columnist : columnistList){
+                            if (columnist.getKey().toLowerCase(turkish).equals(entry.getKey())){
+                                columnistExists = true;
+                                break;
+                            }
+                        }
+                        // If a columnist in user's preference couldn't be found in the most recent list (outdated)
+                        if (! columnistExists){
+                            // Delete this old columnist from preferences
+                            myColumnists.edit().remove(entry.getKey()).apply();
+                        }
+                    }
                 }
             }
         }
-        editor.apply();
+
     }
 }

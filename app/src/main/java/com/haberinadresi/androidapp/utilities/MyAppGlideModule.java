@@ -12,6 +12,9 @@ public final class MyAppGlideModule extends AppGlideModule {
     public void applyOptions(@NonNull Context context, @NonNull GlideBuilder builder) {
         int diskCacheSizeBytes = 1024 * 1024 * 100; // 100 MB
         builder.setDiskCache(new InternalCacheDiskCacheFactory(context, diskCacheSizeBytes));
+
+        // RESİMLERİN NERDEN YÜKLENDİĞİNE BAKMAK İÇİN LOG KAYDINI AÇMAK
+        builder.setLogLevel(Log.VERBOSE);
     }
     */
 }

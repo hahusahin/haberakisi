@@ -120,8 +120,7 @@ public class FavNewsAdapter extends RecyclerView.Adapter<FavNewsAdapter.NewsView
         String relativeTime = DateUtils.getRelativeTimeSpanString(
                 newsItem.getUpdateTime(),
                 System.currentTimeMillis(),
-                DateUtils.MINUTE_IN_MILLIS,
-                DateUtils.FORMAT_ABBREV_RELATIVE).toString();
+                DateUtils.MINUTE_IN_MILLIS).toString();
         newsViewHolder.newsTime.setText(relativeTime);
 
         newsViewHolder.constraintLayout.setOnClickListener(new View.OnClickListener() {

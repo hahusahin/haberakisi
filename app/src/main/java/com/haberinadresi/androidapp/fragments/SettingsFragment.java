@@ -1,22 +1,34 @@
 package com.haberinadresi.androidapp.fragments;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.Settings;
+import android.widget.Toast;
+
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatDelegate;
 import androidx.preference.ListPreference;
 import androidx.preference.Preference;
 import androidx.preference.PreferenceFragmentCompat;
+
+import com.bumptech.glide.Glide;
 import com.google.firebase.messaging.FirebaseMessaging;
 import com.haberinadresi.androidapp.R;
+import com.haberinadresi.androidapp.activities.SourceSelectionActivity;
 
 public class SettingsFragment extends PreferenceFragmentCompat {
 
     private SharedPreferences sharedPreferences;
+    private static final String alertTitle = "Bilgilendirme";
+    private static final String alertMessage =
+            "\t- Sadece haberlere 'Son Dakika' etiketi ekleyen haber kaynaklarından bildirim gelecektir." +
+            "\n\n\t- Listede olmayan haber kaynakları haberlere 'Son Dakika' ifadesi koymadığı için alınmamıştır.";
+    private static final String okay = "Tamam";
 
     @Override
     public void onCreatePreferences(Bundle bundle, String s) {
@@ -82,6 +94,53 @@ public class SettingsFragment extends PreferenceFragmentCompat {
             openNotificationSettings.setVisible(false);
         }
 
+        // Son Dakika Notification Source Selector
+        // Link that opens source selection activity to select Notification Sources
+        final Preference notificationSourceSelection = findPreference(getResources().getString(R.string.notification_source_selection_key));
+        // Enable/Disable the notification source selector
+        if(sharedPreferences.getBoolean(getResources().getString(R.string.subscribed_to_lastminute_notifications), false)){
+            notificationSourceSelection.setEnabled(true);
+            notificationSourceSelection.getIcon().setAlpha(255);
+        } else {
+            notificationSourceSelection.setEnabled(false);
+            notificationSourceSelection.getIcon().setAlpha(130);
+        }
+        notificationSourceSelection.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+            @Override
+            public boolean onPreferenceClick(Preference preference) {
+                // First show the warning, then open source selection when clicked
+                if(! sharedPreferences.getBoolean(getResources().getString(R.string.notification_source_info_seen), false)){
+                    try {
+                        AlertDialog.Builder builder = new AlertDialog.Builder(requireActivity());
+                        builder.setTitle(alertTitle);
+                        builder.setMessage(alertMessage);
+                        builder.setPositiveButton(okay, new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                Intent sourceSelection = new Intent(requireActivity(), SourceSelectionActivity.class);
+                                sourceSelection.putExtra(getResources().getString(R.string.news_category_key), getResources().getString(R.string.bildirim_key));
+                                sourceSelection.putExtra(getResources().getString(R.string.news_category_name),getResources().getString(R.string.bildirim_normal));
+                                startActivity(sourceSelection);
+                            }
+                        });
+                        builder.create().show();
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    } finally {
+                        sharedPreferences.edit().putBoolean(getResources().getString(R.string.notification_source_info_seen), true).apply();
+                    }
+                }
+                // If the warning seen, open source selection directly
+                else {
+                    Intent sourceSelection = new Intent(requireActivity(), SourceSelectionActivity.class);
+                    sourceSelection.putExtra(getResources().getString(R.string.news_category_key), getResources().getString(R.string.bildirim_key));
+                    sourceSelection.putExtra(getResources().getString(R.string.news_category_name),getResources().getString(R.string.bildirim_normal));
+                    startActivity(sourceSelection);
+                }
+                return true;
+            }
+        });
+
         // Son Dakika Notifications Enable/Disable Listener
         findPreference(getResources().getString(R.string.last_minute_notifications_key)).setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
             @Override
@@ -90,12 +149,16 @@ public class SettingsFragment extends PreferenceFragmentCompat {
                 // AND make the notification settings link visible/invisible (For Android 8+)
                 if((Boolean) newValue){
                     FirebaseMessaging.getInstance().subscribeToTopic(getResources().getString(R.string.last_minute_notifications_topic));
+                    notificationSourceSelection.setEnabled(true);
+                    notificationSourceSelection.getIcon().setAlpha(255);
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O){
                         openNotificationSettings.setEnabled(true);
                         openNotificationSettings.getIcon().setAlpha(255);
                     }
                 } else {
                     FirebaseMessaging.getInstance().unsubscribeFromTopic(getResources().getString(R.string.last_minute_notifications_topic));
+                    notificationSourceSelection.setEnabled(false);
+                    notificationSourceSelection.getIcon().setAlpha(130);
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O){
                         openNotificationSettings.setEnabled(false);
                         openNotificationSettings.getIcon().setAlpha(130);
@@ -108,6 +171,25 @@ public class SettingsFragment extends PreferenceFragmentCompat {
             }
         });
 
+        // Clear Image Cache Button
+        Preference clearCache = findPreference(getResources().getString(R.string.clear_cache_key));
+        clearCache.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+            @Override
+            public boolean onPreferenceClick(Preference preference) {
+
+                // Start the glide cleaner on background
+                new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        Glide.get(requireActivity()).clearDiskCache();
+                    }
+                }).start();
+                // Show message to user
+                Toast.makeText(requireActivity(), getResources().getString(R.string.clear_cache_toast), Toast.LENGTH_SHORT).show();
+
+                return true;
+            }
+        });
 
         // Privacy Policy
         Preference privacyPolicy = findPreference(getResources().getString(R.string.privacy_policy_key));
@@ -130,7 +212,6 @@ public class SettingsFragment extends PreferenceFragmentCompat {
     private void setFontSummary(Preference preference){
         preference.setOnPreferenceChangeListener(listener);
         listener.onPreferenceChange(preference, sharedPreferences.getString(preference.getKey(), "medium"));
-                //PreferenceManager.getDefaultSharedPreferences(preference.getContext()).getString(preference.getKey(), ""));
     }
 
     private Preference.OnPreferenceChangeListener listener = new Preference.OnPreferenceChangeListener() {
@@ -165,42 +246,9 @@ public class SettingsFragment extends PreferenceFragmentCompat {
 
 
     /*
-    CHROME DA AÇ - ŞİMDİLİK İPTAL
-    // Open with Web Browser Switch Change Listener
-        Preference chromePreference = findPreference(getResources().getString(R.string.open_with_browser_key));
-        chromePreference.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
-            @Override
-            public boolean onPreferenceChange(Preference preference, Object newValue) {
-                // Update shared preferences key
-                SharedPreferences.Editor editor = sharedPreferences.edit();
-                editor.putBoolean(getResources().getString(R.string.open_with_browser_key), (Boolean) newValue).apply();
-                return true;
-            }
-        });
-
-    ŞİMDİLİK İPTAL GEREK YOK RESİMLERİ YÜKLEMİYORUM ZATEN TELEFONA
-    // Clear Image Cache Button
-        Preference clearCache = findPreference(getResources().getString(R.string.clear_cache_key));
-        // Get the cache size and set it to the summary as kB, MB etc.. (ŞİMDİLİK BOYUTU GÖSTERME)
-        //long cacheSize = getCacheSize();
-        //clearCache.setSummary(readableFileSize(cacheSize));
-        clearCache.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
-            @Override
-            public boolean onPreferenceClick(Preference preference) {
-
-                Toast.makeText(requireActivity(), getResources().getString(R.string.clear_cache_toast), Toast.LENGTH_SHORT).show();
-                // Start the glide cleaner on background
-                new Thread(new Runnable() {
-                    @Override
-                    public void run() {
-                        Glide.get(requireActivity()).clearDiskCache();
-                    }
-                }).start();
-
-                return true;
-            }
-        });
-
+    // Get the cache size and set it to the summary as kB, MB etc.. (ŞİMDİLİK BOYUTU GÖSTERMİYORUM)
+    //long cacheSize = getCacheSize();
+    //clearCache.setSummary(readableFileSize(cacheSize));
 
     // 3 Helper Methods to get the Cache Size of the Images
     public long getCacheSize(){

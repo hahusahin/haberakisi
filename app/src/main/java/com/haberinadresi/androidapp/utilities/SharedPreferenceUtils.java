@@ -9,7 +9,6 @@ import java.util.Map;
 
 public class SharedPreferenceUtils {
 
-
     // Clear the Clicked Columns
     public static void clearColumns(Context context){
         SharedPreferences clickedColumns = context.getSharedPreferences(context.getResources().getString(R.string.clicked_columns_key), Context.MODE_PRIVATE);
@@ -18,7 +17,23 @@ public class SharedPreferenceUtils {
         if(clickedCols != null){
             for(Map.Entry<String,?> entry : clickedCols.entrySet()){
                 // if the clicked column is older than one week then delete it
-                if(System.currentTimeMillis() - (Long) entry.getValue() > 604800000L ){ // 7* 24 * 60 * 60 * 1000 = 604800000
+                if(System.currentTimeMillis() - (Long) entry.getValue() > 604800000L){ // 7* 24 * 60 * 60 * 1000 = 604800000
+                    editor.remove(entry.getKey());
+                }
+            }
+        }
+        editor.apply();
+    }
+
+    // Clear the Notified Items
+    public static void clearNotifiedNews(Context context){
+        SharedPreferences notifiedNews = context.getSharedPreferences(context.getResources().getString(R.string.notified_news_key), Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = notifiedNews.edit();
+        Map<String,?> notifications = notifiedNews.getAll();
+        if(notifications != null){
+            for(Map.Entry<String,?> entry : notifications.entrySet()){
+                // if the notified news is older than one day then delete it
+                if(System.currentTimeMillis() - (Long) entry.getValue() > 86400000L){ // 24 * 60 * 60 * 1000 = 86400000
                     editor.remove(entry.getKey());
                 }
             }

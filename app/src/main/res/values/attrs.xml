@@ -19,9 +19,11 @@
         <attr name="extranews_title_tablet" format="dimension" />
         <attr name="extranews_time_phone" format="dimension" />
         <attr name="extranews_time_tablet" format="dimension" />
-        <attr name="news_title_phone" format="dimension" />
+        <attr name="news_title_type13_phone" format="dimension" />
+        <attr name="news_title_type2_phone" format="dimension" />
         <attr name="news_title_tablet" format="dimension" />
-        <attr name="news_other_info_phone" format="dimension" />
+        <attr name="news_other_info_type13_phone" format="dimension" />
+        <attr name="news_other_info_type2_phone" format="dimension" />
         <attr name="news_other_info_tablet" format="dimension" />
         <attr name="source_category_name_phone" format="dimension" />
         <attr name="source_category_name_tablet" format="dimension" />

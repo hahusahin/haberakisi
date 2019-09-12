@@ -1,5 +1,6 @@
 package com.haberinadresi.androidapp.fragments;
 
+import androidx.appcompat.widget.SearchView;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 import android.content.Context;
@@ -14,6 +15,9 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -45,12 +49,14 @@ public class ColumnsFragment extends Fragment implements SharedPreferences.OnSha
     private SharedPreferences myColumnists;
     private View internetAlert;
     private AdView bannerAdView;
+    private List<Columnist> allColumns;
     private boolean onPauseFlag = false;
     private boolean isPreferenceChanged = false;
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
+        setHasOptionsMenu(true); // To show menu item on actionbar
         return inflater.inflate(R.layout.fragment_columns, container, false);
     }
 
@@ -159,15 +165,17 @@ public class ColumnsFragment extends Fragment implements SharedPreferences.OnSha
                         });
                         //Update the list of adapter
                         columnAdapter.setColumnList(filteredColumns);
+                        // Keep the full column list to be used when making search
+                        allColumns = filteredColumns;
                     }
                     // Hide ProgressBar and swipe refresher when news are loaded
                     progressBar.setVisibility(View.INVISIBLE);
                     swipeContainer.setRefreshing(false);
                 }
             });
-
-        //If no columnist is in favorite
-        } else {
+        }
+        //If no columnist source in favorite
+        else {
             //Clear the adapter(if exists) and Show warning text
             if(columnAdapter != null){
                 columnAdapter.clearColumnList();
@@ -192,6 +200,70 @@ public class ColumnsFragment extends Fragment implements SharedPreferences.OnSha
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
 
         isPreferenceChanged = true;
+    }
+
+    // Added to make search in the column list
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        super.onCreateOptionsMenu(menu, inflater);
+
+        inflater.inflate(R.menu.news_fragment_menu, menu);
+
+        // Hide the view type icon (not used in columns)
+        menu.findItem(R.id.action_news_view_type).setVisible(false);
+
+        // Search Menu Item Operations
+        MenuItem searchMenuItem = menu.findItem(R.id.action_search);
+        final SearchView searchView = (SearchView) searchMenuItem.getActionView();
+        searchView.setQueryHint(getResources().getString(R.string.search_columnist));
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                // Get the whole news list from the recyclerview adapter (if initialized)
+                if(allColumns != null){
+                    List<Columnist> filteredColumns = new ArrayList<>();
+                    final Locale turkish = new Locale("tr", "TR");
+                    String searchText = query.toLowerCase(turkish);
+                    // Iterate over the columns to find the columnist
+                    for(Columnist item : allColumns){
+                        String columnist = item.getName().toLowerCase(turkish);
+                        if(columnist.contains(searchText)){
+                            filteredColumns.add(item);
+                        }
+                    }
+                    // set the filtered list to adapter
+                    columnAdapter.setColumnList(filteredColumns);
+                }
+                searchView.clearFocus(); //To hide keyboard
+                return true;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String s) {
+                return false;
+            }
+        });
+
+        searchMenuItem.setOnActionExpandListener(new MenuItem.OnActionExpandListener() {
+            @Override
+            public boolean onMenuItemActionExpand(MenuItem item) {
+                swipeContainer.setEnabled(false); // Disable swipe refreshing
+                return true;
+            }
+
+            @Override
+            public boolean onMenuItemActionCollapse(MenuItem item) {
+                // When backpressed to close search, set the original column list
+                if(allColumns != null){
+                    columnAdapter.setColumnList(allColumns);
+                } else {
+                    fetchColumns(false, false);
+                }
+                swipeContainer.setEnabled(true); // enable swipe refreshing
+                return true;
+            }
+        });
+
     }
 
     @Override
