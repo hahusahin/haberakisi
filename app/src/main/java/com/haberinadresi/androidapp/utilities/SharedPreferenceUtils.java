@@ -9,6 +9,22 @@ import java.util.Map;
 
 public class SharedPreferenceUtils {
 
+    // Clear the Clicked News
+    public static void clearNews(Context context){
+        SharedPreferences clickedNews = context.getSharedPreferences(context.getResources().getString(R.string.clicked_news_key), Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = clickedNews.edit();
+        Map<String,?> clickedItems = clickedNews.getAll();
+        if(clickedItems != null){
+            for(Map.Entry<String,?> entry : clickedItems.entrySet()){
+                // if the clicked news is older than one day then delete it
+                if(System.currentTimeMillis() - (Long) entry.getValue() > 86400000L ){ // 24 * 60 * 60 * 1000 = 86400000
+                    editor.remove(entry.getKey());
+                }
+            }
+        }
+        editor.apply();
+    }
+
     // Clear the Clicked Columns
     public static void clearColumns(Context context){
         SharedPreferences clickedColumns = context.getSharedPreferences(context.getResources().getString(R.string.clicked_columns_key), Context.MODE_PRIVATE);
@@ -41,21 +57,4 @@ public class SharedPreferenceUtils {
         editor.apply();
     }
 
-    /* ŞİMDİLİK BU DETAYA GEREK YOK, TOPLU SİLİYORUM
-    // Clear the Clicked News
-    public static void clearNews(Context context){
-        SharedPreferences clickedNews = context.getSharedPreferences(context.getResources().getString(R.string.clicked_news_key), Context.MODE_PRIVATE);
-        SharedPreferences.Editor editor = clickedNews.edit();
-        Map<String,?> clickedItems = clickedNews.getAll();
-        if(clickedItems != null){
-            for(Map.Entry<String,?> entry : clickedItems.entrySet()){
-                // if the clicked news is older than one day then delete it
-                if(System.currentTimeMillis() - (Long) entry.getValue() > 86400000L ){ // 24 * 60 * 60 * 1000 = 86400000
-                    editor.remove(entry.getKey());
-                }
-            }
-        }
-        editor.apply();
-    }
-     */
 }

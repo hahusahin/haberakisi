@@ -28,7 +28,6 @@ import java.lang.reflect.Type;
 import java.text.Collator;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -38,7 +37,6 @@ public class WebsitesFragment extends Fragment implements SharedPreferences.OnSh
     private RecyclerView recyclerView1, recyclerView2, recyclerView3, recyclerView4;
     private View internetAlert, divider1, divider2, divider3;
     private Button sourceWarning;
-    private AdView bannerAdView;
     private SharedPreferences sourcePreferences;
     private boolean onPauseFlag = false;
     private boolean isPreferenceChanged = false;
@@ -53,11 +51,6 @@ public class WebsitesFragment extends Fragment implements SharedPreferences.OnSh
     public void onViewCreated(@NonNull final View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        // Get the banner ad from main activity and show it if this fragment is visible to user
-        bannerAdView = requireActivity().findViewById(R.id.bannerAdView);
-        if(getUserVisibleHint() && bannerAdView != null){
-            bannerAdView.setVisibility(View.VISIBLE);
-        }
         // The button to display if user didn't select any news source
         sourceWarning = view.findViewById(R.id.btn_source_alert);
         sourceWarning.setVisibility(View.GONE);
@@ -107,14 +100,11 @@ public class WebsitesFragment extends Fragment implements SharedPreferences.OnSh
         else {
             internetAlert.setVisibility(View.VISIBLE);
             // when user clicks on button, check the network connection again
-            checkConnection.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    // if connects after button click, then dismiss internet error
-                    if(NetworkUtils.isConnected(requireActivity())){
-                        internetAlert.setVisibility(View.INVISIBLE);
-                        loadWebsiteIcons();
-                    }
+            checkConnection.setOnClickListener(v -> {
+                // if connects after button click, then dismiss internet error
+                if(NetworkUtils.isConnected(requireActivity())){
+                    internetAlert.setVisibility(View.INVISIBLE);
+                    loadWebsiteIcons();
                 }
             });
         }
@@ -148,7 +138,7 @@ public class WebsitesFragment extends Fragment implements SharedPreferences.OnSh
             List<SourceItem> list4 = new ArrayList<>(); // yabancı basın
             for (SourceItem sourceItem : myWebsites){
                 switch (sourceItem.getCategory()){
-                    case "gazete": case "internet_medyasi": case "ekonomi": case "yerel":
+                    case "gazete": case "internet_medyasi": case "ekonomi": case "yerel": default:
                         list1.add(sourceItem);
                         break;
                     case "spor":
@@ -160,9 +150,6 @@ public class WebsitesFragment extends Fragment implements SharedPreferences.OnSh
                     case "yabanci_basin":
                         list4.add(sourceItem);
                         break;
-                    default:
-                        list1.add(sourceItem);
-                        break;
                 }
             }
 
@@ -172,12 +159,9 @@ public class WebsitesFragment extends Fragment implements SharedPreferences.OnSh
             collator.setStrength(Collator.PRIMARY);
 
             // gazete, int.medyası, yerel
-            Collections.sort(list1, new Comparator<SourceItem>() {
-                @Override
-                public int compare(SourceItem item1, SourceItem item2) {
-                    return collator.compare(item1.getSourceName(), item2.getSourceName());
-                    // ESKİSİ return item1.getSourceName().compareTo(item2.getSourceName());
-                }
+            Collections.sort(list1, (item1, item2) -> {
+                return collator.compare(item1.getSourceName(), item2.getSourceName());
+                // ESKİSİ return item1.getSourceName().compareTo(item2.getSourceName());
             });
 
             // load website sources to adapter
@@ -193,12 +177,7 @@ public class WebsitesFragment extends Fragment implements SharedPreferences.OnSh
             }
 
             // spor
-            Collections.sort(list2, new Comparator<SourceItem>() {
-                @Override
-                public int compare(SourceItem item1, SourceItem item2) {
-                    return collator.compare(item1.getSourceName(), item2.getSourceName());
-                }
-            });
+            Collections.sort(list2, (item1, item2) -> collator.compare(item1.getSourceName(), item2.getSourceName()));
             // load website sources to adapter
             MyWebsitesAdapter adapter2 = new MyWebsitesAdapter(requireActivity(), list2);
             recyclerView2.setAdapter(adapter2);
@@ -212,12 +191,7 @@ public class WebsitesFragment extends Fragment implements SharedPreferences.OnSh
             }
 
             // kültür sanat, bilim, teknoloji, sağlık vs...
-            Collections.sort(list3, new Comparator<SourceItem>() {
-                @Override
-                public int compare(SourceItem item1, SourceItem item2) {
-                    return collator.compare(item1.getSourceName(), item2.getSourceName());
-                }
-            });
+            Collections.sort(list3, (item1, item2) -> collator.compare(item1.getSourceName(), item2.getSourceName()));
             // load website sources to adapter
             MyWebsitesAdapter adapter3 = new MyWebsitesAdapter(requireActivity(), list3);
             recyclerView3.setAdapter(adapter3);
@@ -231,12 +205,7 @@ public class WebsitesFragment extends Fragment implements SharedPreferences.OnSh
             }
 
             // yabancı basın
-            Collections.sort(list4, new Comparator<SourceItem>() {
-                @Override
-                public int compare(SourceItem item1, SourceItem item2) {
-                    return collator.compare(item1.getSourceName(), item2.getSourceName());
-                }
-            });
+            Collections.sort(list4, (item1, item2) -> collator.compare(item1.getSourceName(), item2.getSourceName()));
             // load website sources to adapter
             MyWebsitesAdapter adapter4 = new MyWebsitesAdapter(requireActivity(), list4);
             recyclerView4.setAdapter(adapter4);
@@ -259,12 +228,9 @@ public class WebsitesFragment extends Fragment implements SharedPreferences.OnSh
             // show source warning
             sourceWarning.setVisibility(View.VISIBLE);
             // Open the source selection page when user clicks the warning
-            sourceWarning.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Intent categorySelection = new Intent(requireActivity(), WebCategoriesActivity.class);
-                    startActivity(categorySelection);
-                }
+            sourceWarning.setOnClickListener(v -> {
+                Intent categorySelection = new Intent(requireActivity(), WebCategoriesActivity.class);
+                startActivity(categorySelection);
             });
         }
 
@@ -286,6 +252,12 @@ public class WebsitesFragment extends Fragment implements SharedPreferences.OnSh
 
     @Override
     public void onResume() {
+        // Get the banner ad from main activity and show it if this fragment is visible to user
+        AdView bannerAdView = requireActivity().findViewById(R.id.bannerAdView);
+        if(bannerAdView != null){
+            bannerAdView.setVisibility(View.VISIBLE);
+        }
+
         //If coming from onPause (not from onCreate)
         if(onPauseFlag){
             //If source preferences are changed
@@ -306,14 +278,5 @@ public class WebsitesFragment extends Fragment implements SharedPreferences.OnSh
         sourcePreferences.unregisterOnSharedPreferenceChangeListener(this);
 
         super.onDestroy();
-    }
-
-    @Override
-    public void setUserVisibleHint(boolean isVisibleToUser) {
-        super.setUserVisibleHint(isVisibleToUser);
-
-        if(isVisibleToUser && isResumed() && bannerAdView != null){
-            bannerAdView.setVisibility(View.VISIBLE);
-        }
     }
 }

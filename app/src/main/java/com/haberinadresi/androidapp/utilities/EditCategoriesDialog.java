@@ -25,12 +25,9 @@ public class EditCategoriesDialog extends AppCompatDialogFragment {
         AlertDialog.Builder builder = new AlertDialog.Builder(requireActivity());
         builder.setTitle(title)
                 .setMessage(message)
-                .setPositiveButton(okay, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        SharedPreferences.Editor editor = requireActivity().getSharedPreferences(getResources().getString(R.string.custom_keys), Context.MODE_PRIVATE).edit();
-                        editor.putBoolean(getResources().getString(R.string.is_category_dialog_seen), true).apply();
-                    }
+                .setPositiveButton(okay, (dialog, which) -> {
+                    SharedPreferences.Editor editor = requireActivity().getSharedPreferences(getResources().getString(R.string.custom_keys), Context.MODE_PRIVATE).edit();
+                    editor.putBoolean(getResources().getString(R.string.is_category_dialog_seen), true).apply();
                 });
 
         return builder.create();

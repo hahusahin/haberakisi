@@ -10,6 +10,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.widget.NestedScrollView;
 
+import android.os.Handler;
 import android.text.format.DateUtils;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -30,6 +31,7 @@ import com.bumptech.glide.request.target.Target;
 import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
+import com.google.android.gms.ads.LoadAdError;
 import com.haberinadresi.androidapp.R;
 import com.haberinadresi.androidapp.models.NewsItem;
 import com.haberinadresi.androidapp.repository.FavNewsRepository;
@@ -63,7 +65,7 @@ public class NewsDetailActivity extends AppCompatActivity {
                 case "small":
                     setTheme(R.style.FontStyle_Small);
                     break;
-                case "medium":
+                case "medium": default:
                     setTheme(R.style.FontStyle_Medium);
                     break;
                 case "large":
@@ -72,8 +74,6 @@ public class NewsDetailActivity extends AppCompatActivity {
                 case "xlarge":
                     setTheme(R.style.FontStyle_XLarge);
                     break;
-                default:
-                    setTheme(R.style.FontStyle_Medium);
             }
         } else {
             setTheme(R.style.FontStyle_Medium);
@@ -94,9 +94,22 @@ public class NewsDetailActivity extends AppCompatActivity {
         bannerAdView.loadAd(adRequest);
         bannerAdView.setAdListener(new AdListener(){
             @Override
-            public void onAdFailedToLoad(int i) {
-                // If failed, then load a new one
-                bannerAdView.loadAd(new AdRequest.Builder().build());
+            public void onAdLoaded() {
+                // If ad is loaded than reset counter that keeps failures
+                customKeys.edit().putInt(getResources().getString(R.string.banner_trial_counter), 0).apply();
+            }
+
+            @Override
+            public void onAdFailedToLoad(LoadAdError loadAdError) {
+                // Try for three times only
+                int trial = customKeys.getInt(getResources().getString(R.string.banner_trial_counter), 0);
+                trial++;
+                if(trial <= 3){
+                    customKeys.edit().putInt(getResources().getString(R.string.banner_trial_counter), trial).apply();
+                    // Wait for ... seconds and then try again
+                    Handler handler = new Handler();
+                    handler.postDelayed(() -> bannerAdView.loadAd(new AdRequest.Builder().build()), 10000);
+                }
             }
         });
 
@@ -191,98 +204,80 @@ public class NewsDetailActivity extends AppCompatActivity {
             newsTime.setText(relativeTime);
 
 
-            logoImage.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Intent oneSourceNews = new Intent(NewsDetailActivity.this, OneSrcNewsActivity.class);
-                    oneSourceNews.putExtra(getResources().getString(R.string.news_source_for_display), newsItem.getSource());
-                    oneSourceNews.putExtra(getResources().getString(R.string.news_source_key), newsItem.getKey());
-                    startActivity(oneSourceNews);
-                    finish();
-                }
+            logoImage.setOnClickListener(v -> {
+                Intent oneSourceNews = new Intent(NewsDetailActivity.this, OneSrcNewsActivity.class);
+                oneSourceNews.putExtra(getResources().getString(R.string.news_source_for_display), newsItem.getSource());
+                oneSourceNews.putExtra(getResources().getString(R.string.news_source_key), newsItem.getKey());
+                startActivity(oneSourceNews);
+                finish();
             });
 
-            newsSource.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Intent oneSourceNews = new Intent(NewsDetailActivity.this, OneSrcNewsActivity.class);
-                    oneSourceNews.putExtra(getResources().getString(R.string.news_source_for_display), newsItem.getSource());
-                    oneSourceNews.putExtra(getResources().getString(R.string.news_source_key), newsItem.getKey());
-                    startActivity(oneSourceNews);
-                    finish();
-                }
+            newsSource.setOnClickListener(v -> {
+                Intent oneSourceNews = new Intent(NewsDetailActivity.this, OneSrcNewsActivity.class);
+                oneSourceNews.putExtra(getResources().getString(R.string.news_source_for_display), newsItem.getSource());
+                oneSourceNews.putExtra(getResources().getString(R.string.news_source_key), newsItem.getKey());
+                startActivity(oneSourceNews);
+                finish();
             });
 
         }
 
         // Open the news link with Webview
         Button newsLink = findViewById(R.id.news_detail_click);
-        newsLink.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intentWebview = new Intent(NewsDetailActivity.this, ShowInWebviewActivity.class);
-                intentWebview.putExtra(getResources().getString(R.string.news_source_for_display), newsItem.getSource());
-                intentWebview.putExtra(getResources().getString(R.string.news_url), newsItem.getNewsUrl());
-                startActivity(intentWebview);
+        newsLink.setOnClickListener(v -> {
+            Intent intentWebview = new Intent(NewsDetailActivity.this, ShowInWebviewActivity.class);
+            intentWebview.putExtra(getResources().getString(R.string.news_source_for_display), newsItem.getSource());
+            intentWebview.putExtra(getResources().getString(R.string.news_url), newsItem.getNewsUrl());
+            startActivity(intentWebview);
 
-            }
         });
 
         // Share the news link on whatsapp
         ImageView whatsapp = findViewById(R.id.iv_share_whatsapp);
-        whatsapp.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
+        whatsapp.setOnClickListener(v -> {
 
-                String url = newsItem.getNewsUrl();
-                Intent intent = new Intent(Intent.ACTION_SEND);
-                intent.putExtra(Intent.EXTRA_TEXT, url);
-                intent.setType("text/plain");
-                intent.setPackage("com.whatsapp");
-                try {
-                    startActivity(intent);
-                } catch (android.content.ActivityNotFoundException e) {
-                    Toast.makeText(getApplicationContext(), "Whatsapp açılamadı", Toast.LENGTH_SHORT).show();
-                }
+            String url = newsItem.getNewsUrl();
+            Intent intent = new Intent(Intent.ACTION_SEND);
+            intent.putExtra(Intent.EXTRA_TEXT, url);
+            intent.setType("text/plain");
+            intent.setPackage("com.whatsapp");
+            try {
+                startActivity(intent);
+            } catch (android.content.ActivityNotFoundException e) {
+                Toast.makeText(getApplicationContext(), "Whatsapp açılamadı", Toast.LENGTH_SHORT).show();
             }
         });
 
         // Share the news link on twitter
         ImageView twitter = findViewById(R.id.iv_share_twitter);
-        twitter.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
+        twitter.setOnClickListener(v -> {
 
-                String url = newsItem.getNewsUrl();
-                Intent intent = new Intent(Intent.ACTION_SEND);
-                intent.putExtra(Intent.EXTRA_TEXT, url);
-                intent.setType("text/plain");
-                intent.setPackage("com.twitter.android");
-                try {
-                    startActivity(intent);
-                } catch (android.content.ActivityNotFoundException e) {
-                    Toast.makeText(getApplicationContext(), "Twitter açılamadı", Toast.LENGTH_SHORT).show();
-                }
-
+            String url = newsItem.getNewsUrl();
+            Intent intent = new Intent(Intent.ACTION_SEND);
+            intent.putExtra(Intent.EXTRA_TEXT, url);
+            intent.setType("text/plain");
+            intent.setPackage("com.twitter.android");
+            try {
+                startActivity(intent);
+            } catch (android.content.ActivityNotFoundException e) {
+                Toast.makeText(getApplicationContext(), "Twitter açılamadı", Toast.LENGTH_SHORT).show();
             }
+
         });
 
         // Share the news link on facebook
         ImageView facebook = findViewById(R.id.iv_share_facebook);
-        facebook.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
+        facebook.setOnClickListener(v -> {
 
-                String url = newsItem.getNewsUrl();
-                Intent intent = new Intent(Intent.ACTION_SEND);
-                intent.putExtra(Intent.EXTRA_TEXT, url);
-                intent.setType("text/plain");
-                intent.setPackage("com.facebook.katana");
-                try {
-                    startActivity(intent);
-                } catch (android.content.ActivityNotFoundException e) {
-                    Toast.makeText(getApplicationContext(), "Facebook açılamadı", Toast.LENGTH_SHORT).show();
-                }
+            String url = newsItem.getNewsUrl();
+            Intent intent = new Intent(Intent.ACTION_SEND);
+            intent.putExtra(Intent.EXTRA_TEXT, url);
+            intent.setType("text/plain");
+            intent.setPackage("com.facebook.katana");
+            try {
+                startActivity(intent);
+            } catch (android.content.ActivityNotFoundException e) {
+                Toast.makeText(getApplicationContext(), "Facebook açılamadı", Toast.LENGTH_SHORT).show();
             }
         });
 
@@ -341,21 +336,18 @@ public class NewsDetailActivity extends AppCompatActivity {
                         .into(imageViews[i]);
 
                 final int index = i;
-                layouts[i].setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
+                layouts[i].setOnClickListener(v -> {
 
-                        // Increment the click counter (used for displaying Interstitial Ad in Main Activity OnResume)
-                        SharedPreferences customKeys = getSharedPreferences(getResources().getString(R.string.custom_keys), MODE_PRIVATE);
-                        int counter = customKeys.getInt(getResources().getString(R.string.news_click_counter),0);
-                        customKeys.edit().putInt(getResources().getString(R.string.news_click_counter), counter + 1).apply();
+                    // Increment the click counter (used for displaying Interstitial Ad in Main Activity OnResume)
+                    SharedPreferences customKeys1 = getSharedPreferences(getResources().getString(R.string.custom_keys), MODE_PRIVATE);
+                    int counter = customKeys1.getInt(getResources().getString(R.string.news_click_counter),0);
+                    customKeys1.edit().putInt(getResources().getString(R.string.news_click_counter), counter + 1).apply();
 
-                        // Open the link with Webview
-                        Intent intentWebview = new Intent(NewsDetailActivity.this, ShowInWebviewActivity.class);
-                        intentWebview.putExtra(getResources().getString(R.string.news_url), extraNewsList.get(index).getNewsUrl());
-                        intentWebview.putExtra(getResources().getString(R.string.news_source_for_display), extraNewsList.get(index).getSource());
-                        startActivity(intentWebview);
-                    }
+                    // Open the link with Webview
+                    Intent intentWebview = new Intent(NewsDetailActivity.this, ShowInWebviewActivity.class);
+                    intentWebview.putExtra(getResources().getString(R.string.news_url), extraNewsList.get(index).getNewsUrl());
+                    intentWebview.putExtra(getResources().getString(R.string.news_source_for_display), extraNewsList.get(index).getSource());
+                    startActivity(intentWebview);
                 });
 
             }

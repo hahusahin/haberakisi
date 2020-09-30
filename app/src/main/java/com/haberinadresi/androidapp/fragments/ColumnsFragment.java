@@ -1,8 +1,7 @@
 package com.haberinadresi.androidapp.fragments;
 
 import androidx.appcompat.widget.SearchView;
-import androidx.lifecycle.Observer;
-import androidx.lifecycle.ViewModelProviders;
+import androidx.lifecycle.ViewModelProvider;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -33,7 +32,6 @@ import com.haberinadresi.androidapp.viewmodels.ColumnsVM;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -48,7 +46,6 @@ public class ColumnsFragment extends Fragment implements SharedPreferences.OnSha
     private SwipeRefreshLayout swipeContainer;
     private SharedPreferences myColumnists;
     private View internetAlert;
-    private AdView bannerAdView;
     private List<Columnist> allColumns;
     private boolean onPauseFlag = false;
     private boolean isPreferenceChanged = false;
@@ -64,11 +61,6 @@ public class ColumnsFragment extends Fragment implements SharedPreferences.OnSha
     public void onViewCreated(@NonNull final View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        // Get the banner ad from main activity and show it if this fragment is visible to user
-        bannerAdView = requireActivity().findViewById(R.id.bannerAdView);
-        if(getUserVisibleHint() && bannerAdView != null){
-            bannerAdView.setVisibility(View.VISIBLE);
-        }
         // The button to display if user didn't select any news source
         sourceWarning = view.findViewById(R.id.btn_source_alert);
         sourceWarning.setVisibility(View.INVISIBLE);
@@ -88,7 +80,7 @@ public class ColumnsFragment extends Fragment implements SharedPreferences.OnSha
         recyclerView.setLayoutManager(new LinearLayoutManager(requireActivity(), RecyclerView.VERTICAL, false));
         recyclerView.setHasFixedSize(true);
 
-        columnsVM = ViewModelProviders.of(this).get(ColumnsVM.class);
+        columnsVM = new ViewModelProvider(this).get(ColumnsVM.class);
 
         // Configure the swipe Refresher and it's refreshing colors
         swipeContainer = view.findViewById(R.id.swiper);
@@ -97,13 +89,10 @@ public class ColumnsFragment extends Fragment implements SharedPreferences.OnSha
                 android.R.color.holo_orange_light,
                 android.R.color.holo_red_light);
         // Fetch the news when swiped by the user
-        swipeContainer.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-            @Override
-            public void onRefresh() {
-                swipeContainer.setRefreshing(true);
-                // get the news again
-                fetchColumns(isPreferenceChanged, true);
-            }
+        swipeContainer.setOnRefreshListener(() -> {
+            swipeContainer.setRefreshing(true);
+            // get the news again
+            fetchColumns(isPreferenceChanged, true);
         });
 
         // If device is connected to the internet
@@ -116,15 +105,12 @@ public class ColumnsFragment extends Fragment implements SharedPreferences.OnSha
             internetAlert.setVisibility(View.VISIBLE);
             swipeContainer.setEnabled(false);
             // when user clicks on button, check the network connection again
-            checkConnection.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    // if connects after button click, then dismiss internet error
-                    if(NetworkUtils.isConnected(requireActivity())){
-                        internetAlert.setVisibility(View.INVISIBLE);
-                        fetchColumns(isPreferenceChanged, false);
-                        swipeContainer.setEnabled(true);
-                    }
+            checkConnection.setOnClickListener(v -> {
+                // if connects after button click, then dismiss internet error
+                if(NetworkUtils.isConnected(requireActivity())){
+                    internetAlert.setVisibility(View.INVISIBLE);
+                    fetchColumns(isPreferenceChanged, false);
+                    swipeContainer.setEnabled(true);
                 }
             });
         }
@@ -142,36 +128,28 @@ public class ColumnsFragment extends Fragment implements SharedPreferences.OnSha
             progressBar.setVisibility(isRefreshed ? View.GONE : View.VISIBLE);
             swipeContainer.setEnabled(true);
             // Start with empty adapter/recyclerview
-            columnAdapter = new ColumnAdapter(requireActivity(), new ArrayList<Columnist>());
+            columnAdapter = new ColumnAdapter(requireActivity(), new ArrayList<>());
             recyclerView.setAdapter(columnAdapter);
 
-            columnsVM.getColumnsLivedata(isPreferenceChanged).observe(this, new Observer<List<Columnist>>() {
-                @Override
-                public void onChanged(@Nullable List<Columnist> columnList) {
-                    // Filters the column list wrt the users preferences and updates the recyclerview
-                    List<Columnist> filteredColumns = new ArrayList<>();
-                    if(columnList != null){
-                        final Locale turkish = new Locale("tr", "TR");
-                        for(Columnist column : columnList){
-                            if(myColumnists.contains(column.getKey().toLowerCase(turkish))){
-                                filteredColumns.add(column);
-                            }
+            columnsVM.getColumnsLivedata(isPreferenceChanged).observe(getViewLifecycleOwner(), columnList -> {
+                // Filters the column list wrt the users preferences and updates the recyclerview
+                List<Columnist> filteredColumns = new ArrayList<>();
+                if(columnList != null){
+                    final Locale turkish = new Locale("tr", "TR");
+                    for(Columnist column : columnList){
+                        if(myColumnists.contains(column.getKey().toLowerCase(turkish))){
+                            filteredColumns.add(column);
                         }
-                        Collections.sort(filteredColumns, new Comparator<Columnist>() {
-                            @Override
-                            public int compare(Columnist column1, Columnist column2) {
-                                return Long.compare(column2.getTime(), column1.getTime());
-                            }
-                        });
-                        //Update the list of adapter
-                        columnAdapter.setColumnList(filteredColumns);
-                        // Keep the full column list to be used when making search
-                        allColumns = filteredColumns;
                     }
-                    // Hide ProgressBar and swipe refresher when news are loaded
-                    progressBar.setVisibility(View.INVISIBLE);
-                    swipeContainer.setRefreshing(false);
+                    Collections.sort(filteredColumns, (column1, column2) -> Long.compare(column2.getTime(), column1.getTime()));
+                    //Update the list of adapter
+                    columnAdapter.setColumnList(filteredColumns);
+                    // Keep the full column list to be used when making search
+                    allColumns = filteredColumns;
                 }
+                // Hide ProgressBar and swipe refresher when news are loaded
+                progressBar.setVisibility(View.INVISIBLE);
+                swipeContainer.setRefreshing(false);
             });
         }
         //If no columnist source in favorite
@@ -183,14 +161,11 @@ public class ColumnsFragment extends Fragment implements SharedPreferences.OnSha
             swipeContainer.setEnabled(false);
             sourceWarning.setVisibility(View.VISIBLE);
             // Open the columnist selection page when user clicks the warning
-            sourceWarning.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
+            sourceWarning.setOnClickListener(v -> {
 
-                    Intent sourceSelection = new Intent(requireActivity(), ColumnistSelectActivity.class);
-                    startActivity(sourceSelection);
+                Intent sourceSelection = new Intent(requireActivity(), ColumnistSelectActivity.class);
+                startActivity(sourceSelection);
 
-                }
             });
         }
 
@@ -204,7 +179,7 @@ public class ColumnsFragment extends Fragment implements SharedPreferences.OnSha
 
     // Added to make search in the column list
     @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+    public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
 
         inflater.inflate(R.menu.news_fragment_menu, menu);
@@ -275,6 +250,12 @@ public class ColumnsFragment extends Fragment implements SharedPreferences.OnSha
 
     @Override
     public void onResume() {
+        // Get the banner ad from main activity and show it if this fragment is visible to user
+        AdView bannerAdView = requireActivity().findViewById(R.id.bannerAdView);
+        if(bannerAdView != null){
+            bannerAdView.setVisibility(View.VISIBLE);
+        }
+
         //If coming from onPause (not from onCreate)
         if (onPauseFlag){
             //If source preferences are changed
@@ -295,15 +276,6 @@ public class ColumnsFragment extends Fragment implements SharedPreferences.OnSha
         myColumnists.unregisterOnSharedPreferenceChangeListener(this);
 
         super.onDestroy();
-    }
-
-    @Override
-    public void setUserVisibleHint(boolean isVisibleToUser) {
-        super.setUserVisibleHint(isVisibleToUser);
-
-        if(isVisibleToUser && isResumed() && bannerAdView != null){
-            bannerAdView.setVisibility(View.VISIBLE);
-        }
     }
 }
 

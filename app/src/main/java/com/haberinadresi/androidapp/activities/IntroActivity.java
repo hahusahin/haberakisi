@@ -44,26 +44,18 @@ public class IntroActivity extends AppCompatActivity {
 
         slideViewPager.addOnPageChangeListener(viewListener);
 
-        nextButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                // If at last page
-                if(nextButton.getText().equals(getResources().getString(R.string.intro_finish))){
-                    finish();
-                }
-                // If not at last page
-                else {
-                    slideViewPager.setCurrentItem(currentPage + 1);
-                }
+        nextButton.setOnClickListener(v -> {
+            // If at last page
+            if(nextButton.getText().equals(getResources().getString(R.string.intro_finish))){
+                finish();
+            }
+            // If not at last page
+            else {
+                slideViewPager.setCurrentItem(currentPage + 1);
             }
         });
 
-        skipButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                finish();
-            }
-        });
+        skipButton.setOnClickListener(v -> finish());
 
     }
 

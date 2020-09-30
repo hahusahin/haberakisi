@@ -69,26 +69,23 @@ public class HeadlineAdapter extends RecyclerView.Adapter<HeadlineAdapter.Manset
         mansetViewHolder.mansetSource.setText(mansetItem.getSource());
 
         // Open the headline in fullscreen mode (load the big image)
-        mansetViewHolder.linearLayout.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                // Write the fullsize image url's of headlines to string arraylist
-                // And get the clicked items position
-                ArrayList<String> headlineUrls = new ArrayList<>();
-                int clickedHeadlinePosition = -1;
-                for(NewsItem item : headlineList){
-                    if(item.getImageUrl().equals(mansetItem.getImageUrl())){
-                        clickedHeadlinePosition = headlineList.indexOf(item);
-                    }
-                    headlineUrls.add(item.getImageUrl());
+        mansetViewHolder.linearLayout.setOnClickListener(v -> {
+            // Write the fullsize image url's of headlines to string arraylist
+            // And get the clicked items position
+            ArrayList<String> headlineUrls = new ArrayList<>();
+            int clickedHeadlinePosition = -1;
+            for(NewsItem item : headlineList){
+                if(item.getImageUrl().equals(mansetItem.getImageUrl())){
+                    clickedHeadlinePosition = headlineList.indexOf(item);
                 }
-                // Pass these values to activity
-                Intent fullScreenIntent = new Intent(context, ShowHeadlinesActivity.class);
-                fullScreenIntent.putStringArrayListExtra(context.getResources().getString(R.string.headline_list), headlineUrls);
-                fullScreenIntent.putExtra(context.getResources().getString(R.string.headline_position), clickedHeadlinePosition);
-                context.startActivity(fullScreenIntent);
-
+                headlineUrls.add(item.getImageUrl());
             }
+            // Pass these values to activity
+            Intent fullScreenIntent = new Intent(context, ShowHeadlinesActivity.class);
+            fullScreenIntent.putStringArrayListExtra(context.getResources().getString(R.string.headline_list), headlineUrls);
+            fullScreenIntent.putExtra(context.getResources().getString(R.string.headline_position), clickedHeadlinePosition);
+            context.startActivity(fullScreenIntent);
+
         });
 
     }

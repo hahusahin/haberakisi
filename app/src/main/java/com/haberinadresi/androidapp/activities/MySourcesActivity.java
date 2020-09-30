@@ -21,7 +21,6 @@ import com.haberinadresi.androidapp.models.SourceItem;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 
@@ -39,7 +38,7 @@ public class MySourcesActivity extends AppCompatActivity {
                 case "small":
                     setTheme(R.style.FontStyle_Small);
                     break;
-                case "medium":
+                case "medium": default:
                     setTheme(R.style.FontStyle_Medium);
                     break;
                 case "large":
@@ -48,8 +47,6 @@ public class MySourcesActivity extends AppCompatActivity {
                 case "xlarge":
                     setTheme(R.style.FontStyle_XLarge);
                     break;
-                default:
-                    setTheme(R.style.FontStyle_Medium);
             }
         } else {
             setTheme(R.style.FontStyle_Medium);
@@ -112,12 +109,7 @@ public class MySourcesActivity extends AppCompatActivity {
 
             gundemTextView.setVisibility(View.VISIBLE);
             // sort by name before attaching
-            Collections.sort(myGundemSources, new Comparator<SourceItem>() {
-                @Override
-                public int compare(SourceItem source1, SourceItem source2) {
-                    return source1.getKey().compareTo(source2.getKey());
-                }
-            });
+            Collections.sort(myGundemSources, (source1, source2) -> source1.getKey().compareTo(source2.getKey()));
             MySourcesAdapter gundemAdapter = new MySourcesAdapter(MySourcesActivity.this, myGundemSources);
             rvGundem.setAdapter(gundemAdapter);
         } else {
@@ -133,12 +125,7 @@ public class MySourcesActivity extends AppCompatActivity {
 
             sporTextView.setVisibility(View.VISIBLE);
             // sort by name before attaching
-            Collections.sort(mySporSources, new Comparator<SourceItem>() {
-                @Override
-                public int compare(SourceItem source1, SourceItem source2) {
-                    return source1.getKey().compareTo(source2.getKey());
-                }
-            });
+            Collections.sort(mySporSources, (source1, source2) -> source1.getKey().compareTo(source2.getKey()));
             MySourcesAdapter sporAdapter = new MySourcesAdapter(MySourcesActivity.this, mySporSources);
             rvSpor.setAdapter(sporAdapter);
         }else {
@@ -153,12 +140,7 @@ public class MySourcesActivity extends AppCompatActivity {
 
             teknolojiTextView.setVisibility(View.VISIBLE);
             // sort by name before attaching
-            Collections.sort(myTeknolojiSources, new Comparator<SourceItem>() {
-                @Override
-                public int compare(SourceItem source1, SourceItem source2) {
-                    return source1.getKey().compareTo(source2.getKey());
-                }
-            });
+            Collections.sort(myTeknolojiSources, (source1, source2) -> source1.getKey().compareTo(source2.getKey()));
             MySourcesAdapter teknolojiAdapter = new MySourcesAdapter(MySourcesActivity.this, myTeknolojiSources);
             rvTeknoloji.setAdapter(teknolojiAdapter);
         }else {
@@ -173,12 +155,7 @@ public class MySourcesActivity extends AppCompatActivity {
 
             kultursanatTextView.setVisibility(View.VISIBLE);
             // sort by name before attaching
-            Collections.sort(myKulturSanatSources, new Comparator<SourceItem>() {
-                @Override
-                public int compare(SourceItem source1, SourceItem source2) {
-                    return source1.getKey().compareTo(source2.getKey());
-                }
-            });
+            Collections.sort(myKulturSanatSources, (source1, source2) -> source1.getKey().compareTo(source2.getKey()));
             MySourcesAdapter kulturSanatAdapter = new MySourcesAdapter(MySourcesActivity.this, myKulturSanatSources);
             rvKulturSanat.setAdapter(kulturSanatAdapter);
         } else {
@@ -193,12 +170,7 @@ public class MySourcesActivity extends AppCompatActivity {
 
             saglikTextView.setVisibility(View.VISIBLE);
             // sort by name before attaching
-            Collections.sort(mySaglikSources, new Comparator<SourceItem>() {
-                @Override
-                public int compare(SourceItem source1, SourceItem source2) {
-                    return source1.getKey().compareTo(source2.getKey());
-                }
-            });
+            Collections.sort(mySaglikSources, (source1, source2) -> source1.getKey().compareTo(source2.getKey()));
             MySourcesAdapter saglikAdapter = new MySourcesAdapter(MySourcesActivity.this, mySaglikSources);
             rvSaglik.setAdapter(saglikAdapter);
         }else {
@@ -213,12 +185,7 @@ public class MySourcesActivity extends AppCompatActivity {
 
             magazinTextView.setVisibility(View.VISIBLE);
             // sort by name before attaching
-            Collections.sort(myMagazinSources, new Comparator<SourceItem>() {
-                @Override
-                public int compare(SourceItem source1, SourceItem source2) {
-                    return source1.getKey().compareTo(source2.getKey());
-                }
-            });
+            Collections.sort(myMagazinSources, (source1, source2) -> source1.getKey().compareTo(source2.getKey()));
             MySourcesAdapter magazinAdapter = new MySourcesAdapter(MySourcesActivity.this, myMagazinSources);
             rvMagazin.setAdapter(magazinAdapter);
         }else {

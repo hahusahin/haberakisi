@@ -41,7 +41,7 @@ public class BackupNewsImages {
                 return "https://docs.google.com/uc?id=1p2UNuB4iXwAldpSlLq24sYr3RihdGoXZ";
             case "donanimhaber_teknoloji":
                 return "https://docs.google.com/uc?id=1uKjYOcSmpJdKSvYwoN7pQ8qk9roYIm4f";
-            case "dunya_gundem":
+            case "dunya_gundem": case "dunya_ekonomi":
                 return "https://docs.google.com/uc?id=1ULPPf5nNtOGRoecyzbkWfyMoz7oIHKFt";
             case "dwturkce_gundem":
                 return "https://docs.google.com/uc?id=1U8ex6azrL_YQYMnylHPXeQH0dJ1Cj36p";
@@ -57,12 +57,18 @@ public class BackupNewsImages {
                 return "https://docs.google.com/uc?id=15sZrcPsbXXJFYL0UEO62HKLW5HB6iqRc";
             case "finansgundem_ekonomi":
                 return "https://docs.google.com/uc?id=1B1GkShUnjNFcnBH0IAYqdMBU3DKqE99i";
+            case "gazeteduvar_gundem":
+                return "https://docs.google.com/uc?id=1Dro14rEvopJUPWFHzMA8Lv2bHXbXdh0X";
             case "gecce_magazin":
                 return "https://docs.google.com/uc?id=1A-N1LViiD-b4WZDQbHXnzstj4S4g7P1m";
+            case "gercekgundem_gundem":
+                return "https://docs.google.com/uc?id=1kiUMY3yrzqBpRhXRRPH_eEiXKXgdc5EJ";
             case "gunes_gundem":
                 return "https://docs.google.com/uc?id=16kspUof3ZF9JeAweizzxksq2rKykqQcq";
             case "haber7_gundem":
                 return "https://docs.google.com/uc?id=1yEN185Pmatgt8uiAa16WlyJpK2QDnsnE";
+            case "haberglobal_gundem": case "haberglobal_ekonomi":
+                return "https://docs.google.com/uc?id=1tf4fuvrbmPT3VjZNAb0621jcNn12OaKD";
             case "haberler_gundem": case "haberler_saglik":
                 return "https://docs.google.com/uc?id=12P9Fuykx9s6dmm-ohgvjNKBe8eEkdD6S";
             case "haberturk_ekonomi": case "haberturk_gundem": case "haberturk_kultursanat":
@@ -73,6 +79,8 @@ public class BackupNewsImages {
                 return "https://docs.google.com/uc?id=1y2lvjWvqKq2_uMTFKDqQUgaCinow5X_w";
             case "haberturk_spor":
                 return "https://docs.google.com/uc?id=1SJwtKQ_wEA6Qz6NPa8X79n8zTGSiRZGs";
+            case "halktv_gundem":
+                return "https://docs.google.com/uc?id=1YqXAX9rfNqFzNyLkaLJX6SVmela7wIH1";
             case "hurriyet_ekonomi": case "hurriyet_gundem": case "hurriyet_teknoloji":
                 return "https://docs.google.com/uc?id=1hdwcLvQJ5YXYgXTtedAkfcHPEbp6Dj3Z";
             case "hurriyet_kultursanat":
@@ -165,6 +173,8 @@ public class BackupNewsImages {
                 return "https://docs.google.com/uc?id=1XGeKmAol456haSaX3sr7YgHn8XP77Mu8";
             case "vatan_gundem":
                 return "https://docs.google.com/uc?id=1P-0j7YrmIAyscrZdHb83QwNJX1oPkIie";
+            case "voaturkce_gundem":
+                return "https://docs.google.com/uc?id=1cRotO66NcjCzmp7IRS0FFLDxgr6xbriy";
             case "webrazzi_teknoloji":
                 return "https://docs.google.com/uc?id=1_LPw3Kj0bgJJf5Sir63yFEOcMNG5rFVB";
             case "webtekno_teknoloji":

@@ -109,16 +109,13 @@ public class ColumnsVM extends AndroidViewModel {
     }
 
     private void saveColumnsToSP(final List<Columnist> columnList) {
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                SharedPreferences sharedPreferences = getApplication().getSharedPreferences(getApplication().getResources().getString(R.string.cached_news_key), MODE_PRIVATE);
-                SharedPreferences.Editor editor = sharedPreferences.edit();
-                Gson gson = new Gson();
-                String json = gson.toJson(columnList);
-                editor.putString(getApplication().getResources().getString(R.string.yazarlar_key), json);
-                editor.apply();
-            }
+        new Thread(() -> {
+            SharedPreferences sharedPreferences = getApplication().getSharedPreferences(getApplication().getResources().getString(R.string.cached_news_key), MODE_PRIVATE);
+            SharedPreferences.Editor editor = sharedPreferences.edit();
+            Gson gson = new Gson();
+            String json = gson.toJson(columnList);
+            editor.putString(getApplication().getResources().getString(R.string.yazarlar_key), json);
+            editor.apply();
         }).start();
     }
 }

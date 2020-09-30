@@ -1,7 +1,6 @@
 package com.haberinadresi.androidapp.activities;
 
-import androidx.lifecycle.Observer;
-import androidx.lifecycle.ViewModelProviders;
+import androidx.lifecycle.ViewModelProvider;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import androidx.annotation.Nullable;
@@ -10,6 +9,8 @@ import androidx.appcompat.content.res.AppCompatResources;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.appcompat.widget.Toolbar;
+
+import android.os.Handler;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ProgressBar;
@@ -18,11 +19,10 @@ import android.widget.TextView;
 import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
+import com.google.android.gms.ads.LoadAdError;
 import com.haberinadresi.androidapp.R;
 import com.haberinadresi.androidapp.adapters.FavColumnsAdapter;
-import com.haberinadresi.androidapp.models.Columnist;
 import com.haberinadresi.androidapp.viewmodels.FavColumnsVM;
-import java.util.List;
 
 //This activity loads news from only the selected source
 public class FavColumnsActivity extends AppCompatActivity {
@@ -45,7 +45,7 @@ public class FavColumnsActivity extends AppCompatActivity {
                 case "small":
                     setTheme(R.style.FontStyle_Small);
                     break;
-                case "medium":
+                case "medium": default:
                     setTheme(R.style.FontStyle_Medium);
                     break;
                 case "large":
@@ -54,8 +54,6 @@ public class FavColumnsActivity extends AppCompatActivity {
                 case "xlarge":
                     setTheme(R.style.FontStyle_XLarge);
                     break;
-                default:
-                    setTheme(R.style.FontStyle_Medium);
             }
         } else {
             setTheme(R.style.FontStyle_Medium);
@@ -75,9 +73,22 @@ public class FavColumnsActivity extends AppCompatActivity {
         bannerAdView.loadAd(adRequest);
         bannerAdView.setAdListener(new AdListener(){
             @Override
-            public void onAdFailedToLoad(int i) {
-                // If failed, then load a new one
-                bannerAdView.loadAd(new AdRequest.Builder().build());
+            public void onAdLoaded() {
+                // If ad is loaded than reset counter that keeps failures
+                customPrefs.edit().putInt(getResources().getString(R.string.banner_trial_counter), 0).apply();
+            }
+
+            @Override
+            public void onAdFailedToLoad(LoadAdError loadAdError) {
+                // Try for three times only
+                int trial = customPrefs.getInt(getResources().getString(R.string.banner_trial_counter), 0);
+                trial++;
+                if(trial <= 3){
+                    customPrefs.edit().putInt(getResources().getString(R.string.banner_trial_counter), trial).apply();
+                    // Wait for ... seconds and then try again
+                    Handler handler = new Handler();
+                    handler.postDelayed(() -> bannerAdView.loadAd(new AdRequest.Builder().build()), 10000);
+                }
             }
         });
 
@@ -97,21 +108,18 @@ public class FavColumnsActivity extends AppCompatActivity {
         progressBar = findViewById(R.id.pb_favorite_news);
         progressBar.setVisibility(View.VISIBLE);
 
-        FavColumnsVM favColumnsVM = ViewModelProviders.of(this).get(FavColumnsVM.class);
-        favColumnsVM.getFavColumns().observe(this, new Observer<List<Columnist>>() {
-            @Override
-            public void onChanged(@Nullable List<Columnist> columnsList) {
+        FavColumnsVM favColumnsVM = new ViewModelProvider(this).get(FavColumnsVM.class);
+        favColumnsVM.getFavColumns().observe(this, columnsList -> {
 
-                columnsAdapter = new FavColumnsAdapter(FavColumnsActivity.this, columnsList);
-                recyclerView.setAdapter(columnsAdapter);
-                // Hide ProgressBar when news are loaded
-                progressBar.setVisibility(View.INVISIBLE);
-                // If the user didn't add any news to favorite show dialog
-                if(columnsAdapter.getItemCount() < 1){
-                    emptyFavNewsWarning.setVisibility(View.VISIBLE);
-                } else {
-                    emptyFavNewsWarning.setVisibility(View.GONE);
-                }
+            columnsAdapter = new FavColumnsAdapter(FavColumnsActivity.this, columnsList);
+            recyclerView.setAdapter(columnsAdapter);
+            // Hide ProgressBar when news are loaded
+            progressBar.setVisibility(View.INVISIBLE);
+            // If the user didn't add any news to favorite show dialog
+            if(columnsAdapter.getItemCount() < 1){
+                emptyFavNewsWarning.setVisibility(View.VISIBLE);
+            } else {
+                emptyFavNewsWarning.setVisibility(View.GONE);
             }
         });
 

@@ -46,7 +46,7 @@ public class EditCategoriesActivity extends AppCompatActivity implements SharedP
                 case "small":
                     setTheme(R.style.FontStyle_Small);
                     break;
-                case "medium":
+                case "medium": default:
                     setTheme(R.style.FontStyle_Medium);
                     break;
                 case "large":
@@ -55,8 +55,6 @@ public class EditCategoriesActivity extends AppCompatActivity implements SharedP
                 case "xlarge":
                     setTheme(R.style.FontStyle_XLarge);
                     break;
-                default:
-                    setTheme(R.style.FontStyle_Medium);
             }
         } else {
             setTheme(R.style.FontStyle_Medium);
@@ -126,17 +124,14 @@ public class EditCategoriesActivity extends AppCompatActivity implements SharedP
         //Button that restarts the activity when clicked (to apply the category order change)
         applyButton = findViewById(R.id.btn_apply_changes);
         applyButton.setVisibility(View.GONE);
-        applyButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(EditCategoriesActivity.this, MainActivity.class);
-                intent.putExtra(EditCategoriesActivity.class.getName(), true);
-                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
-                startActivity(intent);
-                overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
-                finish();
+        applyButton.setOnClickListener(v -> {
+            Intent intent = new Intent(EditCategoriesActivity.this, MainActivity.class);
+            intent.putExtra(EditCategoriesActivity.class.getName(), true);
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+            startActivity(intent);
+            overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
+            finish();
 
-            }
         });
 
     }
@@ -145,9 +140,9 @@ public class EditCategoriesActivity extends AppCompatActivity implements SharedP
 
         ArrayList<CategoryItem> categoryList = new ArrayList<>();
         categoryList.add(new CategoryItem(getResources().getString(R.string.gundem_normal), R.mipmap.letter_g, true));
-        categoryList.add(new CategoryItem(getResources().getString(R.string.spor_normal), R.mipmap.letter_s, true));
         categoryList.add(new CategoryItem(getResources().getString(R.string.koseyazilari_normal), R.mipmap.letter_k, true));
         categoryList.add(new CategoryItem(getResources().getString(R.string.ekonomi_normal), R.mipmap.letter_e, true));
+        categoryList.add(new CategoryItem(getResources().getString(R.string.spor_normal), R.mipmap.letter_s, true));
         categoryList.add(new CategoryItem(getResources().getString(R.string.teknoloji_normal), R.mipmap.letter_t, true));
         categoryList.add(new CategoryItem(getResources().getString(R.string.kultursanat_normal), R.mipmap.letter_k, true));
         categoryList.add(new CategoryItem(getResources().getString(R.string.saglik_normal), R.mipmap.letter_s, true));

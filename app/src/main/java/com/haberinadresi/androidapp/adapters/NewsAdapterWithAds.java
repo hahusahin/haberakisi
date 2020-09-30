@@ -103,7 +103,7 @@ public class NewsAdapterWithAds extends RecyclerView.Adapter<RecyclerView.ViewHo
                 int news_view_preference = customKeys.getInt(context.getResources().getString(R.string.news_item_view_preference), 0);
                 View newsView;
                 switch (news_view_preference){
-                    case 0:
+                    case 0: default:
                         newsView = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_news_type1, parent, false);
                         break;
                     case 1:
@@ -112,8 +112,6 @@ public class NewsAdapterWithAds extends RecyclerView.Adapter<RecyclerView.ViewHo
                     case 2:
                         newsView = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_news_type3, parent, false);
                         break;
-                   default:
-                       newsView = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_news_type1, parent, false);
                 }
                 return new NewsViewHolder(newsView);
             case BANNER_AD_VIEW_TYPE:
@@ -208,101 +206,92 @@ public class NewsAdapterWithAds extends RecyclerView.Adapter<RecyclerView.ViewHo
                 }
 
                 // Operations when a news item is clicked
-                newsViewHolder.constraintLayout.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
+                newsViewHolder.constraintLayout.setOnClickListener(v -> {
 
-                        // Save the clicked item's link to sharedpreference (to gray out it later on)
-                        clickedNews.edit().putLong(newsItem.getNewsUrl(), System.currentTimeMillis()).apply();
+                    // Save the clicked item's link to sharedpreference (to gray out it later on)
+                    clickedNews.edit().putLong(newsItem.getNewsUrl(), System.currentTimeMillis()).apply();
 
-                        // If detail field is empty, open the link with webview
-                        if ( newsItem.getDetail() == null || newsItem.getDetail().equals("") ) {
-                            Intent intentWebview = new Intent(context, ShowInWebviewActivity.class);
-                            intentWebview.putExtra(context.getResources().getString(R.string.news_url), newsItem.getNewsUrl());
-                            intentWebview.putExtra(context.getResources().getString(R.string.news_source_for_display), newsItem.getSource());
-                            intentWebview.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                            context.startActivity(intentWebview);
+                    // If detail field is empty, open the link with webview
+                    if ( newsItem.getDetail() == null || newsItem.getDetail().equals("") ) {
+                        Intent intentWebview = new Intent(context, ShowInWebviewActivity.class);
+                        intentWebview.putExtra(context.getResources().getString(R.string.news_url), newsItem.getNewsUrl());
+                        intentWebview.putExtra(context.getResources().getString(R.string.news_source_for_display), newsItem.getSource());
+                        intentWebview.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                        context.startActivity(intentWebview);
 
-                        // If there is valid detail info, open the newsDetailActivity
-                        } else {
-                            // Open the activity that shows the news' details, put the necessary items on it
-                            Intent newsDetail = new Intent(context, NewsDetailActivity.class);
-                            // Convert the clicked newsItem (object) into string
-                            Gson gson = new Gson();
-                            String clickedNews = gson.toJson(newsItem);
-                            newsDetail.putExtra(context.getResources().getString(R.string.news_item), clickedNews);
-                            // Generate the extra 3 news from the same source to be displayed at the bottom of NewsDetail Activity
-                            List<NewsItem> extraNews = getExtraNews(newsList, newsItem.getKey());
-                            if(extraNews != null){
-                                newsDetail.putExtra(context.getResources().getString(R.string.extra_news), gson.toJson(extraNews));
-                            }
-                            newsDetail.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                            context.startActivity(newsDetail);
+                    // If there is valid detail info, open the newsDetailActivity
+                    } else {
+                        // Open the activity that shows the news' details, put the necessary items on it
+                        Intent newsDetail = new Intent(context, NewsDetailActivity.class);
+                        // Convert the clicked newsItem (object) into string
+                        Gson gson = new Gson();
+                        String clickedNews = gson.toJson(newsItem);
+                        newsDetail.putExtra(context.getResources().getString(R.string.news_item), clickedNews);
+                        // Generate the extra 3 news from the same source to be displayed at the bottom of NewsDetail Activity
+                        List<NewsItem> extraNews = getExtraNews(newsList, newsItem.getKey());
+                        if(extraNews != null){
+                            newsDetail.putExtra(context.getResources().getString(R.string.extra_news), gson.toJson(extraNews));
                         }
-
-                        // tell the adapter that there is change in the clicked item (gray out)
-                        notifyItemChanged(newsViewHolder.getAdapterPosition());
-
-                        // Increment the click counter (used for displaying Interstitial Ad in Main Activity OnResume)
-                        int counter = customKeys.getInt(context.getResources().getString(R.string.news_click_counter),0);
-                        customKeys.edit().putInt(context.getResources().getString(R.string.news_click_counter), counter + 1).apply();
+                        newsDetail.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                        context.startActivity(newsDetail);
                     }
+
+                    // tell the adapter that there is change in the clicked item (gray out)
+                    notifyItemChanged(newsViewHolder.getAdapterPosition());
+
+                    // Increment the click counter (used for displaying Interstitial Ad in Main Activity OnResume)
+                    int counter = customKeys.getInt(context.getResources().getString(R.string.news_click_counter),0);
+                    customKeys.edit().putInt(context.getResources().getString(R.string.news_click_counter), counter + 1).apply();
                 });
 
                 // POPUP MENU OPERATIONS (Save & Share)
-                newsViewHolder.moreVertical.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        // Create the Popup Menu
-                        final PopupMenu popup = new PopupMenu(context, v);
-                        popup.getMenuInflater().inflate(R.menu.news_more_menu, popup.getMenu());
-                        // Set the title of Save News Menu item ( Haberi Kaydet / Kayıtlılardan Çıkar)
-                        MenuItem saveMenuItem = popup.getMenu().getItem(0);
-                        if (savedNews.contains(newsItem.getNewsUrl())) {
-                            saveMenuItem.setTitle(context.getResources().getString(R.string.unsave_news_column));
-                        } else {
-                            saveMenuItem.setTitle(context.getResources().getString(R.string.save_news));
-                        }
-                        // Set the click operations
-                        popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
-                            @Override
-                            public boolean onMenuItemClick(MenuItem menuItem) {
-
-                                // SAVE OPERATIONS
-                                if(menuItem.getItemId() == R.id.more_save_news){
-                                    // if news is already in the saved list
-                                    if (savedNews.contains(newsItem.getNewsUrl())) {
-                                        //Delete news from favorite news database
-                                        FavNewsRepository repository = new FavNewsRepository(context);
-                                        repository.delete(newsItem);
-                                        // Show toast message
-                                        Toast.makeText(context.getApplicationContext(), context.getResources().getString(R.string.news_deleted_from_favorite), Toast.LENGTH_SHORT).show();
-                                        // update shared preference file
-                                        savedNews.edit().remove(newsItem.getNewsUrl()).apply();
-
-                                    // News is not saved before, so save it into database
-                                    } else {
-                                        //Add news to favorite news database
-                                        FavNewsRepository repository = new FavNewsRepository(context);
-                                        repository.insert(newsItem);
-                                        // Show toast message
-                                        Toast.makeText(context.getApplicationContext(), context.getResources().getString(R.string.news_added_to_favorite), Toast.LENGTH_SHORT).show();
-                                        // update shared preference file
-                                        savedNews.edit().putBoolean(newsItem.getNewsUrl(), true).apply();
-                                    }
-
-                                // SHARE OPERATIONS
-                                } else if(menuItem.getItemId() == R.id.more_share_news){
-                                    Intent intent = new Intent(Intent.ACTION_SEND);
-                                    intent.putExtra(Intent.EXTRA_TEXT, newsItem.getNewsUrl());
-                                    intent.setType("text/plain");
-                                    context.startActivity(intent);
-                                }
-                                return true;
-                            }
-                        });
-                        popup.show();
+                newsViewHolder.moreVertical.setOnClickListener(v -> {
+                    // Create the Popup Menu
+                    final PopupMenu popup = new PopupMenu(context, v);
+                    popup.getMenuInflater().inflate(R.menu.news_more_menu, popup.getMenu());
+                    // Set the title of Save News Menu item ( Haberi Kaydet / Kayıtlılardan Çıkar)
+                    MenuItem saveMenuItem = popup.getMenu().getItem(0);
+                    if (savedNews.contains(newsItem.getNewsUrl())) {
+                        saveMenuItem.setTitle(context.getResources().getString(R.string.unsave_news_column));
+                    } else {
+                        saveMenuItem.setTitle(context.getResources().getString(R.string.save_news));
                     }
+                    // Set the click operations
+                    popup.setOnMenuItemClickListener(menuItem -> {
+
+                        // SAVE OPERATIONS
+                        if(menuItem.getItemId() == R.id.more_save_news){
+                            // if news is already in the saved list
+                            if (savedNews.contains(newsItem.getNewsUrl())) {
+                                //Delete news from favorite news database
+                                FavNewsRepository repository = new FavNewsRepository(context);
+                                repository.delete(newsItem);
+                                // Show toast message
+                                Toast.makeText(context.getApplicationContext(), context.getResources().getString(R.string.news_deleted_from_favorite), Toast.LENGTH_SHORT).show();
+                                // update shared preference file
+                                savedNews.edit().remove(newsItem.getNewsUrl()).apply();
+
+                            // News is not saved before, so save it into database
+                            } else {
+                                //Add news to favorite news database
+                                FavNewsRepository repository = new FavNewsRepository(context);
+                                repository.insert(newsItem);
+                                // Show toast message
+                                Toast.makeText(context.getApplicationContext(), context.getResources().getString(R.string.news_added_to_favorite), Toast.LENGTH_SHORT).show();
+                                // update shared preference file
+                                savedNews.edit().putBoolean(newsItem.getNewsUrl(), true).apply();
+                            }
+
+                        // SHARE OPERATIONS
+                        } else if(menuItem.getItemId() == R.id.more_share_news){
+                            Intent intent = new Intent(Intent.ACTION_SEND);
+                            intent.putExtra(Intent.EXTRA_TEXT, newsItem.getNewsUrl());
+                            intent.setType("text/plain");
+                            context.startActivity(intent);
+                        }
+                        return true;
+                    });
+                    popup.show();
                 });
 
                 /*

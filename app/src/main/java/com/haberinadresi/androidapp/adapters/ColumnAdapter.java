@@ -123,84 +123,75 @@ public class ColumnAdapter extends RecyclerView.Adapter<ColumnAdapter.ColumnView
             columnViewHolder.columnistImage.setColorFilter(filter);
         }
 
-        columnViewHolder.constraintLayout.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
+        columnViewHolder.constraintLayout.setOnClickListener(v -> {
 
-                // Save the clicked item's link to sharedpreference (to gray out it later on)
-                clickedColumns.edit().putLong(columnItem.getColumnUrl(), System.currentTimeMillis()).apply();
+            // Save the clicked item's link to sharedpreference (to gray out it later on)
+            clickedColumns.edit().putLong(columnItem.getColumnUrl(), System.currentTimeMillis()).apply();
 
-                // Open the link with Webview
-                Intent intentUrl = new Intent(context, ShowInWebviewActivity.class);
-                intentUrl.putExtra(context.getResources().getString(R.string.news_url), columnItem.getColumnUrl());
-                intentUrl.putExtra(context.getResources().getString(R.string.news_source_for_display), columnItem.getName());
-                intentUrl.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                context.startActivity(intentUrl);
+            // Open the link with Webview
+            Intent intentUrl = new Intent(context, ShowInWebviewActivity.class);
+            intentUrl.putExtra(context.getResources().getString(R.string.news_url), columnItem.getColumnUrl());
+            intentUrl.putExtra(context.getResources().getString(R.string.news_source_for_display), columnItem.getName());
+            intentUrl.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            context.startActivity(intentUrl);
 
-                // tell the adapter that there is change in the clicked item
-                notifyItemChanged(columnViewHolder.getAdapterPosition());
+            // tell the adapter that there is change in the clicked item
+            notifyItemChanged(columnViewHolder.getAdapterPosition());
 
-                // Increment the click counter (used for displaying Interstitial Ad in Main Activity OnResume)
-                int counter = customKeys.getInt(context.getResources().getString(R.string.news_click_counter),0);
-                customKeys.edit().putInt(context.getResources().getString(R.string.news_click_counter), counter + 1).apply();
+            // Increment the click counter (used for displaying Interstitial Ad in Main Activity OnResume)
+            int counter = customKeys.getInt(context.getResources().getString(R.string.news_click_counter),0);
+            customKeys.edit().putInt(context.getResources().getString(R.string.news_click_counter), counter + 1).apply();
 
-            }
         });
 
         // POPUP MENU OPERATIONS (Save & Share)
-        columnViewHolder.moreVertical.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                // Create the Popup Menu
-                final PopupMenu popup = new PopupMenu(context, v);
-                popup.getMenuInflater().inflate(R.menu.column_more_menu, popup.getMenu());
-                // Set the title of Save News Menu item ( Yazıyı Kaydet / Favorilerden Çıkar)
-                MenuItem saveMenuItem = popup.getMenu().getItem(0);
-                if (savedColumns.contains(columnItem.getColumnUrl())) {
-                    saveMenuItem.setTitle(context.getResources().getString(R.string.unsave_news_column));
-                } else {
-                    saveMenuItem.setTitle(context.getResources().getString(R.string.save_column));
-                }
-                // Set the click operations
-                popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
-                    @Override
-                    public boolean onMenuItemClick(MenuItem menuItem) {
-
-                        // SAVE OPERATIONS
-                        if(menuItem.getItemId() == R.id.more_save_column){
-                            // if column is already in the saved list
-                            if (savedColumns.contains(columnItem.getColumnUrl())) {
-                                //Delete column from favorite columns database
-                                FavColumnsRepository repository = new FavColumnsRepository(context);
-                                repository.delete(columnItem);
-                                // Show toast message
-                                Toast.makeText(context.getApplicationContext(), context.getResources().getString(R.string.column_deleted_from_favorite), Toast.LENGTH_SHORT).show();
-                                // update shared preference file
-                                savedColumns.edit().remove(columnItem.getColumnUrl()).apply();
-
-                            // Column is not saved before, so save it into database
-                            } else {
-                                //Add column to favorite columns database
-                                FavColumnsRepository repository = new FavColumnsRepository(context);
-                                repository.insert(columnItem);
-                                // Show toast message
-                                Toast.makeText(context.getApplicationContext(), context.getResources().getString(R.string.column_added_to_favorite), Toast.LENGTH_SHORT).show();
-                                // update shared preference file
-                                savedColumns.edit().putBoolean(columnItem.getColumnUrl() ,true).apply();
-                            }
-
-                        // SHARE OPERATIONS
-                        } else if(menuItem.getItemId() == R.id.more_share_column){
-                            Intent intent = new Intent(Intent.ACTION_SEND);
-                            intent.putExtra(Intent.EXTRA_TEXT, columnItem.getColumnUrl());
-                            intent.setType("text/plain");
-                            context.startActivity(intent);
-                        }
-                        return true;
-                    }
-                });
-                popup.show();
+        columnViewHolder.moreVertical.setOnClickListener(v -> {
+            // Create the Popup Menu
+            final PopupMenu popup = new PopupMenu(context, v);
+            popup.getMenuInflater().inflate(R.menu.column_more_menu, popup.getMenu());
+            // Set the title of Save News Menu item ( Yazıyı Kaydet / Favorilerden Çıkar)
+            MenuItem saveMenuItem = popup.getMenu().getItem(0);
+            if (savedColumns.contains(columnItem.getColumnUrl())) {
+                saveMenuItem.setTitle(context.getResources().getString(R.string.unsave_news_column));
+            } else {
+                saveMenuItem.setTitle(context.getResources().getString(R.string.save_column));
             }
+            // Set the click operations
+            popup.setOnMenuItemClickListener(menuItem -> {
+
+                // SAVE OPERATIONS
+                if(menuItem.getItemId() == R.id.more_save_column){
+                    // if column is already in the saved list
+                    if (savedColumns.contains(columnItem.getColumnUrl())) {
+                        //Delete column from favorite columns database
+                        FavColumnsRepository repository = new FavColumnsRepository(context);
+                        repository.delete(columnItem);
+                        // Show toast message
+                        Toast.makeText(context.getApplicationContext(), context.getResources().getString(R.string.column_deleted_from_favorite), Toast.LENGTH_SHORT).show();
+                        // update shared preference file
+                        savedColumns.edit().remove(columnItem.getColumnUrl()).apply();
+
+                    // Column is not saved before, so save it into database
+                    } else {
+                        //Add column to favorite columns database
+                        FavColumnsRepository repository = new FavColumnsRepository(context);
+                        repository.insert(columnItem);
+                        // Show toast message
+                        Toast.makeText(context.getApplicationContext(), context.getResources().getString(R.string.column_added_to_favorite), Toast.LENGTH_SHORT).show();
+                        // update shared preference file
+                        savedColumns.edit().putBoolean(columnItem.getColumnUrl() ,true).apply();
+                    }
+
+                // SHARE OPERATIONS
+                } else if(menuItem.getItemId() == R.id.more_share_column){
+                    Intent intent = new Intent(Intent.ACTION_SEND);
+                    intent.putExtra(Intent.EXTRA_TEXT, columnItem.getColumnUrl());
+                    intent.setType("text/plain");
+                    context.startActivity(intent);
+                }
+                return true;
+            });
+            popup.show();
         });
     }
 

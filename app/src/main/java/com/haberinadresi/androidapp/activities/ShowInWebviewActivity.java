@@ -1,10 +1,12 @@
 package com.haberinadresi.androidapp.activities;
 
+import android.content.Context;
 import android.content.Intent;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -16,12 +18,14 @@ import android.view.View;
 import android.webkit.JsPromptResult;
 import android.webkit.JsResult;
 import android.webkit.WebChromeClient;
+import android.webkit.WebResourceRequest;
 import android.webkit.WebResourceResponse;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.FrameLayout;
 import android.widget.ProgressBar;
+import android.widget.Toast;
 
 import com.haberinadresi.androidapp.R;
 
@@ -33,8 +37,10 @@ public class ShowInWebviewActivity extends AppCompatActivity {
     private ProgressBar progressBar;
     private FrameLayout frameLayout;
     private String source;
+    private String newsUrl;
     public static final String[] adKeywords =
-            {"googleadservices", "googleads", "pagead", "pubads", ".click", "/clicks", ".doubleclick", "adclick.", "/banner."};
+            {"googleadservices", "googleads", "pagead", "pubads", ".click", "/clicks", ".doubleclick",
+                "adclick.", "/banner.", "https//ad."};
 
 
     @SuppressWarnings("SetJavaScriptEnabled")
@@ -54,10 +60,15 @@ public class ShowInWebviewActivity extends AppCompatActivity {
         progressBar = findViewById(R.id.pb_webview_loading);
         progressBar.setMax(100);
 
-        // Get the news url from the intent (NewsDetail Activity & News Adapter & Column Adapter)
+        // Get the news url from the intent (NewsDetail Activity & News Adapter & Column Adapter & Notification)
         Intent intentUrl = getIntent();
         source = intentUrl.getStringExtra(getResources().getString(R.string.news_source_for_display));
-        String newsUrl = intentUrl.getStringExtra(getResources().getString(R.string.news_url));
+        newsUrl = intentUrl.getStringExtra(getResources().getString(R.string.news_url));
+        // only for notifications (to save the clicked items)
+        String sourceKey =  intentUrl.getStringExtra(getResources().getString(R.string.news_source_key));
+        if(sourceKey != null){
+            saveClickedNotifications(sourceKey, newsUrl);
+        }
 
         // Start Webview
         webView.setWebViewClient(new MyWebViewClient());
@@ -66,15 +77,14 @@ public class ShowInWebviewActivity extends AppCompatActivity {
         webView.getSettings().setJavaScriptEnabled(true);
         webView.getSettings().setDomStorageEnabled(true);
         webView.getSettings().setUseWideViewPort(true);
-        webView.getSettings().setLoadWithOverviewMode(true); // To load the page without zoom
+        webView.getSettings().setLoadWithOverviewMode(true); // To load the page without zoom at initial stage
         webView.getSettings().setLayoutAlgorithm(WebSettings.LayoutAlgorithm.TEXT_AUTOSIZING); // To avoid big font size
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             webView.getSettings().setMixedContentMode(WebSettings.MIXED_CONTENT_ALWAYS_ALLOW); // To show pictures (not seen in some websites)
         }
 
-        //webView.getSettings().setSupportZoom(true);
-        //webView.getSettings().setBuiltInZoomControls(true);
-        //webView.getSettings().setDisplayZoomControls(true);
+        webView.getSettings().setBuiltInZoomControls(true); // to enable pinch zooming
+        webView.getSettings().setDisplayZoomControls(false); // to hide zoom control buttons
         //webView.setOverScrollMode(WebView.OVER_SCROLL_NEVER);
 
         webView.loadUrl(newsUrl);
@@ -85,25 +95,51 @@ public class ShowInWebviewActivity extends AppCompatActivity {
     private class MyWebViewClient extends WebViewClient{
         @Override
         public boolean shouldOverrideUrlLoading(WebView view, String url) {
+            /* ESKİSİ
             view.loadUrl(url);
             frameLayout.setVisibility(View.VISIBLE);
             return true;
+            */
+            boolean overrideUrlLoading = false;
+
+            if (url.startsWith("whatsapp://")) {
+
+                Intent intent = new Intent(Intent.ACTION_SEND);
+                intent.putExtra(Intent.EXTRA_TEXT, newsUrl);
+                intent.setType("text/plain");
+                intent.setPackage("com.whatsapp");
+                try {
+                    startActivity(intent);
+                } catch (android.content.ActivityNotFoundException e) {
+                    Toast.makeText(getApplicationContext(), "Whatsapp açılamadı", Toast.LENGTH_SHORT).show();
+                }
+
+                overrideUrlLoading = true;
+
+            }
+            else {
+                view.loadUrl(url);
+                frameLayout.setVisibility(View.VISIBLE);
+            }
+
+            return overrideUrlLoading;
         }
 
         // To block ads
         @Nullable
         @Override
-        public WebResourceResponse shouldInterceptRequest(WebView view, String url) {
+        public WebResourceResponse shouldInterceptRequest(WebView view, WebResourceRequest request) {
             boolean adFound = false;
             for(String item : adKeywords){
-                if(url.contains(item)){
+                if(request.getUrl().toString().contains(item)){
                     adFound = true;
+                    break;
                 }
             }
             if(adFound){
                 return new WebResourceResponse("text/plain", "utf-8", new ByteArrayInputStream("".getBytes()));
             } else {
-                return super.shouldInterceptRequest(view, url);
+                return super.shouldInterceptRequest(view, request);
             }
         }
     }
@@ -231,4 +267,15 @@ public class ShowInWebviewActivity extends AppCompatActivity {
         super.onDestroy();
     }
 
+    // Saves the clicked notifications to shared preferences (to highlight them later on)
+    private void saveClickedNotifications(String sourceKey, String newsUrl){
+        SharedPreferences clickedColumns, clickedNews;
+        clickedColumns = getSharedPreferences(getResources().getString(R.string.clicked_columns_key), Context.MODE_PRIVATE);
+        clickedNews = getSharedPreferences(getResources().getString(R.string.clicked_news_key), Context.MODE_PRIVATE);
+        if(sourceKey.contains("_gundem") || sourceKey.contains("_ekonomi") || sourceKey.contains("_spor")){
+            clickedNews.edit().putLong(newsUrl, System.currentTimeMillis()).apply();
+        } else {
+            clickedColumns.edit().putLong(newsUrl, System.currentTimeMillis()).apply();
+        }
+    }
 }

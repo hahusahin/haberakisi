@@ -95,57 +95,54 @@ public class SourceAdapter extends RecyclerView.Adapter<SourceAdapter.SourceView
                 viewHolder.sourceSelector.setImageResource(R.mipmap.ic_add_circle);
             }
         }
-        viewHolder.relativeLayout.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
+        viewHolder.relativeLayout.setOnClickListener(v -> {
 
-                // CHANGE SHARED PREFERENCES
-                SharedPreferences.Editor newsEditor = newsSources.edit();
-                SharedPreferences.Editor notificationEditor = notificationSources.edit();
+            // CHANGE SHARED PREFERENCES
+            SharedPreferences.Editor newsEditor = newsSources.edit();
+            SharedPreferences.Editor notificationEditor = notificationSources.edit();
 
-                // If category is BİLDİRİM, change bildirim source prefs
-                if(category.equals(context.getResources().getString(R.string.bildirim_key))){
-                    // check the current preference (if exists then remove it, if not exists then add it)
-                    if(notificationSources.contains(sourceItem.getKey())){
-                        notificationEditor.remove(sourceItem.getKey());
-                    } else {
-                        Gson gson = new Gson();
-                        String json = gson.toJson(sourceItem);
-                        notificationEditor.putString(sourceItem.getKey(), json);
-                    }
-                    notificationEditor.apply();
+            // If category is BİLDİRİM, change bildirim source prefs
+            if(category.equals(context.getResources().getString(R.string.bildirim_key))){
+                // check the current preference (if exists then remove it, if not exists then add it)
+                if(notificationSources.contains(sourceItem.getKey())){
+                    notificationEditor.remove(sourceItem.getKey());
+                } else {
+                    Gson gson = new Gson();
+                    String json = gson.toJson(sourceItem);
+                    notificationEditor.putString(sourceItem.getKey(), json);
                 }
-                // If category is GÜNDEM, SPOR..., change mysources prefs
-                else {
-                    // check the current preference (if exists then remove it, if not exists then add it)
-                    if(newsSources.contains(sourceItem.getKey())){
-                        newsEditor.remove(sourceItem.getKey());
-                    } else {
-                        Gson gson = new Gson();
-                        String json = gson.toJson(sourceItem);
-                        newsEditor.putString(sourceItem.getKey(), json);
-                    }
-                    newsEditor.apply();
+                notificationEditor.apply();
+            }
+            // If category is GÜNDEM, SPOR..., change mysources prefs
+            else {
+                // check the current preference (if exists then remove it, if not exists then add it)
+                if(newsSources.contains(sourceItem.getKey())){
+                    newsEditor.remove(sourceItem.getKey());
+                } else {
+                    Gson gson = new Gson();
+                    String json = gson.toJson(sourceItem);
+                    newsEditor.putString(sourceItem.getKey(), json);
                 }
+                newsEditor.apply();
+            }
 
-                // CHANGE THE PLUS MINUS IMAGE
-                if(category.equals(context.getResources().getString(R.string.bildirim_key))){
-                    if(notificationSources.contains(sourceItem.getKey())){
-                        viewHolder.sourceSelector.setImageResource(R.mipmap.ic_remove_circle);
-                        Toast.makeText(context.getApplicationContext(), sourceItem.getSourceName() + " " + context.getResources().getString(R.string.added_to_favorite), Toast.LENGTH_SHORT).show();
-                    } else {
-                        viewHolder.sourceSelector.setImageResource(R.mipmap.ic_add_circle);
-                        Toast.makeText(context.getApplicationContext(), sourceItem.getSourceName() + " " + context.getResources().getString(R.string.deleted_from_favorite), Toast.LENGTH_SHORT).show();
-                    }
+            // CHANGE THE PLUS MINUS IMAGE
+            if(category.equals(context.getResources().getString(R.string.bildirim_key))){
+                if(notificationSources.contains(sourceItem.getKey())){
+                    viewHolder.sourceSelector.setImageResource(R.mipmap.ic_remove_circle);
+                    Toast.makeText(context.getApplicationContext(), sourceItem.getSourceName() + " " + context.getResources().getString(R.string.added_to_favorite), Toast.LENGTH_SHORT).show();
+                } else {
+                    viewHolder.sourceSelector.setImageResource(R.mipmap.ic_add_circle);
+                    Toast.makeText(context.getApplicationContext(), sourceItem.getSourceName() + " " + context.getResources().getString(R.string.deleted_from_favorite), Toast.LENGTH_SHORT).show();
                 }
-                else {
-                    if(newsSources.contains(sourceItem.getKey())){
-                        viewHolder.sourceSelector.setImageResource(R.mipmap.ic_remove_circle);
-                        Toast.makeText(context.getApplicationContext(), sourceItem.getSourceName() + " " + context.getResources().getString(R.string.added_to_favorite), Toast.LENGTH_SHORT).show();
-                    } else {
-                        viewHolder.sourceSelector.setImageResource(R.mipmap.ic_add_circle);
-                        Toast.makeText(context.getApplicationContext(), sourceItem.getSourceName() + " " + context.getResources().getString(R.string.deleted_from_favorite), Toast.LENGTH_SHORT).show();
-                    }
+            }
+            else {
+                if(newsSources.contains(sourceItem.getKey())){
+                    viewHolder.sourceSelector.setImageResource(R.mipmap.ic_remove_circle);
+                    Toast.makeText(context.getApplicationContext(), sourceItem.getSourceName() + " " + context.getResources().getString(R.string.added_to_favorite), Toast.LENGTH_SHORT).show();
+                } else {
+                    viewHolder.sourceSelector.setImageResource(R.mipmap.ic_add_circle);
+                    Toast.makeText(context.getApplicationContext(), sourceItem.getSourceName() + " " + context.getResources().getString(R.string.deleted_from_favorite), Toast.LENGTH_SHORT).show();
                 }
             }
         });

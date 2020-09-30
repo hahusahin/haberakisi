@@ -3,6 +3,8 @@ package com.haberinadresi.androidapp.activities;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import android.view.MenuItem;
 import com.haberinadresi.androidapp.R;
@@ -52,7 +54,7 @@ public class SettingsActivity extends AppCompatActivity implements SharedPrefere
     }
 
     @Override
-    protected void onSaveInstanceState(Bundle outState) {
+    protected void onSaveInstanceState(@NonNull Bundle outState) {
         super.onSaveInstanceState(outState);
         // Save the change status of settings to bundle since activity is recreated when nightmode switch toggled
         outState.putBoolean(getResources().getString(R.string.night_mode_key), isNightModeChanged);
@@ -61,7 +63,7 @@ public class SettingsActivity extends AppCompatActivity implements SharedPrefere
     }
 
     @Override
-    protected void onRestoreInstanceState(Bundle savedInstanceState) {
+    protected void onRestoreInstanceState(@NonNull Bundle savedInstanceState) {
         super.onRestoreInstanceState(savedInstanceState);
         // Restore the state changes if activity is recreated
         isNightModeChanged = savedInstanceState.getBoolean(getResources().getString(R.string.night_mode_key), false);

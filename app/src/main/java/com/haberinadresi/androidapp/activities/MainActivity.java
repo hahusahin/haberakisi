@@ -3,7 +3,6 @@ package com.haberinadresi.androidapp.activities;
 import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
-import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
@@ -13,6 +12,7 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 
 import com.google.android.gms.ads.AdView;
+import com.google.android.gms.ads.LoadAdError;
 import com.google.android.material.tabs.TabLayout;
 import androidx.viewpager.widget.ViewPager;
 import com.google.android.material.navigation.NavigationView;
@@ -22,6 +22,8 @@ import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.AppCompatDelegate;
 import androidx.appcompat.widget.Toolbar;
+
+import android.os.Handler;
 import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.style.RelativeSizeSpan;
@@ -36,8 +38,6 @@ import com.google.firebase.messaging.FirebaseMessaging;
 import com.haberinadresi.androidapp.R;
 import com.haberinadresi.androidapp.adapters.TabPagerAdapter;
 import com.haberinadresi.androidapp.utilities.SharedPreferenceUtils;
-import com.haberinadresi.androidapp.utilities.WebUtils;
-import com.haberinadresi.androidapp.utilities.WhatsNewDialog;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener{
@@ -47,7 +47,7 @@ public class MainActivity extends AppCompatActivity
     private InterstitialAd interstitialAd;
     private AdView bannerAdView;
     private boolean onPauseFlag = false;
-    public static final int MAX_COUNT = 12; //If user clicks more than ... news detail, show Interstitial ad when backpressed
+    public static final int MAX_COUNT = 15; //If user clicks more than ... news detail, show Interstitial ad when backpressed
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -68,7 +68,7 @@ public class MainActivity extends AppCompatActivity
                 case "small":
                     setTheme(R.style.FontStyle_Small);
                     break;
-                case "medium":
+                case "medium": default:
                     setTheme(R.style.FontStyle_Medium);
                     break;
                 case "large":
@@ -77,8 +77,6 @@ public class MainActivity extends AppCompatActivity
                 case "xlarge":
                     setTheme(R.style.FontStyle_XLarge);
                     break;
-                default:
-                    setTheme(R.style.FontStyle_Medium);
             }
         } else {
             setTheme(R.style.FontStyle_Medium);
@@ -92,16 +90,17 @@ public class MainActivity extends AppCompatActivity
         if(! isCategoriesChanged && ! isSettingsChanged){
             ///////// clear the news that are in the cache
             getSharedPreferences(getResources().getString(R.string.cached_news_key), MODE_PRIVATE).edit().clear().apply();
-            //////////////// Clear the old clicked news and columns from sharedprefs
-            // All clicked news are cleared in each session
-            getSharedPreferences(getResources().getString(R.string.clicked_news_key), Context.MODE_PRIVATE).edit().clear().apply();
-            // Columns AND Notified News are cleared wrt their dates (since they are not changing rapidly)
+            //////////////// Clear the old clicked news / notified news / columns from sharedprefs
+            SharedPreferenceUtils.clearNews(this);
             SharedPreferenceUtils.clearColumns(this);
             SharedPreferenceUtils.clearNotifiedNews(this);
+            // All clicked news are cleared in each session
+            //getSharedPreferences(getResources().getString(R.string.clicked_news_key), Context.MODE_PRIVATE).edit().clear().apply();
+            // Columns AND Notified News are cleared wrt their dates (since they are not changing rapidly)
         }
 
         /////////////Initialize Admob
-        MobileAds.initialize(this, getResources().getString(R.string.admob_app_id));
+        MobileAds.initialize(this);
 
         ////////////////
         Toolbar toolbar = findViewById(R.id.toolbar);
@@ -142,10 +141,24 @@ public class MainActivity extends AppCompatActivity
         interstitialAd.loadAd(new AdRequest.Builder().build());
         interstitialAd.setAdListener(new AdListener(){
             @Override
-            public void onAdFailedToLoad(int i) {
-                // If failed, then load a new one
-                interstitialAd.loadAd(new AdRequest.Builder().build());
+            public void onAdLoaded() {
+                // If ad is loaded than reset counter that keeps failures
+                customPreferences.edit().putInt(getResources().getString(R.string.interstitial_trial_counter), 0).apply();
             }
+
+            @Override
+            public void onAdFailedToLoad(LoadAdError loadAdError) {
+                // Try for three times only
+                int trial = customPreferences.getInt(getResources().getString(R.string.interstitial_trial_counter), 0);
+                trial++;
+                if(trial <= 3){
+                    customPreferences.edit().putInt(getResources().getString(R.string.interstitial_trial_counter), trial).apply();
+                    // Wait for ... seconds and then try again
+                    Handler handler = new Handler();
+                    handler.postDelayed(() -> interstitialAd.loadAd(new AdRequest.Builder().build()), 10000);
+                }
+            }
+
             @Override
             public void onAdOpened() {
                 //If Ad is displayed, then reset the counter
@@ -164,9 +177,22 @@ public class MainActivity extends AppCompatActivity
         bannerAdView.loadAd(adRequest);
         bannerAdView.setAdListener(new AdListener(){
             @Override
-            public void onAdFailedToLoad(int i) {
-                // If failed, then load a new one
-                bannerAdView.loadAd(new AdRequest.Builder().build());
+            public void onAdLoaded() {
+                // If ad is loaded than reset counter that keeps failures
+                customPreferences.edit().putInt(getResources().getString(R.string.banner_trial_counter), 0).apply();
+            }
+
+            @Override
+            public void onAdFailedToLoad(LoadAdError loadAdError) {
+                // Try for three times only
+                int trial = customPreferences.getInt(getResources().getString(R.string.banner_trial_counter), 0);
+                trial++;
+                if(trial <= 3){
+                    customPreferences.edit().putInt(getResources().getString(R.string.banner_trial_counter), trial).apply();
+                    // Wait for ... seconds and then try again
+                    Handler handler = new Handler();
+                    handler.postDelayed(() -> bannerAdView.loadAd(new AdRequest.Builder().build()), 10000);
+                }
             }
         });
 
@@ -334,24 +360,6 @@ public class MainActivity extends AppCompatActivity
         if (bannerAdView != null) {
             bannerAdView.resume();
         }
-        // Show What's New Dialog for once if it is not seen by user AND it is updated (not newly installed)
-        if(! customPreferences.getBoolean(getResources().getString(R.string.whats_new_dialog_v6), false) &&
-                WebUtils.isInstallFromUpdate(MainActivity.this)) {
-            try {
-                WhatsNewDialog dialog = new WhatsNewDialog();
-                dialog.show(getSupportFragmentManager(), "What's New In This Update");
-            } catch (Exception e) {
-                e.printStackTrace();
-            } finally {
-                SharedPreferences.Editor editor = customPreferences.edit();
-                // Delete the previous keys that are used
-                editor.remove(getResources().getString(R.string.whats_new_dialog_v4));
-                editor.remove(getResources().getString(R.string.whats_new_dialog_v5));
-                // Put the new key
-                editor.putBoolean(getResources().getString(R.string.whats_new_dialog_v6), true);
-                editor.apply();
-            }
-        }
 
         super.onResume();
     }
@@ -410,8 +418,16 @@ if(! customPreferences.getBoolean(getResources().getString(R.string.whats_new_di
     try {
         WhatsNewDialog dialog = new WhatsNewDialog();
         dialog.show(getSupportFragmentManager(), "What's New In This Update");
-    } catch (java.lang.IllegalStateException e) {
-        customPreferences.edit().putBoolean(getResources().getString(R.string.whats_new_dialog_v6), true).apply();
+    } catch (Exception e) {
+        e.printStackTrace();
+    } finally {
+        SharedPreferences.Editor editor = customPreferences.edit();
+        // Delete the previous keys that are used
+        editor.remove(getResources().getString(R.string.whats_new_dialog_v4));
+        editor.remove(getResources().getString(R.string.whats_new_dialog_v5));
+        // Put the new key
+        editor.putBoolean(getResources().getString(R.string.whats_new_dialog_v6), true);
+        editor.apply();
     }
 }
  */

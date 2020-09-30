@@ -13,7 +13,6 @@ import com.haberinadresi.androidapp.models.SourceItem;
 
 import java.lang.reflect.Type;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 public class UpdateMySources extends JobIntentService {
@@ -51,17 +50,13 @@ public class UpdateMySources extends JobIntentService {
             }
         }
 
-        // BİR SONRAKİ GÜNCELLEMEDE SİL
-        // Delete the sources that are added by the user but later on removed by the app (yeniasır gibi)
-        ArrayList<String> deletedSources = new ArrayList<>(Arrays.asList("yeniasir_gundem", "goal_spor"));
-        for (String item : deletedSources){
-            if(mySources.contains(item)){
-                editor.remove(item);
-            }
-        }
+        // GEÇİCİ ARADAN BİR SÜRE GEÇTİKTEN SONRA SİLİNEBİLİR - BU KAYNAKLARI GÜNDEMDEN ÇIKARDIM ÇÜNKÜ
+        editor.remove("dunya_gundem");
+        editor.remove("gunes_gundem");
+        editor.remove("vatan_gundem");
+        editor.remove("yeniasya_gundem");
 
         editor.apply();
-
     }
 
 }

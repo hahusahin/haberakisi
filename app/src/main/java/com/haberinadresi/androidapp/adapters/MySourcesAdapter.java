@@ -78,18 +78,13 @@ public class MySourcesAdapter extends RecyclerView.Adapter<MySourcesAdapter.Sour
             .into(viewHolder.sourceLogo);
 
         // load news from only the selected source
-        viewHolder.linearLayout.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
+        viewHolder.linearLayout.setOnClickListener(view -> {
 
-            Intent oneSourceNews = new Intent(context, OneSrcNewsActivity.class);
-            oneSourceNews.putExtra(context.getResources().getString(R.string.news_source_for_display), sourceItem.getSourceName());
-            oneSourceNews.putExtra(context.getResources().getString(R.string.news_source_key), sourceItem.getKey());
+        Intent oneSourceNews = new Intent(context, OneSrcNewsActivity.class);
+        oneSourceNews.putExtra(context.getResources().getString(R.string.news_source_for_display), sourceItem.getSourceName());
+        oneSourceNews.putExtra(context.getResources().getString(R.string.news_source_key), sourceItem.getKey());
+        context.startActivity(oneSourceNews);
 
-            oneSourceNews.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-            context.startActivity(oneSourceNews);
-
-            }
         });
 
     }

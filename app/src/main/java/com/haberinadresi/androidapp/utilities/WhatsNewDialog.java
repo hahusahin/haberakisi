@@ -1,7 +1,6 @@
 package com.haberinadresi.androidapp.utilities;
 
 import android.app.Dialog;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import androidx.annotation.NonNull;
@@ -25,12 +24,9 @@ public class WhatsNewDialog extends AppCompatDialogFragment {
         AlertDialog.Builder builder = new AlertDialog.Builder(requireActivity());
         builder.setTitle(title)
                 .setMessage(message)
-                .setNeutralButton(goToSettings, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        Intent settings = new Intent(requireActivity(), SettingsActivity.class);
-                        startActivity(settings);
-                    }
+                .setNeutralButton(goToSettings, (dialog, which) -> {
+                    Intent settings = new Intent(requireActivity(), SettingsActivity.class);
+                    startActivity(settings);
                 })
                 .setPositiveButton(okay, null);
 

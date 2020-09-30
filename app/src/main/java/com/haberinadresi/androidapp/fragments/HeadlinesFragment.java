@@ -1,7 +1,6 @@
 package com.haberinadresi.androidapp.fragments;
 
-import androidx.lifecycle.Observer;
-import androidx.lifecycle.ViewModelProviders;
+import androidx.lifecycle.ViewModelProvider;
 import android.content.Intent;
 import android.os.Bundle;
 import androidx.annotation.NonNull;
@@ -20,11 +19,9 @@ import com.google.android.gms.ads.AdView;
 import com.haberinadresi.androidapp.R;
 import com.haberinadresi.androidapp.activities.SettingsActivity;
 import com.haberinadresi.androidapp.adapters.HeadlineAdapter;
-import com.haberinadresi.androidapp.models.NewsItem;
 import com.haberinadresi.androidapp.utilities.NetworkUtils;
 import com.haberinadresi.androidapp.viewmodels.HeadlinesVM;
 
-import java.util.List;
 
 public class HeadlinesFragment extends Fragment {
 
@@ -33,7 +30,6 @@ public class HeadlinesFragment extends Fragment {
     private HeadlineAdapter headlineAdapter;
     private ProgressBar progressBar;
     private View internetAlert;
-    private AdView bannerAdView;
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
@@ -45,11 +41,6 @@ public class HeadlinesFragment extends Fragment {
     public void onViewCreated(@NonNull final View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        // Get the banner ad from main activity and show it if this fragment is visible to user
-        bannerAdView = requireActivity().findViewById(R.id.bannerAdView);
-        if(getUserVisibleHint() && bannerAdView != null){
-            bannerAdView.setVisibility(View.VISIBLE);
-        }
         // The ProgressBar that will indicate to the user that news are loading
         progressBar = view.findViewById(R.id.pb_manset_fragment);
         progressBar.setVisibility(View.GONE);
@@ -63,18 +54,15 @@ public class HeadlinesFragment extends Fragment {
         recyclerView.setLayoutManager(new GridLayoutManager(requireActivity(), 3));
         recyclerView.setHasFixedSize(true);
 
-        headlinesVM = ViewModelProviders.of(this).get(HeadlinesVM.class);
+        headlinesVM = new ViewModelProvider(this).get(HeadlinesVM.class);
 
         // The mobile data save alert view
         Button mobileDataAlert = view.findViewById(R.id.btn_mobiledata_warning);
         mobileDataAlert.setVisibility(View.GONE);
         // Open settings activity when clicked
-        mobileDataAlert.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent settings = new Intent(requireActivity(), SettingsActivity.class);
-                startActivity(settings);
-            }
+        mobileDataAlert.setOnClickListener(v -> {
+            Intent settings = new Intent(requireActivity(), SettingsActivity.class);
+            startActivity(settings);
         });
 
         // If device is connected to the internet
@@ -94,14 +82,11 @@ public class HeadlinesFragment extends Fragment {
         else {
             internetAlert.setVisibility(View.VISIBLE);
             // when user clicks on button, check the network connection again
-            checkConnection.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    // if connects after button click, then dismiss internet error
-                    if(NetworkUtils.isConnected(requireActivity())){
-                        internetAlert.setVisibility(View.INVISIBLE);
-                        fetchHeadlines();
-                    }
+            checkConnection.setOnClickListener(v -> {
+                // if connects after button click, then dismiss internet error
+                if(NetworkUtils.isConnected(requireActivity())){
+                    internetAlert.setVisibility(View.INVISIBLE);
+                    fetchHeadlines();
                 }
             });
         }
@@ -112,17 +97,14 @@ public class HeadlinesFragment extends Fragment {
         // Start animating the progressbar
         progressBar.setVisibility(View.VISIBLE);
 
-        headlinesVM.getHeadlinesLivedata().observe(this, new Observer<List<NewsItem>>() {
-            @Override
-            public void onChanged(@Nullable List<NewsItem> mansetList) {
+        headlinesVM.getHeadlinesLivedata().observe(getViewLifecycleOwner(), mansetList -> {
 
-                if(mansetList != null){
-                    headlineAdapter = new HeadlineAdapter(requireActivity(), mansetList);
-                    recyclerView.setAdapter(headlineAdapter);
-                }
-                // Hide ProgressBar when news are loaded
-                progressBar.setVisibility(View.INVISIBLE);
+            if(mansetList != null){
+                headlineAdapter = new HeadlineAdapter(requireActivity(), mansetList);
+                recyclerView.setAdapter(headlineAdapter);
             }
+            // Hide ProgressBar when news are loaded
+            progressBar.setVisibility(View.INVISIBLE);
         });
     }
 
@@ -133,20 +115,16 @@ public class HeadlinesFragment extends Fragment {
 
     @Override
     public void onResume() {
+        // Get the banner ad from main activity and show it if this fragment is visible to user
+        AdView bannerAdView = requireActivity().findViewById(R.id.bannerAdView);
+        if(bannerAdView != null){
+            bannerAdView.setVisibility(View.VISIBLE);
+        }
         super.onResume();
     }
 
     @Override
     public void onDestroy() {
         super.onDestroy();
-    }
-
-    @Override
-    public void setUserVisibleHint(boolean isVisibleToUser) {
-        super.setUserVisibleHint(isVisibleToUser);
-
-        if(isVisibleToUser && isResumed() && bannerAdView != null){
-            bannerAdView.setVisibility(View.VISIBLE);
-        }
     }
 }

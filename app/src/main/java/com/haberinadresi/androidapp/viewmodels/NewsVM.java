@@ -19,14 +19,12 @@ import com.haberinadresi.androidapp.utilities.WebUtils;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
 
 import io.reactivex.Observable;
 import io.reactivex.Observer;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
-import io.reactivex.functions.Function;
 import io.reactivex.schedulers.Schedulers;
 import okhttp3.OkHttpClient;
 import okhttp3.logging.HttpLoggingInterceptor;
@@ -98,23 +96,15 @@ public class NewsVM extends AndroidViewModel {
             requests.add(api.getNews(category, source));
         }
 
-        Observable.zip(requests, new Function<Object[], List<NewsItem>>() {
-            @Override
-            public List<NewsItem> apply(Object[] objects) {
-                List<NewsItem> combinedNews = new ArrayList<>();
-                for (Object response : objects) {
-                    if (response instanceof List<?>) {
-                        combinedNews.addAll((List<NewsItem>) response);
-                    }
+        Observable.zip(requests, objects -> {
+            List<NewsItem> combinedNews = new ArrayList<>();
+            for (Object response : objects) {
+                if (response instanceof List<?>) {
+                    combinedNews.addAll((List<NewsItem>) response);
                 }
-                Collections.sort(combinedNews, new Comparator<NewsItem>() {
-                    @Override
-                    public int compare(NewsItem news1, NewsItem news2) {
-                        return Long.compare(news2.getUpdateTime(), news1.getUpdateTime());
-                    }
-                });
-                return combinedNews;
             }
+            Collections.sort(combinedNews, (news1, news2) -> Long.compare(news2.getUpdateTime(), news1.getUpdateTime()));
+            return combinedNews;
         })
             .subscribeOn(Schedulers.newThread()) //Schedulers.io()
             .observeOn(AndroidSchedulers.mainThread()) //Schedulers.newThread()
@@ -176,12 +166,7 @@ public class NewsVM extends AndroidViewModel {
                             }
                         }
 
-                        Collections.sort(filteredNews, new Comparator<NewsItem>() {
-                            @Override
-                            public int compare(NewsItem news1, NewsItem news2) {
-                                return Long.compare(news2.getUpdateTime(), news1.getUpdateTime());
-                            }
-                        });
+                        Collections.sort(filteredNews, (news1, news2) -> Long.compare(news2.getUpdateTime(), news1.getUpdateTime()));
 
                         //set the list to our MutableLiveData
                         newsLiveData.setValue(filteredNews);
@@ -216,17 +201,14 @@ public class NewsVM extends AndroidViewModel {
     }
 
     private void saveNewsToSP(final String category, final List<NewsItem> newsList) {
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                SharedPreferences sharedPreferences = getApplication().getSharedPreferences(getApplication().getResources().getString(R.string.cached_news_key), MODE_PRIVATE);
-                SharedPreferences.Editor editor = sharedPreferences.edit();
-                Gson gson = new Gson();
-                String json = gson.toJson(newsList);
-                editor.putString(category, json);
-                editor.putLong(getFetchTimeKey(category), System.currentTimeMillis());
-                editor.apply();
-            }
+        new Thread(() -> {
+            SharedPreferences sharedPreferences = getApplication().getSharedPreferences(getApplication().getResources().getString(R.string.cached_news_key), MODE_PRIVATE);
+            SharedPreferences.Editor editor = sharedPreferences.edit();
+            Gson gson = new Gson();
+            String json = gson.toJson(newsList);
+            editor.putString(category, json);
+            editor.putLong(getFetchTimeKey(category), System.currentTimeMillis());
+            editor.apply();
         }).start();
     }
     

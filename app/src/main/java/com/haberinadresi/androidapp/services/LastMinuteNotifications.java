@@ -5,6 +5,7 @@ import android.app.PendingIntent;
 import android.content.Intent;
 import android.content.SharedPreferences;
 
+import androidx.annotation.NonNull;
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
 import androidx.core.app.TaskStackBuilder;
@@ -31,8 +32,8 @@ public class LastMinuteNotifications extends FirebaseMessagingService {
     @Override
     public void onMessageReceived(RemoteMessage remoteMessage) {
 
-        SharedPreferences customKeys = getSharedPreferences(getResources().getString(R.string.custom_keys), MODE_PRIVATE);
-        long lastNotificationTime = customKeys.getLong(getResources().getString(R.string.last_notified_time), 0L);
+        //SharedPreferences customKeys = getSharedPreferences(getResources().getString(R.string.custom_keys), MODE_PRIVATE);
+        //long lastNotificationTime = customKeys.getLong(getResources().getString(R.string.last_notified_time), 0L);
         SharedPreferences notifiedNews = getSharedPreferences(getResources().getString(R.string.notified_news_key), MODE_PRIVATE);
 
         String topic = remoteMessage.getFrom();
@@ -41,8 +42,9 @@ public class LastMinuteNotifications extends FirebaseMessagingService {
         //Log.d(TAG, String.valueOf(System.currentTimeMillis() - lastNotificationTime));
 
         // If message includes topic AND
-        // if the last notification is at most 4 minutes old (to avoid showing notification over and over again)
-        if(topic != null && System.currentTimeMillis() - lastNotificationTime > 240000L){
+        // if the last notification is at most 1 minutes old (to avoid showing notification over and over again)
+        //&& System.currentTimeMillis() - lastNotificationTime > 60000L
+        if(topic != null){
             // If message is coming from SON DAKIKA topic
             // Başlık şu şekilde çıkıyor (/topics/Son_Dakika), o yüzden contains kullandım
             if(topic.contains(getResources().getString(R.string.last_minute_notifications_topic))){
@@ -57,48 +59,53 @@ public class LastMinuteNotifications extends FirebaseMessagingService {
                         List<NotificationItem> newsList = gson.fromJson(json, type);
 
                         // Find the appropriate news for user from the list (if exists)
-                        NotificationItem notificationItem = findItem(newsList, notifiedNews);
+                        List<NotificationItem> notificationItems = filterList(newsList, notifiedNews);
 
-                        if(notificationItem != null){
+                        if(notificationItems != null){
+                            // Send notification for each news
+                            for(NotificationItem notificationItem : notificationItems) {
+                                // Intent to Open the clicked news in Webview
+                                Intent notificationIntent = new Intent(this, ShowInWebviewActivity.class);
+                                notificationIntent.putExtra(getResources().getString(R.string.news_url), notificationItem.getNewsUrl());
+                                notificationIntent.putExtra(getResources().getString(R.string.news_source_for_display), notificationItem.getSource());
+                                notificationIntent.putExtra(getResources().getString(R.string.news_source_key), notificationItem.getKey());
 
-                            // Intent to Open the clicked news in Webview
-                            Intent newsDetailIntent = new Intent(this, ShowInWebviewActivity.class);
-                            newsDetailIntent.putExtra(getResources().getString(R.string.news_url), notificationItem.getNewsUrl());
-                            newsDetailIntent.putExtra(getResources().getString(R.string.news_source_for_display), notificationItem.getSource());
+                                // Create a pattern (When clicked, open in Webview and after that when backpressed return to Main Activity)
+                                TaskStackBuilder stackBuilder = TaskStackBuilder.create(this);
+                                stackBuilder.addNextIntent(new Intent(this, MainActivity.class));
+                                stackBuilder.addNextIntent(notificationIntent);
 
-                            // Create a pattern (When clicked, open in Webview and after that when backpressed return to Main Activity)
-                            TaskStackBuilder stackBuilder = TaskStackBuilder.create(this);
-                            stackBuilder.addNextIntent(new Intent(this, MainActivity.class));
-                            stackBuilder.addNextIntent(newsDetailIntent);
+                                // Create pending intent (To give unique request codes to each intent, pass a random integer)
+                                PendingIntent pendingIntent = stackBuilder.getPendingIntent(new Random().nextInt(), PendingIntent.FLAG_ONE_SHOT);
 
-                            // Create pending intent (To give unique request codes to each intent, pass a random integer)
-                            PendingIntent pendingIntent = stackBuilder.getPendingIntent(new Random().nextInt(), PendingIntent.FLAG_ONE_SHOT);
+                                // Build the "Son Dakika" notification
+                                Notification notification = new NotificationCompat.Builder(this, getResources().getString(R.string.last_minute_channel_id))
+                                        .setSmallIcon(R.drawable.app_icon_notification)
+                                        .setColor(getResources().getColor(R.color.colorPrimary))
+                                        .setContentTitle(notificationItem.getSource()) // + " - Son Dakika"
+                                        .setContentText(notificationItem.getTitle())
+                                        .setStyle(new NotificationCompat.BigTextStyle().bigText(notificationItem.getTitle()))
+                                        .setPriority(NotificationCompat.PRIORITY_HIGH)
+                                        .setAutoCancel(true)
+                                        .setContentIntent(pendingIntent)
+                                        //.setCategory(NotificationCompat.CATEGORY_MESSAGE)
+                                        //.setSound()
+                                        .build();
 
-                            // Build the "Son Dakika" notification
-                            Notification notification = new NotificationCompat.Builder(this, getResources().getString(R.string.last_minute_channel_id))
-                                    .setSmallIcon(R.drawable.app_icon_notification)
-                                    .setColor(getResources().getColor(R.color.colorPrimary))
-                                    .setContentTitle(notificationItem.getSource()) // + " - Son Dakika"
-                                    .setContentText(notificationItem.getTitle())
-                                    .setStyle(new NotificationCompat.BigTextStyle().bigText(notificationItem.getTitle()))
-                                    .setPriority(NotificationCompat.PRIORITY_HIGH)
-                                    .setAutoCancel(true)
-                                    .setContentIntent(pendingIntent)
-                                    //.setCategory(NotificationCompat.CATEGORY_MESSAGE)
-                                    //.setSound()
-                                    .build();
+                                // Send the notification (To give unique integer id to each notification, pass a random integer)
+                                NotificationManagerCompat notificationManager = NotificationManagerCompat.from(this);
+                                //int notificationId = (int) System.currentTimeMillis()%Integer.MAX_VALUE; (ALTERNATIVE RANDOM NUMBER)
+                                notificationManager.notify(new Random().nextInt(), notification);
 
-                            // Send the notification (To give unique integer id to each notification, pass a random integer)
-                            NotificationManagerCompat notificationManager = NotificationManagerCompat.from(this);
-                            //int notificationId = (int) System.currentTimeMillis()%Integer.MAX_VALUE; (ALTERNATIVE RANDOM NUMBER)
-                            notificationManager.notify(new Random().nextInt(), notification);
+                                // Update last notification time in sharedpreferences
+                                //customKeys.edit().putLong(getResources().getString(R.string.last_notified_time), System.currentTimeMillis()).apply();
 
-                            // Update last notification time in sharedpreferences
-                            customKeys.edit().putLong(getResources().getString(R.string.last_notified_time), System.currentTimeMillis()).apply();
-                            // Add the news to the notified items
-                            notifiedNews.edit().putLong(notificationItem.getNewsUrl(), System.currentTimeMillis()).apply();
+                                // Add the news to the notified items
+                                notifiedNews.edit().putLong(notificationItem.getNewsUrl(), System.currentTimeMillis()).apply();
 
+                            }
                         }
+
                     }
                 }
             }
@@ -109,7 +116,7 @@ public class LastMinuteNotifications extends FirebaseMessagingService {
     }
 
     // Get the first news/column item that is appropriate for the user (i.e. news source is in user's favorite sources)
-    private NotificationItem findItem(List<NotificationItem> newsList, SharedPreferences notifiedNews){
+    private List<NotificationItem> filterList(List<NotificationItem> newsList, SharedPreferences notifiedNews){
 
         // Iterate over each news OR columns to check whether it is in user's preference sources
         SharedPreferences notificationSources = getSharedPreferences(getResources().getString(R.string.notification_prefs_key), MODE_PRIVATE);
@@ -119,7 +126,10 @@ public class LastMinuteNotifications extends FirebaseMessagingService {
         List<NotificationItem> filteredList = new ArrayList<>();
         for(NotificationItem newsItem : newsList){
             // If the news' source is preferred as notification source by user
-            if(notificationSources.contains(newsItem.getKey()) || myColumnists.contains(newsItem.getKey().toLowerCase(turkish))){
+            // OR column notification is preferred and the columnist is in the user's preferences
+            if(notificationSources.contains(newsItem.getKey()) ||
+                (notificationSources.contains("koseyazilari_gundem") && myColumnists.contains(newsItem.getKey().toLowerCase(turkish))))
+            {
                 // If this news is not notified before then add to list
                 if(! notifiedNews.contains(newsItem.getNewsUrl())){
                     filteredList.add(newsItem);
@@ -129,9 +139,12 @@ public class LastMinuteNotifications extends FirebaseMessagingService {
 
         // If there exists breaking news appropriate for user's preference
         if(! filteredList.isEmpty()){
+            /*
             // Choose the item to be notified randomly
             int index = new Random().nextInt(filteredList.size());
             return filteredList.get(index);
+             */
+            return filteredList;
         }
         // No appropriate news exists
         else {
@@ -144,4 +157,8 @@ public class LastMinuteNotifications extends FirebaseMessagingService {
         super.onDeletedMessages();
     }
 
+    @Override
+    public void onNewToken(@NonNull String s) {
+        super.onNewToken(s);
+    }
 }

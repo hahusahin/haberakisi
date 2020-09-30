@@ -8,7 +8,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
-import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -67,18 +66,15 @@ public class EditCategoriesAdapter extends RecyclerView.Adapter<EditCategoriesAd
         viewHolder.categoryIcon.setImageResource(categoryItem.getCategoryImageId());
         viewHolder.categorySelector.setChecked(categoryItem.getIsSelected());
 
-        viewHolder.categorySelector.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                //Change the boolean value in the current item
-                categoryList.get(viewHolder.getAdapterPosition()).setSelected(isChecked);
-                //Save the changes to Sharedpreferences
-                SharedPreferences.Editor editor = sharedPreferences.edit();
-                Gson gson = new Gson();
-                String json = gson.toJson(categoryList);
-                editor.putString(context.getResources().getString(R.string.category_preferences), json);
-                editor.commit();
-            }
+        viewHolder.categorySelector.setOnCheckedChangeListener((buttonView, isChecked) -> {
+            //Change the boolean value in the current item
+            categoryList.get(viewHolder.getAdapterPosition()).setSelected(isChecked);
+            //Save the changes to Sharedpreferences
+            SharedPreferences.Editor editor = sharedPreferences.edit();
+            Gson gson = new Gson();
+            String json = gson.toJson(categoryList);
+            editor.putString(context.getResources().getString(R.string.category_preferences), json);
+            editor.commit();
         });
 
     }

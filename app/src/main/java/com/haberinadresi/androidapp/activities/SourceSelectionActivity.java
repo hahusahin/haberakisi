@@ -1,7 +1,6 @@
 package com.haberinadresi.androidapp.activities;
 
-import androidx.lifecycle.Observer;
-import androidx.lifecycle.ViewModelProviders;
+import androidx.lifecycle.ViewModelProvider;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -49,7 +48,7 @@ public class SourceSelectionActivity extends AppCompatActivity implements Search
                 case "small":
                     setTheme(R.style.FontStyle_Small);
                     break;
-                case "medium":
+                case "medium": default:
                     setTheme(R.style.FontStyle_Medium);
                     break;
                 case "large":
@@ -58,8 +57,6 @@ public class SourceSelectionActivity extends AppCompatActivity implements Search
                 case "xlarge":
                     setTheme(R.style.FontStyle_XLarge);
                     break;
-                default:
-                    setTheme(R.style.FontStyle_Medium);
             }
         } else {
             setTheme(R.style.FontStyle_Medium);
@@ -87,25 +84,22 @@ public class SourceSelectionActivity extends AppCompatActivity implements Search
         recyclerView.setLayoutManager(new LinearLayoutManager(this, RecyclerView.VERTICAL, false));
         recyclerView.setHasFixedSize(true);
 
-        sourceAdapter = new SourceAdapter(SourceSelectionActivity.this, new ArrayList<SourceItem>());
+        sourceAdapter = new SourceAdapter(SourceSelectionActivity.this, new ArrayList<>());
         recyclerView.setAdapter(sourceAdapter);
 
-        sourceSelectionVM = ViewModelProviders.of(this).get(SourceSelectionVM.class);
-        sourceSelectionVM.getSourcesLiveData(categoryKey).observe(this, new Observer<List<SourceItem>>() {
-            @Override
-            public void onChanged(@Nullable List<SourceItem> sourceList) {
+        sourceSelectionVM = new ViewModelProvider(this).get(SourceSelectionVM.class);
+        sourceSelectionVM.getSourcesLiveData(categoryKey).observe(this, sourceList -> {
 
-                // attach the list to the recyclerview adapter and stop progressbar
-                sourceAdapter.setSourceList(sourceList);
-                progressBar.setVisibility(View.INVISIBLE);
+            // attach the list to the recyclerview adapter and stop progressbar
+            sourceAdapter.setSourceList(sourceList);
+            progressBar.setVisibility(View.INVISIBLE);
 
-                // Start the service that updates the user's source preference values that are in SharedPreferences (image url's etc..)
-                Intent updateMySources = new Intent(SourceSelectionActivity.this, UpdateMySources.class);
-                Gson gson = new Gson();
-                String json = gson.toJson(sourceList);
-                updateMySources.putExtra(getResources().getString(R.string.source_list), json);
-                JobIntentService.enqueueWork(SourceSelectionActivity.this, UpdateMySources.class, 101, updateMySources);
-            }
+            // Start the service that updates the user's source preference values that are in SharedPreferences (image url's etc..)
+            Intent updateMySources = new Intent(SourceSelectionActivity.this, UpdateMySources.class);
+            Gson gson = new Gson();
+            String json = gson.toJson(sourceList);
+            updateMySources.putExtra(getResources().getString(R.string.source_list), json);
+            JobIntentService.enqueueWork(SourceSelectionActivity.this, UpdateMySources.class, 101, updateMySources);
         });
 
     }

@@ -3,6 +3,8 @@ package com.haberinadresi.androidapp.adapters;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
@@ -27,7 +29,7 @@ public class TabPagerAdapter extends FragmentStatePagerAdapter {
     private Context context;
 
     public TabPagerAdapter(Context context, FragmentManager fragmentManager) {
-        super(fragmentManager);
+        super(fragmentManager, TabPagerAdapter.BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT);
         this.context = context;
 
         List<String> tabPreferences = new ArrayList<>();
@@ -64,6 +66,7 @@ public class TabPagerAdapter extends FragmentStatePagerAdapter {
         return tabArray[position];
     }
 
+    @NonNull
     @Override
     public Fragment getItem(int position) {
 
@@ -91,7 +94,7 @@ public class TabPagerAdapter extends FragmentStatePagerAdapter {
         } else if(title.equals(context.getResources().getString(R.string.habersiteleri_normal))){
             return new WebsitesFragment();
         } else {
-            return null;
+            return new Fragment();
         }
     }
 

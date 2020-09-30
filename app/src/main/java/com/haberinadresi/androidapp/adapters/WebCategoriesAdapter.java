@@ -60,18 +60,15 @@ public class WebCategoriesAdapter extends RecyclerView.Adapter<WebCategoriesAdap
         viewHolder.categoryName.setText(categoryItem.getCategoryName());
         viewHolder.categoryIcon.setImageResource(categoryItem.getCategoryImageId());
         // Open the activity that shows related sources
-        viewHolder.relativeLayout.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                // Convert the source name to key
-                String key = getCategoryKeys(categoryItem.getCategoryName());
-                if (key != null){
-                    Intent sourceSelection = new Intent(context, SourceSelectionActivity.class);
-                    sourceSelection.putExtra(context.getResources().getString(R.string.news_category_key), key);
-                    sourceSelection.putExtra(context.getResources().getString(R.string.news_category_name), categoryItem.getCategoryName());
-                    //sourceSelection.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                    context.startActivity(sourceSelection);
-                }
+        viewHolder.relativeLayout.setOnClickListener(v -> {
+            // Convert the source name to key
+            String key = getCategoryKeys(categoryItem.getCategoryName());
+            if (key != null){
+                Intent sourceSelection = new Intent(context, SourceSelectionActivity.class);
+                sourceSelection.putExtra(context.getResources().getString(R.string.news_category_key), key);
+                sourceSelection.putExtra(context.getResources().getString(R.string.news_category_name), categoryItem.getCategoryName());
+                //sourceSelection.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                context.startActivity(sourceSelection);
             }
         });
 

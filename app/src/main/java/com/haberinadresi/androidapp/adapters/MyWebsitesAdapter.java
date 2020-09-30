@@ -81,21 +81,18 @@ public class MyWebsitesAdapter extends RecyclerView.Adapter<MyWebsitesAdapter.So
             .into(viewHolder.sourceLogo);
 
 
-        viewHolder.linearLayout.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
+        viewHolder.linearLayout.setOnClickListener(view -> {
 
-                // Open the link with Webview
-                Intent intentUrl = new Intent(context, ShowInWebviewActivity.class);
-                intentUrl.putExtra(context.getResources().getString(R.string.news_url), sourceItem.getSourceKey());
-                intentUrl.putExtra(context.getResources().getString(R.string.news_source_for_display), sourceItem.getSourceName());
-                intentUrl.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                context.startActivity(intentUrl);
+            // Open the link with Webview
+            Intent intentUrl = new Intent(context, ShowInWebviewActivity.class);
+            intentUrl.putExtra(context.getResources().getString(R.string.news_url), sourceItem.getSourceKey());
+            intentUrl.putExtra(context.getResources().getString(R.string.news_source_for_display), sourceItem.getSourceName());
+            intentUrl.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            context.startActivity(intentUrl);
 
-                // Increment the click counter (used for displaying Interstitial Ad in Main Activity OnResume)
-                int counter = customKeys.getInt(context.getResources().getString(R.string.news_click_counter),0);
-                customKeys.edit().putInt(context.getResources().getString(R.string.news_click_counter), counter + 1).apply();
-            }
+            // Increment the click counter (used for displaying Interstitial Ad in Main Activity OnResume)
+            int counter = customKeys.getInt(context.getResources().getString(R.string.news_click_counter),0);
+            customKeys.edit().putInt(context.getResources().getString(R.string.news_click_counter), counter + 1).apply();
         });
 
     }

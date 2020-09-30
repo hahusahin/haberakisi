@@ -109,16 +109,13 @@ public class HeadlinesVM extends AndroidViewModel {
     }
 
     private void saveHeadlinesToSP(final List<NewsItem> newsList) {
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                SharedPreferences sharedPreferences = getApplication().getSharedPreferences(getApplication().getResources().getString(R.string.cached_news_key), MODE_PRIVATE);
-                SharedPreferences.Editor editor = sharedPreferences.edit();
-                Gson gson = new Gson();
-                String json = gson.toJson(newsList);
-                editor.putString(getApplication().getResources().getString(R.string.manset_key), json);
-                editor.apply();
-            }
+        new Thread(() -> {
+            SharedPreferences sharedPreferences = getApplication().getSharedPreferences(getApplication().getResources().getString(R.string.cached_news_key), MODE_PRIVATE);
+            SharedPreferences.Editor editor = sharedPreferences.edit();
+            Gson gson = new Gson();
+            String json = gson.toJson(newsList);
+            editor.putString(getApplication().getResources().getString(R.string.manset_key), json);
+            editor.apply();
         }).start();
     }
 }

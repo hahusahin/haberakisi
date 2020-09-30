@@ -1,7 +1,6 @@
 package com.haberinadresi.androidapp.fragments;
 
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
@@ -38,28 +37,22 @@ public class SettingsFragment extends PreferenceFragmentCompat {
         sharedPreferences = requireActivity().getSharedPreferences(getResources().getString(R.string.custom_keys), Context.MODE_PRIVATE);
 
         // Day - Night switch Change Listener
-        findPreference(getResources().getString(R.string.night_mode_key)).setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
-            @Override
-            public boolean onPreferenceChange(Preference preference, Object newValue) {
-                // Update shared preferences night_mode key
-                SharedPreferences.Editor editor = sharedPreferences.edit();
-                editor.putBoolean(getResources().getString(R.string.night_mode_key), (Boolean) newValue).apply();
-                // Apply day night theme and restart the settings activity
-                AppCompatDelegate.setDefaultNightMode((Boolean) newValue ? AppCompatDelegate.MODE_NIGHT_YES : AppCompatDelegate.MODE_NIGHT_NO);
-                requireActivity().recreate();
-                return true;
-            }
+        findPreference(getResources().getString(R.string.night_mode_key)).setOnPreferenceChangeListener((preference, newValue) -> {
+            // Update shared preferences night_mode key
+            SharedPreferences.Editor editor = sharedPreferences.edit();
+            editor.putBoolean(getResources().getString(R.string.night_mode_key), (Boolean) newValue).apply();
+            // Apply day night theme and restart the settings activity
+            AppCompatDelegate.setDefaultNightMode((Boolean) newValue ? AppCompatDelegate.MODE_NIGHT_YES : AppCompatDelegate.MODE_NIGHT_NO);
+            requireActivity().recreate();
+            return true;
         });
 
         // Show Images Only on WIFI Switch Change Listener
-        findPreference(getResources().getString(R.string.show_images_key)).setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
-            @Override
-            public boolean onPreferenceChange(Preference preference, Object newValue) {
-                // Update shared preferences key
-                SharedPreferences.Editor editor = sharedPreferences.edit();
-                editor.putBoolean(getResources().getString(R.string.show_images_key), (Boolean) newValue).apply();
-                return true;
-            }
+        findPreference(getResources().getString(R.string.show_images_key)).setOnPreferenceChangeListener((preference, newValue) -> {
+            // Update shared preferences key
+            SharedPreferences.Editor editor = sharedPreferences.edit();
+            editor.putBoolean(getResources().getString(R.string.show_images_key), (Boolean) newValue).apply();
+            return true;
         });
 
         // Link that opens Notification Settings (For Android 8+) if notifications are enabled
@@ -68,15 +61,12 @@ public class SettingsFragment extends PreferenceFragmentCompat {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O){
             // Show the link
             openNotificationSettings.setVisible(true);
-            openNotificationSettings.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
-                @Override
-                public boolean onPreferenceClick(Preference preference) {
-                    Intent intent = new Intent(Settings.ACTION_CHANNEL_NOTIFICATION_SETTINGS);
-                    intent.putExtra(Settings.EXTRA_APP_PACKAGE, requireActivity().getPackageName());
-                    intent.putExtra(Settings.EXTRA_CHANNEL_ID, getResources().getString(R.string.last_minute_channel_id));
-                    startActivity(intent);
-                    return true;
-                }
+            openNotificationSettings.setOnPreferenceClickListener(preference -> {
+                Intent intent = new Intent(Settings.ACTION_CHANNEL_NOTIFICATION_SETTINGS);
+                intent.putExtra(Settings.EXTRA_APP_PACKAGE, requireActivity().getPackageName());
+                intent.putExtra(Settings.EXTRA_CHANNEL_ID, getResources().getString(R.string.last_minute_channel_id));
+                startActivity(intent);
+                return true;
             });
             // If user already enabled the notifications
             if(sharedPreferences.getBoolean(getResources().getString(R.string.subscribed_to_lastminute_notifications), false)){
@@ -105,101 +95,81 @@ public class SettingsFragment extends PreferenceFragmentCompat {
             notificationSourceSelection.setEnabled(false);
             notificationSourceSelection.getIcon().setAlpha(130);
         }
-        notificationSourceSelection.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
-            @Override
-            public boolean onPreferenceClick(Preference preference) {
-                // First show the warning, then open source selection when clicked
-                if(! sharedPreferences.getBoolean(getResources().getString(R.string.notification_source_info_seen), false)){
-                    try {
-                        AlertDialog.Builder builder = new AlertDialog.Builder(requireActivity());
-                        builder.setTitle(alertTitle);
-                        builder.setMessage(alertMessage);
-                        builder.setPositiveButton(okay, new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                Intent sourceSelection = new Intent(requireActivity(), SourceSelectionActivity.class);
-                                sourceSelection.putExtra(getResources().getString(R.string.news_category_key), getResources().getString(R.string.bildirim_key));
-                                sourceSelection.putExtra(getResources().getString(R.string.news_category_name),getResources().getString(R.string.bildirim_normal));
-                                startActivity(sourceSelection);
-                            }
-                        });
-                        builder.create().show();
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    } finally {
-                        sharedPreferences.edit().putBoolean(getResources().getString(R.string.notification_source_info_seen), true).apply();
-                    }
+        notificationSourceSelection.setOnPreferenceClickListener(preference -> {
+            // First show the warning, then open source selection when clicked
+            if(! sharedPreferences.getBoolean(getResources().getString(R.string.notification_source_info_seen), false)){
+                try {
+                    AlertDialog.Builder builder = new AlertDialog.Builder(requireActivity());
+                    builder.setTitle(alertTitle);
+                    builder.setMessage(alertMessage);
+                    builder.setPositiveButton(okay, (dialog, which) -> {
+                        Intent sourceSelection = new Intent(requireActivity(), SourceSelectionActivity.class);
+                        sourceSelection.putExtra(getResources().getString(R.string.news_category_key), getResources().getString(R.string.bildirim_key));
+                        sourceSelection.putExtra(getResources().getString(R.string.news_category_name),getResources().getString(R.string.bildirim_normal));
+                        startActivity(sourceSelection);
+                    });
+                    builder.create().show();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                } finally {
+                    sharedPreferences.edit().putBoolean(getResources().getString(R.string.notification_source_info_seen), true).apply();
                 }
-                // If the warning seen, open source selection directly
-                else {
-                    Intent sourceSelection = new Intent(requireActivity(), SourceSelectionActivity.class);
-                    sourceSelection.putExtra(getResources().getString(R.string.news_category_key), getResources().getString(R.string.bildirim_key));
-                    sourceSelection.putExtra(getResources().getString(R.string.news_category_name),getResources().getString(R.string.bildirim_normal));
-                    startActivity(sourceSelection);
-                }
-                return true;
             }
+            // If the warning seen, open source selection directly
+            else {
+                Intent sourceSelection = new Intent(requireActivity(), SourceSelectionActivity.class);
+                sourceSelection.putExtra(getResources().getString(R.string.news_category_key), getResources().getString(R.string.bildirim_key));
+                sourceSelection.putExtra(getResources().getString(R.string.news_category_name),getResources().getString(R.string.bildirim_normal));
+                startActivity(sourceSelection);
+            }
+            return true;
         });
 
         // Son Dakika Notifications Enable/Disable Listener
-        findPreference(getResources().getString(R.string.last_minute_notifications_key)).setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
-            @Override
-            public boolean onPreferenceChange(Preference preference, Object newValue) {
-                // Subscribe the client app to the notification topic if enabled
-                // AND make the notification settings link visible/invisible (For Android 8+)
-                if((Boolean) newValue){
-                    FirebaseMessaging.getInstance().subscribeToTopic(getResources().getString(R.string.last_minute_notifications_topic));
-                    notificationSourceSelection.setEnabled(true);
-                    notificationSourceSelection.getIcon().setAlpha(255);
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O){
-                        openNotificationSettings.setEnabled(true);
-                        openNotificationSettings.getIcon().setAlpha(255);
-                    }
-                } else {
-                    FirebaseMessaging.getInstance().unsubscribeFromTopic(getResources().getString(R.string.last_minute_notifications_topic));
-                    notificationSourceSelection.setEnabled(false);
-                    notificationSourceSelection.getIcon().setAlpha(130);
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O){
-                        openNotificationSettings.setEnabled(false);
-                        openNotificationSettings.getIcon().setAlpha(130);
-                    }
+        findPreference(getResources().getString(R.string.last_minute_notifications_key)).setOnPreferenceChangeListener((preference, newValue) -> {
+            // Subscribe the client app to the notification topic if enabled
+            // AND make the notification settings link visible/invisible (For Android 8+)
+            if((Boolean) newValue){
+                FirebaseMessaging.getInstance().subscribeToTopic(getResources().getString(R.string.last_minute_notifications_topic));
+                notificationSourceSelection.setEnabled(true);
+                notificationSourceSelection.getIcon().setAlpha(255);
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O){
+                    openNotificationSettings.setEnabled(true);
+                    openNotificationSettings.getIcon().setAlpha(255);
                 }
-                // Update shared preferences key
-                SharedPreferences.Editor editor = sharedPreferences.edit();
-                editor.putBoolean(getResources().getString(R.string.subscribed_to_lastminute_notifications), (Boolean) newValue).apply();
-                return true;
+            } else {
+                FirebaseMessaging.getInstance().unsubscribeFromTopic(getResources().getString(R.string.last_minute_notifications_topic));
+                notificationSourceSelection.setEnabled(false);
+                notificationSourceSelection.getIcon().setAlpha(130);
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O){
+                    openNotificationSettings.setEnabled(false);
+                    openNotificationSettings.getIcon().setAlpha(130);
+                }
             }
+            // Update shared preferences key
+            SharedPreferences.Editor editor = sharedPreferences.edit();
+            editor.putBoolean(getResources().getString(R.string.subscribed_to_lastminute_notifications), (Boolean) newValue).apply();
+            return true;
         });
 
         // Clear Image Cache Button
         Preference clearCache = findPreference(getResources().getString(R.string.clear_cache_key));
-        clearCache.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
-            @Override
-            public boolean onPreferenceClick(Preference preference) {
+        clearCache.setOnPreferenceClickListener(preference -> {
 
-                // Start the glide cleaner on background
-                new Thread(new Runnable() {
-                    @Override
-                    public void run() {
-                        Glide.get(requireActivity()).clearDiskCache();
-                    }
-                }).start();
-                // Show message to user
-                Toast.makeText(requireActivity(), getResources().getString(R.string.clear_cache_toast), Toast.LENGTH_SHORT).show();
+            // Start the glide cleaner on background
+            new Thread(() -> Glide.get(requireActivity()).clearDiskCache()).start();
+            // Show message to user
+            Toast.makeText(requireActivity(), getResources().getString(R.string.clear_cache_toast), Toast.LENGTH_SHORT).show();
 
-                return true;
-            }
+            return true;
         });
 
         // Privacy Policy
         Preference privacyPolicy = findPreference(getResources().getString(R.string.privacy_policy_key));
-        privacyPolicy.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
-            @Override
-            public boolean onPreferenceClick(Preference preference) {
-                Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(getResources().getString(R.string.privacy_policy_link)));
-                startActivity(intent);
-                return true;
-            }
+        privacyPolicy.setOnPreferenceClickListener(preference -> {
+            Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(getResources().getString(R.string.privacy_policy_link)));
+            startActivity(intent);
+            return true;
         });
 
 
@@ -227,7 +197,7 @@ public class SettingsFragment extends PreferenceFragmentCompat {
                     case 0:
                         sharedPreferences.edit().putString(preference.getKey(), getResources().getString(R.string.pref_font_value_small)).apply();
                         break;
-                    case 1:
+                    case 1: default:
                         sharedPreferences.edit().putString(preference.getKey(), getResources().getString(R.string.pref_font_value_medium)).apply();
                         break;
                     case 2:
@@ -236,8 +206,6 @@ public class SettingsFragment extends PreferenceFragmentCompat {
                     case 3:
                         sharedPreferences.edit().putString(preference.getKey(), getResources().getString(R.string.pref_font_value_extra_large)).apply();
                         break;
-                    default:
-                        sharedPreferences.edit().putString(preference.getKey(), getResources().getString(R.string.pref_font_value_medium)).apply();
                 }
             }
             return true;

@@ -61,7 +61,7 @@
     <string name="diger">Diğer</string>
 
     <string name="website_categories">Haber Kategorileri</string>
-    <string name="gazete_websiteleri">Gazete</string>
+    <string name="gazete_websiteleri">Gazeteler</string>
     <string name="intmedyasi_websiteleri">İnternet Medyası</string>
     <string name="biltek_websiteleri">Bilim Teknoloji</string>
     <string name="spor_websiteleri">Spor</string>
@@ -157,7 +157,8 @@
     <string name="subscribed_to_lastminute_notifications">Haber Bildirimlerine Abone Olundu</string>
     <string name="last_notified_time">Son Bildirim Zamani</string>
     <string name="news_item_view_preference">Haber Gosterim Secenegi</string>
-
+    <string name="interstitial_trial_counter">Interstitial Trial Counter</string>
+    <string name="banner_trial_counter">Banner Trial Counter</string>
 
     <!-- Strings for Settings -->
     <string name="title_activity_settings">Ayarlar</string>
@@ -211,9 +212,9 @@
     <string name="admob_app_id">ca-app-pub-6119996797830051~6406060240</string>
     <string name="privacy_policy_link">https://s3.eu-central-1.amazonaws.com/haberler.app.files/privacy_policy.html</string>
 
-    <string name="admob_banner_kucuk_unit_id">ca-app-pub-3940256099942544/6300978111</string>
-    <string name="admob_banner_buyuk_unit_id">ca-app-pub-3940256099942544/6300978111</string>
-    <string name="admob_interstitial_unit_id">ca-app-pub-3940256099942544/1033173712</string>
+    <string name="admob_banner_kucuk_unit_id">ca-app-pub-6119996797830051/5538210440</string>
+    <string name="admob_banner_buyuk_unit_id">ca-app-pub-6119996797830051/8867297931</string>
+    <string name="admob_interstitial_unit_id">ca-app-pub-6119996797830051/3026135706</string>
 
     <!--
         MY ADMOB UNIT ID'S

@@ -75,7 +75,7 @@ public class FavNewsAdapter extends RecyclerView.Adapter<FavNewsAdapter.NewsView
         int news_view_preference = customKeys.getInt(context.getResources().getString(R.string.news_item_view_preference), 0);
         View newsView;
         switch (news_view_preference){
-            case 0:
+            case 0: default:
                 newsView = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_news_type1, parent, false);
                 break;
             case 1:
@@ -84,8 +84,6 @@ public class FavNewsAdapter extends RecyclerView.Adapter<FavNewsAdapter.NewsView
             case 2:
                 newsView = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_news_type3, parent, false);
                 break;
-            default:
-                newsView = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_news_type1, parent, false);
         }
         return new NewsViewHolder(newsView);
     }
@@ -123,55 +121,46 @@ public class FavNewsAdapter extends RecyclerView.Adapter<FavNewsAdapter.NewsView
                 DateUtils.MINUTE_IN_MILLIS).toString();
         newsViewHolder.newsTime.setText(relativeTime);
 
-        newsViewHolder.constraintLayout.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
+        newsViewHolder.constraintLayout.setOnClickListener(v -> {
 
-                Intent intentDetail = new Intent(context, ShowInWebviewActivity.class);
-                intentDetail.putExtra(context.getResources().getString(R.string.news_url), newsItem.getNewsUrl());
-                intentDetail.putExtra(context.getResources().getString(R.string.news_source_for_display), newsItem.getSource());
-                context.startActivity(intentDetail);
-            }
+            Intent intentDetail = new Intent(context, ShowInWebviewActivity.class);
+            intentDetail.putExtra(context.getResources().getString(R.string.news_url), newsItem.getNewsUrl());
+            intentDetail.putExtra(context.getResources().getString(R.string.news_source_for_display), newsItem.getSource());
+            context.startActivity(intentDetail);
         });
 
         // POPUP MENU OPERATIONS (Delete & Share)
-        newsViewHolder.moreVertical.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                // Create the Popup Menu
-                final PopupMenu popup = new PopupMenu(context, v);
-                popup.getMenuInflater().inflate(R.menu.news_more_menu, popup.getMenu());
-                // Set the title of Save News Menu item (Favorilerden Çıkar)
-                MenuItem saveMenuItem = popup.getMenu().getItem(0);
-                saveMenuItem.setTitle(context.getResources().getString(R.string.unsave_news_column));
+        newsViewHolder.moreVertical.setOnClickListener(v -> {
+            // Create the Popup Menu
+            final PopupMenu popup = new PopupMenu(context, v);
+            popup.getMenuInflater().inflate(R.menu.news_more_menu, popup.getMenu());
+            // Set the title of Save News Menu item (Favorilerden Çıkar)
+            MenuItem saveMenuItem = popup.getMenu().getItem(0);
+            saveMenuItem.setTitle(context.getResources().getString(R.string.unsave_news_column));
 
-                // Set the click operations
-                popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
-                    @Override
-                    public boolean onMenuItemClick(MenuItem menuItem) {
+            // Set the click operations
+            popup.setOnMenuItemClickListener(menuItem -> {
 
-                        // DELETE OPERATIONS
-                        if(menuItem.getItemId() == R.id.more_save_news){
-                            //Delete news from favorite news database
-                            FavNewsRepository repository = new FavNewsRepository(context);
-                            repository.delete(newsItem);
-                            // Show toast message
-                            Toast.makeText(context.getApplicationContext(), context.getResources().getString(R.string.news_deleted_from_favorite), Toast.LENGTH_SHORT).show();
-                            // update shared preference file
-                            savedNews.edit().remove(newsItem.getNewsUrl()).apply();
+                // DELETE OPERATIONS
+                if(menuItem.getItemId() == R.id.more_save_news){
+                    //Delete news from favorite news database
+                    FavNewsRepository repository = new FavNewsRepository(context);
+                    repository.delete(newsItem);
+                    // Show toast message
+                    Toast.makeText(context.getApplicationContext(), context.getResources().getString(R.string.news_deleted_from_favorite), Toast.LENGTH_SHORT).show();
+                    // update shared preference file
+                    savedNews.edit().remove(newsItem.getNewsUrl()).apply();
 
-                        // SHARE OPERATIONS
-                        } else if(menuItem.getItemId() == R.id.more_share_news){
-                            Intent intent = new Intent(Intent.ACTION_SEND);
-                            intent.putExtra(Intent.EXTRA_TEXT, newsItem.getNewsUrl());
-                            intent.setType("text/plain");
-                            context.startActivity(intent);
-                        }
-                        return true;
-                    }
-                });
-                popup.show();
-            }
+                // SHARE OPERATIONS
+                } else if(menuItem.getItemId() == R.id.more_share_news){
+                    Intent intent = new Intent(Intent.ACTION_SEND);
+                    intent.putExtra(Intent.EXTRA_TEXT, newsItem.getNewsUrl());
+                    intent.setType("text/plain");
+                    context.startActivity(intent);
+                }
+                return true;
+            });
+            popup.show();
         });
     }
 

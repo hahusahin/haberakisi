@@ -1,7 +1,6 @@
 package com.haberinadresi.androidapp.activities;
 
-import androidx.lifecycle.Observer;
-import androidx.lifecycle.ViewModelProviders;
+import androidx.lifecycle.ViewModelProvider;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -19,14 +18,13 @@ import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdSize;
 import com.google.android.gms.ads.AdView;
+import com.google.android.gms.ads.LoadAdError;
 import com.haberinadresi.androidapp.R;
 import com.haberinadresi.androidapp.adapters.NewsAdapterWithAds;
-import com.haberinadresi.androidapp.models.NewsItem;
 import com.haberinadresi.androidapp.viewmodels.OneSourceNewsVM;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
 
 //This activity loads news from only the selected source
@@ -50,7 +48,7 @@ public class OneSrcNewsActivity extends AppCompatActivity {
                 case "small":
                     setTheme(R.style.FontStyle_Small);
                     break;
-                case "medium":
+                case "medium": default:
                     setTheme(R.style.FontStyle_Medium);
                     break;
                 case "large":
@@ -59,8 +57,6 @@ public class OneSrcNewsActivity extends AppCompatActivity {
                 case "xlarge":
                     setTheme(R.style.FontStyle_XLarge);
                     break;
-                default:
-                    setTheme(R.style.FontStyle_Medium);
             }
         } else {
             setTheme(R.style.FontStyle_Medium);
@@ -111,31 +107,22 @@ public class OneSrcNewsActivity extends AppCompatActivity {
         // Set the title of toolbar to the current source
         if(getSupportActionBar() != null){ getSupportActionBar().setTitle(sourceName); }
 
-        OneSourceNewsVM oneSourceNewsVM = ViewModelProviders.of(this).get(OneSourceNewsVM.class);
-        oneSourceNewsVM.getNewsLiveData(key).observe(this, new Observer<List<NewsItem>>() {
-            @Override
-            public void onChanged(@Nullable List<NewsItem> newsList) {
-
-                if(newsList != null){
-                    //Sort the news wrt the time
-                    Collections.sort(newsList, new Comparator<NewsItem>() {
-                        @Override
-                        public int compare(NewsItem news1, NewsItem news2) {
-                            return Long.compare(news2.getUpdateTime(), news1.getUpdateTime());
-                        }
-                    });
-                    //First clear the list and add recent news to list
-                    recyclerViewItems.clear();
-                    recyclerViewItems.addAll(newsList);
-                    // Then add the Ads (to related positions)
-                    addBannerAds();
-                    loadBannerAds();
-                    // After both finished, update recyclerview adapter
-                    newsAdapter.setNewsList(recyclerViewItems);
-                }
-                // Hide progressbar when finished
-                progressBar.setVisibility(View.GONE);
+        OneSourceNewsVM oneSourceNewsVM = new ViewModelProvider(this).get(OneSourceNewsVM.class);
+        oneSourceNewsVM.getNewsLiveData(key).observe(this, newsList -> {
+            if(newsList != null){
+                //Sort the news wrt the time
+                Collections.sort(newsList, (news1, news2) -> Long.compare(news2.getUpdateTime(), news1.getUpdateTime()));
+                //First clear the list and add recent news to list
+                recyclerViewItems.clear();
+                recyclerViewItems.addAll(newsList);
+                // Then add the Ads (to related positions)
+                addBannerAds();
+                loadBannerAds();
+                // After both finished, update recyclerview adapter
+                newsAdapter.setNewsList(recyclerViewItems);
             }
+            // Hide progressbar when finished
+            progressBar.setVisibility(View.GONE);
         });
     }
 
@@ -181,7 +168,7 @@ public class OneSrcNewsActivity extends AppCompatActivity {
             }
 
             @Override
-            public void onAdFailedToLoad(int errorCode) {
+            public void onAdFailedToLoad(LoadAdError loadAdError) {
                 // The previous banner ad failed to load. Load the next ad in the items list.
                 loadBannerAd(index + ITEMS_PER_AD);
             }

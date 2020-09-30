@@ -91,28 +91,25 @@ public class ColumnistAdapter extends RecyclerView.Adapter<ColumnistAdapter.Colu
             viewHolder.sourceSelector.setImageResource(R.mipmap.ic_add_circle);
         }
 
-        viewHolder.relativeLayout.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
+        viewHolder.relativeLayout.setOnClickListener(v -> {
 
-                // CHANGE SHARED PREFERENCES
-                SharedPreferences.Editor editor = myColumnists.edit();
-                // check the current preference (if exists delete it, if not exists add it)
-                if (myColumnists.contains(columnist.getKey().toLowerCase(turkish))){
-                    editor.remove(columnist.getKey().toLowerCase(turkish));
-                } else {
-                    editor.putBoolean(columnist.getKey().toLowerCase(turkish), true);
-                }
-                editor.apply();
+            // CHANGE SHARED PREFERENCES
+            SharedPreferences.Editor editor = myColumnists.edit();
+            // check the current preference (if exists delete it, if not exists add it)
+            if (myColumnists.contains(columnist.getKey().toLowerCase(turkish))){
+                editor.remove(columnist.getKey().toLowerCase(turkish));
+            } else {
+                editor.putBoolean(columnist.getKey().toLowerCase(turkish), true);
+            }
+            editor.apply();
 
-                // CHANGE THE PLUS MINUS IMAGE
-                if (myColumnists.contains(columnist.getKey().toLowerCase(turkish))){
-                    viewHolder.sourceSelector.setImageResource(R.mipmap.ic_remove_circle);
-                    Toast.makeText(context.getApplicationContext(), columnist.getName() + " " + context.getResources().getString(R.string.added_to_favorite), Toast.LENGTH_SHORT).show();
-                } else {
-                    viewHolder.sourceSelector.setImageResource(R.mipmap.ic_add_circle);
-                    Toast.makeText(context.getApplicationContext(), columnist.getName() + " " + context.getResources().getString(R.string.deleted_from_favorite), Toast.LENGTH_SHORT).show();
-                }
+            // CHANGE THE PLUS MINUS IMAGE
+            if (myColumnists.contains(columnist.getKey().toLowerCase(turkish))){
+                viewHolder.sourceSelector.setImageResource(R.mipmap.ic_remove_circle);
+                Toast.makeText(context.getApplicationContext(), columnist.getName() + " " + context.getResources().getString(R.string.added_to_favorite), Toast.LENGTH_SHORT).show();
+            } else {
+                viewHolder.sourceSelector.setImageResource(R.mipmap.ic_add_circle);
+                Toast.makeText(context.getApplicationContext(), columnist.getName() + " " + context.getResources().getString(R.string.deleted_from_favorite), Toast.LENGTH_SHORT).show();
             }
         });
 

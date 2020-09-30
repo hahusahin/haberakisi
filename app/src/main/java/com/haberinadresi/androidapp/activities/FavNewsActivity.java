@@ -1,7 +1,6 @@
 package com.haberinadresi.androidapp.activities;
 
-import androidx.lifecycle.Observer;
-import androidx.lifecycle.ViewModelProviders;
+import androidx.lifecycle.ViewModelProvider;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import androidx.annotation.Nullable;
@@ -11,6 +10,8 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.appcompat.widget.Toolbar;
+
+import android.os.Handler;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ProgressBar;
@@ -19,13 +20,12 @@ import android.widget.TextView;
 import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
+import com.google.android.gms.ads.LoadAdError;
 import com.haberinadresi.androidapp.R;
 import com.haberinadresi.androidapp.adapters.FavNewsAdapter;
-import com.haberinadresi.androidapp.models.NewsItem;
 import com.haberinadresi.androidapp.viewmodels.FavNewsVM;
 
 import java.util.Collections;
-import java.util.List;
 
 public class FavNewsActivity extends AppCompatActivity {
 
@@ -47,7 +47,7 @@ public class FavNewsActivity extends AppCompatActivity {
                 case "small":
                     setTheme(R.style.FontStyle_Small);
                     break;
-                case "medium":
+                case "medium": default:
                     setTheme(R.style.FontStyle_Medium);
                     break;
                 case "large":
@@ -56,8 +56,6 @@ public class FavNewsActivity extends AppCompatActivity {
                 case "xlarge":
                     setTheme(R.style.FontStyle_XLarge);
                     break;
-                default:
-                    setTheme(R.style.FontStyle_Medium);
             }
         } else {
             setTheme(R.style.FontStyle_Medium);
@@ -77,9 +75,22 @@ public class FavNewsActivity extends AppCompatActivity {
         bannerAdView.loadAd(adRequest);
         bannerAdView.setAdListener(new AdListener(){
             @Override
-            public void onAdFailedToLoad(int i) {
-                // If failed, then load a new one
-                bannerAdView.loadAd(new AdRequest.Builder().build());
+            public void onAdLoaded() {
+                // If ad is loaded than reset counter that keeps failures
+                customPrefs.edit().putInt(getResources().getString(R.string.banner_trial_counter), 0).apply();
+            }
+
+            @Override
+            public void onAdFailedToLoad(LoadAdError loadAdError) {
+                // Try for three times only
+                int trial = customPrefs.getInt(getResources().getString(R.string.banner_trial_counter), 0);
+                trial++;
+                if(trial <= 3){
+                    customPrefs.edit().putInt(getResources().getString(R.string.banner_trial_counter), trial).apply();
+                    // Wait for ... seconds and then try again
+                    Handler handler = new Handler();
+                    handler.postDelayed(() -> bannerAdView.loadAd(new AdRequest.Builder().build()), 10000);
+                }
             }
         });
 
@@ -107,22 +118,19 @@ public class FavNewsActivity extends AppCompatActivity {
         progressBar = findViewById(R.id.pb_favorite_news);
         progressBar.setVisibility(View.VISIBLE);
 
-        FavNewsVM favNewsVM = ViewModelProviders.of(this).get(FavNewsVM.class);
-        favNewsVM.getFavNews().observe(this, new Observer<List<NewsItem>>() {
-            @Override
-            public void onChanged(@Nullable List<NewsItem> newsList) {
-                //To show recently added news at the top (reverse list)
-                Collections.reverse(newsList);
-                newsAdapter = new FavNewsAdapter(FavNewsActivity.this, newsList);
-                recyclerView.setAdapter(newsAdapter);
-                // Hide ProgressBar when news are loaded
-                progressBar.setVisibility(View.INVISIBLE);
-                // If the user didn't add any news to favorite show dialog
-                if(newsAdapter.getItemCount() < 1){
-                    emptyFavNewsWarning.setVisibility(View.VISIBLE);
-                } else {
-                    emptyFavNewsWarning.setVisibility(View.GONE);
-                }
+        FavNewsVM favNewsVM = new ViewModelProvider(this).get(FavNewsVM.class);
+        favNewsVM.getFavNews().observe(this, newsList -> {
+            //To show recently added news at the top (reverse list)
+            Collections.reverse(newsList);
+            newsAdapter = new FavNewsAdapter(FavNewsActivity.this, newsList);
+            recyclerView.setAdapter(newsAdapter);
+            // Hide ProgressBar when news are loaded
+            progressBar.setVisibility(View.INVISIBLE);
+            // If the user didn't add any news to favorite show dialog
+            if(newsAdapter.getItemCount() < 1){
+                emptyFavNewsWarning.setVisibility(View.VISIBLE);
+            } else {
+                emptyFavNewsWarning.setVisibility(View.GONE);
             }
         });
 

@@ -1,7 +1,6 @@
 package com.haberinadresi.androidapp.fragments;
 
-import androidx.lifecycle.Observer;
-import androidx.lifecycle.ViewModelProviders;
+import androidx.lifecycle.ViewModelProvider;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
@@ -28,6 +27,7 @@ import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdSize;
 import com.google.android.gms.ads.AdView;
+import com.google.android.gms.ads.LoadAdError;
 import com.haberinadresi.androidapp.R;
 import com.haberinadresi.androidapp.activities.SourceSelectionActivity;
 import com.haberinadresi.androidapp.adapters.NewsAdapterWithAds;
@@ -62,7 +62,6 @@ public class NewsFragment extends Fragment implements SharedPreferences.OnShared
     private String categoryName;
     private LinearLayoutManager linearLayoutManager;
     private GridLayoutManager gridLayoutManager;
-    private AdView bannerAdView;
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup parent,
@@ -80,11 +79,6 @@ public class NewsFragment extends Fragment implements SharedPreferences.OnShared
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        // Get the banner ad from main activity and Hide it if this fragment is visible to user
-        bannerAdView = requireActivity().findViewById(R.id.bannerAdView);
-        if(getUserVisibleHint() && bannerAdView != null){
-            bannerAdView.setVisibility(View.GONE);
-        }
         // The button to display if user didn't select any news source
         sourceWarning = view.findViewById(R.id.btn_source_alert);
         sourceWarning.setVisibility(View.GONE);
@@ -127,18 +121,15 @@ public class NewsFragment extends Fragment implements SharedPreferences.OnShared
         //recyclerView.setItemViewCacheSize(20); //number of offscreen views to retain
 
         // İnitialize viewmodel
-        newsViewModel = ViewModelProviders.of(this).get(NewsVM.class);
+        newsViewModel = new ViewModelProvider(this).get(NewsVM.class);
 
         // Configure the swipe refresh
         swipeContainer = view.findViewById(R.id.swiper);
         swipeContainer.setColorSchemeResources(android.R.color.holo_blue_dark, android.R.color.holo_green_light,
                 android.R.color.holo_orange_light, android.R.color.holo_red_light);
-        swipeContainer.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-            @Override
-            public void onRefresh() {
-                swipeContainer.setRefreshing(true);
-                fetchNews(isPreferenceChanged, true);
-            }
+        swipeContainer.setOnRefreshListener(() -> {
+            swipeContainer.setRefreshing(true);
+            fetchNews(isPreferenceChanged, true);
         });
 
         // If device is connected to the internet
@@ -151,14 +142,11 @@ public class NewsFragment extends Fragment implements SharedPreferences.OnShared
             internetAlert.setVisibility(View.VISIBLE);
             swipeContainer.setEnabled(false);
             // when user clicks on button, check the network connection again
-            checkConnection.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    // if connects after button click, then dismiss internet error and fetch news
-                    if (NetworkUtils.isConnected(requireActivity())) {
-                        internetAlert.setVisibility(View.GONE);
-                        fetchNews(isPreferenceChanged, false);
-                    }
+            checkConnection.setOnClickListener(v -> {
+                // if connects after button click, then dismiss internet error and fetch news
+                if (NetworkUtils.isConnected(requireActivity())) {
+                    internetAlert.setVisibility(View.GONE);
+                    fetchNews(isPreferenceChanged, false);
                 }
             });
         }
@@ -178,25 +166,22 @@ public class NewsFragment extends Fragment implements SharedPreferences.OnShared
             newsAdapter = new NewsAdapterWithAds(requireActivity(), recyclerViewItems);
             recyclerView.setAdapter(newsAdapter);
             // adapter for making search on the news
-            searchAdapter = new NewsAdapterWithoutAd(requireActivity(), new ArrayList<NewsItem>());
+            searchAdapter = new NewsAdapterWithoutAd(requireActivity(), new ArrayList<>());
 
-            newsViewModel.getNewsLivedata(categoryKey, mySourceList, isPreferenceChanged).observe(this, new Observer<List<NewsItem>>() {
-                @Override
-                public void onChanged(@Nullable List<NewsItem> newsList) {
-                    if(newsList != null){
-                        //First clear the list and add recent news to list
-                        recyclerViewItems.clear();
-                        recyclerViewItems.addAll(newsList);
-                        // Then add the Ads (to related positions)
-                        addBannerAds();
-                        loadBannerAds();
-                        // After both finished, update recyclerview adapter
-                        newsAdapter.setNewsList(recyclerViewItems);
-                    }
-                    // Hide progressbar and swipe Refresher
-                    progressBar.setVisibility(View.GONE);
-                    swipeContainer.setRefreshing(false);
+            newsViewModel.getNewsLivedata(categoryKey, mySourceList, isPreferenceChanged).observe(getViewLifecycleOwner(), newsList -> {
+                if(newsList != null){
+                    //First clear the list and add recent news to list
+                    recyclerViewItems.clear();
+                    recyclerViewItems.addAll(newsList);
+                    // Then add the Ads (to related positions)
+                    addBannerAds();
+                    loadBannerAds();
+                    // After both finished, update recyclerview adapter
+                    newsAdapter.setNewsList(recyclerViewItems);
                 }
+                // Hide progressbar and swipe Refresher
+                progressBar.setVisibility(View.GONE);
+                swipeContainer.setRefreshing(false);
             });
 
         // If the user has no source
@@ -208,15 +193,12 @@ public class NewsFragment extends Fragment implements SharedPreferences.OnShared
             sourceWarning.setVisibility(View.VISIBLE);
             swipeContainer.setEnabled(false);
             // Open the source selection page when user clicks the warning
-            sourceWarning.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
+            sourceWarning.setOnClickListener(v -> {
 
-                    Intent sourceSelection = new Intent(requireActivity(), SourceSelectionActivity.class);
-                    sourceSelection.putExtra(getResources().getString(R.string.news_category_key), categoryKey);
-                    sourceSelection.putExtra(getResources().getString(R.string.news_category_name),categoryName);
-                    startActivity(sourceSelection);
-                }
+                Intent sourceSelection = new Intent(requireActivity(), SourceSelectionActivity.class);
+                sourceSelection.putExtra(getResources().getString(R.string.news_category_key), categoryKey);
+                sourceSelection.putExtra(getResources().getString(R.string.news_category_name),categoryName);
+                startActivity(sourceSelection);
             });
         }
     }
@@ -232,14 +214,12 @@ public class NewsFragment extends Fragment implements SharedPreferences.OnShared
         if (key.equals(getResources().getString(R.string.news_item_view_preference))){
             int news_view_type = customPreferences.getInt(getResources().getString(R.string.news_item_view_preference), 0);
             switch (news_view_type){
-                case 0: case 1:
+                case 0: case 1: default:
                     recyclerView.setLayoutManager(linearLayoutManager);
                     break;
                 case 2:
                     recyclerView.setLayoutManager(gridLayoutManager);
                     break;
-                default:
-                    recyclerView.setLayoutManager(linearLayoutManager);
             }
             recyclerView.setAdapter(newsAdapter);
         }
@@ -260,6 +240,12 @@ public class NewsFragment extends Fragment implements SharedPreferences.OnShared
 
     @Override
     public void onResume() {
+        // Get the banner ad from main activity and Hide it if this fragment is visible to user
+        AdView bannerAdView = requireActivity().findViewById(R.id.bannerAdView);
+        if(bannerAdView != null){
+            bannerAdView.setVisibility(View.GONE);
+        }
+
         //If coming from onPause (not from onCreate)
         if(onPauseFlag){
             //If source preferences are changed
@@ -295,18 +281,9 @@ public class NewsFragment extends Fragment implements SharedPreferences.OnShared
         super.onDestroy();
     }
 
-    @Override
-    public void setUserVisibleHint(boolean isVisibleToUser) {
-        super.setUserVisibleHint(isVisibleToUser);
-
-        if(isVisibleToUser && isResumed() && bannerAdView != null){
-            bannerAdView.setVisibility(View.GONE);
-        }
-    }
-
     // Added to make search in the news list
     @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+    public void onCreateOptionsMenu(@NonNull Menu menu, MenuInflater inflater) {
 
         inflater.inflate(R.menu.news_fragment_menu, menu);
 
@@ -371,7 +348,7 @@ public class NewsFragment extends Fragment implements SharedPreferences.OnShared
         int news_view_type = customPreferences.getInt(getResources().getString(R.string.news_item_view_preference), 0);
         // Set the correct image wrt the user's news view preference type
         switch (news_view_type){
-            case 0:
+            case 0: default:
                 newsViewMenuItem.setIcon(R.drawable.ic_newsview2);
                 break;
             case 1:
@@ -380,8 +357,6 @@ public class NewsFragment extends Fragment implements SharedPreferences.OnShared
             case 2:
                 newsViewMenuItem.setIcon(R.drawable.ic_newsview1);
                 break;
-            default:
-                newsViewMenuItem.setIcon(R.drawable.ic_newsview2);
         }
 
         super.onCreateOptionsMenu(menu, inflater);
@@ -400,7 +375,7 @@ public class NewsFragment extends Fragment implements SharedPreferences.OnShared
             customPreferences.edit().putInt(getResources().getString(R.string.news_item_view_preference), news_view_type).commit();
             // Update the icon wrt the view preference
             switch (news_view_type){
-                case 0:
+                case 0: default:
                     item.setIcon(R.drawable.ic_newsview2);
                     break;
                 case 1:
@@ -409,8 +384,6 @@ public class NewsFragment extends Fragment implements SharedPreferences.OnShared
                 case 2:
                     item.setIcon(R.drawable.ic_newsview1);
                     break;
-                default:
-                    item.setIcon(R.drawable.ic_newsview2);
             }
             return true;
         }
@@ -486,7 +459,7 @@ public class NewsFragment extends Fragment implements SharedPreferences.OnShared
             }
 
             @Override
-            public void onAdFailedToLoad(int errorCode) {
+            public void onAdFailedToLoad(LoadAdError loadAdError) {
                 // The previous banner ad failed to load. Load the next ad in the items list.
                 loadBannerAd(index + ITEMS_PER_AD);
             }
