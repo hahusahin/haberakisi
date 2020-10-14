@@ -104,6 +104,7 @@
     <string name="column_item">Column Item</string>
     <string name="source_list">Source List</string>
     <string name="columnists_list">Columnists List</string>
+    <string name="columnist_source">Columnist Source</string>
     <string name="headline_list">Headline List</string>
     <string name="headline_position">Headline Position</string>
 
@@ -171,6 +172,10 @@
     <string name="show_images_off">Resimleri her durumda gösterir</string>
     <string name="show_images_on">Resimleri sadece WIFI\'den bağlıyken gösterir</string>
     <string name="show_images_key">Show Images Only On WIFI</string>
+    <string name="show_read_mode_title">Köşe Yazıları Okuma Modu</string>
+    <string name="show_read_mode_off">Okuma Modu Kapalı (Veri Tasarrufu Maksatlı)</string>
+    <string name="show_read_mode_on">Okuma Modu Açık</string>
+    <string name="show_read_mode_key">Show Column Read Mode</string>
     <string name="last_minute_notifications_title">Haber Bildirimleri</string>
     <string name="last_minute_notifications_off">Bildirimleri Gizle</string>
     <string name="last_minute_notifications_on">Bildirimleri Göster</string>
@@ -229,7 +234,8 @@
 
 
     <!-- TEK SEFERLİK ÇALIŞAN ANAHTAR'LAR (SHARED PREFERENCES) -->
-    <string name="whats_new_dialog_v6">Whats New Dialog v6 Seen</string> <!-- BİR KERE ÇALIŞTI, SONRAKİ VERSİYONLARDA SİL -->
+    <string name="whats_new_dialog_v7">Whats New Dialog v7 Seen</string> <!-- BİR KERE ÇALIŞTI, SONRAKİ VERSİYONLARDA SİL -->
+    <string name="whats_new_dialog_v6">Whats New Dialog v6 Seen</string> <!-- BİR KERE ÇALIŞTI, V27'DE SİLDİM AMA KULLANMA -->
     <string name="whats_new_dialog_v5">Whats New Dialog v5 Seen</string> <!-- BİR KERE ÇALIŞTI, V24'DE SİLDİM AMA KULLANMA -->
     <string name="whats_new_dialog_v4">Whats New Dialog v4 Seen</string> <!-- BİR KERE ÇALIŞTI, V22'DE SİLDİM AMA KULLANMA -->
     <string name="whats_new_dialog_v3">Whats New Dialog v3 Seen</string> <!-- BİR KERE ÇALIŞTI, V19'DA SİLDİM AMA KULLANMA -->

@@ -51,15 +51,15 @@ public class ColumnistSelectVM extends AndroidViewModel {
     private void loadColumnists() {
 
         Gson gson = new GsonBuilder().setLenient().create();
-
+        /*
         final OkHttpClient client = new OkHttpClient.Builder()
                 .addInterceptor(new HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.BODY))
                 .build();
-
+        */
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(getApplication().getResources().getString(R.string.api_link))
                 .addConverterFactory(GsonConverterFactory.create(gson))
-                .client(client)
+                //.client(client)
                 .build();
 
         API api = retrofit.create(API.class);

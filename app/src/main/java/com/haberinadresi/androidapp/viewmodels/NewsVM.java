@@ -76,16 +76,16 @@ public class NewsVM extends AndroidViewModel {
     private void loadSourceNewsFromServer(final String category, ArrayList<String> sourceList) {
 
         Gson gson = new GsonBuilder().setLenient().create();
-
+        /*
         final OkHttpClient client = new OkHttpClient.Builder()
                 .addInterceptor(new HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.BODY))
                 .build();
-
+        */
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(getApplication().getResources().getString(R.string.api_link))
                 .addConverterFactory(GsonConverterFactory.create(gson))
                 .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
-                .client(client)
+                //.client(client)
                 .build();
 
         API api = retrofit.create(API.class);

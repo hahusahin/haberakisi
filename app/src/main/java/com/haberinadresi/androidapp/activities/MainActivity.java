@@ -38,6 +38,8 @@ import com.google.firebase.messaging.FirebaseMessaging;
 import com.haberinadresi.androidapp.R;
 import com.haberinadresi.androidapp.adapters.TabPagerAdapter;
 import com.haberinadresi.androidapp.utilities.SharedPreferenceUtils;
+import com.haberinadresi.androidapp.utilities.WebUtils;
+import com.haberinadresi.androidapp.utilities.WhatsNewDialog;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener{
@@ -47,7 +49,7 @@ public class MainActivity extends AppCompatActivity
     private InterstitialAd interstitialAd;
     private AdView bannerAdView;
     private boolean onPauseFlag = false;
-    public static final int MAX_COUNT = 15; //If user clicks more than ... news detail, show Interstitial ad when backpressed
+    public static final int MAX_COUNT = 16; //If user clicks more than ... news detail, show Interstitial ad when backpressed
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -360,6 +362,23 @@ public class MainActivity extends AppCompatActivity
         if (bannerAdView != null) {
             bannerAdView.resume();
         }
+        // TODO: SİLİNECEK
+        // Show What's New Dialog for once if it is not seen by user AND it is updated (not newly installed)
+        if(! customPreferences.getBoolean(getResources().getString(R.string.whats_new_dialog_v7), false) &&
+                WebUtils.isInstallFromUpdate(MainActivity.this)) {
+            try {
+                WhatsNewDialog dialog = new WhatsNewDialog();
+                dialog.show(getSupportFragmentManager(), "What's New In This Update");
+            } catch (Exception e) {
+                e.printStackTrace();
+            } finally {
+                SharedPreferences.Editor editor = customPreferences.edit();
+                // Delete the previous keys that are used && Put the new key
+                editor.remove(getResources().getString(R.string.whats_new_dialog_v6));
+                editor.putBoolean(getResources().getString(R.string.whats_new_dialog_v7), true);
+                editor.apply();
+            }
+        }
 
         super.onResume();
     }
@@ -413,23 +432,21 @@ public class MainActivity extends AppCompatActivity
 
 /*
 // Show What's New Dialog for once if it is not seen by user AND it is updated (not newly installed)
-if(! customPreferences.getBoolean(getResources().getString(R.string.whats_new_dialog_v6), false) &&
-        WebUtils.isInstallFromUpdate(MainActivity.this)) {
-    try {
-        WhatsNewDialog dialog = new WhatsNewDialog();
-        dialog.show(getSupportFragmentManager(), "What's New In This Update");
-    } catch (Exception e) {
-        e.printStackTrace();
-    } finally {
-        SharedPreferences.Editor editor = customPreferences.edit();
-        // Delete the previous keys that are used
-        editor.remove(getResources().getString(R.string.whats_new_dialog_v4));
-        editor.remove(getResources().getString(R.string.whats_new_dialog_v5));
-        // Put the new key
-        editor.putBoolean(getResources().getString(R.string.whats_new_dialog_v6), true);
-        editor.apply();
-    }
-}
+        if(! customPreferences.getBoolean(getResources().getString(R.string.whats_new_dialog_v7), false) &&
+                WebUtils.isInstallFromUpdate(MainActivity.this)) {
+            try {
+                WhatsNewDialog dialog = new WhatsNewDialog();
+                dialog.show(getSupportFragmentManager(), "What's New In This Update");
+            } catch (Exception e) {
+                e.printStackTrace();
+            } finally {
+                SharedPreferences.Editor editor = customPreferences.edit();
+                // Delete the previous keys that are used && Put the new key
+                editor.remove(getResources().getString(R.string.whats_new_dialog_v6));
+                editor.putBoolean(getResources().getString(R.string.whats_new_dialog_v7), true);
+                editor.apply();
+            }
+        }
  */
 
 /*

@@ -15,6 +15,13 @@
         android:summaryOff="@string/show_images_off"
         android:summaryOn="@string/show_images_on"/>
 
+    <SwitchPreference
+        android:icon="@drawable/ic_text"
+        android:key="@string/show_read_mode_key"
+        android:title="@string/show_read_mode_title"
+        android:summaryOff="@string/show_read_mode_off"
+        android:summaryOn="@string/show_read_mode_on" />
+
     <ListPreference
         android:icon="@drawable/ic_fontsize"
         android:defaultValue="@string/pref_font_label_medium"

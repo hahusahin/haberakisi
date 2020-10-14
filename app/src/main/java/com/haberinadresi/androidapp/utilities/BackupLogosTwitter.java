@@ -96,7 +96,7 @@ public class BackupLogosTwitter {
             case "ekonomist_habersiteleri":
                 return "https://pbs.twimg.com/profile_images/426787379920125952/VAF65-sm_200x200.png";
             case "ensonhaber_gundem": case "ensonhaber_habersiteleri":
-                return "https://pbs.twimg.com/profile_images/469003318463721472/dcVcQtWG_200x200.jpeg";
+                return "https://pbs.twimg.com/profile_images/1310967434279628802/MkhbHa-l_200x200.jpg";
             case "epsikiyatri_habersiteleri":
                 return "https://pbs.twimg.com/profile_images/700666609078136833/twUucVnR_200x200.jpg";
             case "euronewstr_gundem": case "euronewstr_habersiteleri":
@@ -320,7 +320,7 @@ public class BackupLogosTwitter {
             case "tribundergi_habersiteleri":
                 return "https://pbs.twimg.com/profile_images/1292938790273789955/DEck4RYm_200x200.jpg";
             case "trthaber_gundem": case "trthaber_habersiteleri":
-                return "https://pbs.twimg.com/profile_images/997220632759693312/iRKJrg_n_200x200.jpg";
+                return "https://pbs.twimg.com/profile_images/1308528999040155658/lNuiSau4_200x200.png";
             case "trt_spor": case "trtspor_habersiteleri":
                 return "https://pbs.twimg.com/profile_images/1065579404846424064/cEpwevRK_200x200.jpg";
             case "turkgun_habersiteleri":

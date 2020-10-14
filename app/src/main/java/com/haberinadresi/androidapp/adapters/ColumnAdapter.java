@@ -132,6 +132,7 @@ public class ColumnAdapter extends RecyclerView.Adapter<ColumnAdapter.ColumnView
             Intent intentUrl = new Intent(context, ShowInWebviewActivity.class);
             intentUrl.putExtra(context.getResources().getString(R.string.news_url), columnItem.getColumnUrl());
             intentUrl.putExtra(context.getResources().getString(R.string.news_source_for_display), columnItem.getName());
+            intentUrl.putExtra(context.getResources().getString(R.string.columnist_source), columnItem.getSource());
             intentUrl.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             context.startActivity(intentUrl);
 

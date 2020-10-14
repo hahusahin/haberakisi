@@ -11,9 +11,10 @@ import com.haberinadresi.androidapp.activities.SettingsActivity;
 
 public class WhatsNewDialog extends AppCompatDialogFragment {
 
-    public static final String title = "Bilgilendirme";
-    public static final String message =  "\tHaber Bildirimi ayarlarında değişikliğe gidilmiştir. Bildirim almaya devam etmek için " +
-            "Ana Menü - Ayarlar'dan bildirim kaynağı seçmeniz gerekmektedir.";
+    public static final String title = "Neler Yeni?";
+    public static final String message =  "\tKöşe Yazıları için Okuma Modu eklendi. " +
+            "Yazıya tıklandığında sağ altta çıkan butona basarak geçiş yapabilirsiniz. " +
+            "Kullanmak için Ana Menü - Ayarlar'dan açmanız gerekmektedir.";
     private static final String goToSettings = "Ayarlar'a Git";
     private static final String okay = "Tamam";
 

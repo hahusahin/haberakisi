@@ -14,6 +14,7 @@ import androidx.appcompat.app.AppCompatDelegate;
 import androidx.preference.ListPreference;
 import androidx.preference.Preference;
 import androidx.preference.PreferenceFragmentCompat;
+import androidx.preference.PreferenceManager;
 
 import com.bumptech.glide.Glide;
 import com.google.firebase.messaging.FirebaseMessaging;
@@ -52,6 +53,14 @@ public class SettingsFragment extends PreferenceFragmentCompat {
             // Update shared preferences key
             SharedPreferences.Editor editor = sharedPreferences.edit();
             editor.putBoolean(getResources().getString(R.string.show_images_key), (Boolean) newValue).apply();
+            return true;
+        });
+
+        // Columns Read Mode Switch Change Listener
+        findPreference(getResources().getString(R.string.show_read_mode_key)).setOnPreferenceChangeListener((preference, newValue) -> {
+            // Update shared preferences key
+            SharedPreferences.Editor editor = sharedPreferences.edit();
+            editor.putBoolean(getResources().getString(R.string.show_read_mode_key), (Boolean) newValue).apply();
             return true;
         });
 
